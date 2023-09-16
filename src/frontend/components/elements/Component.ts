@@ -1,12 +1,12 @@
-import { CSSResultGroup, LitElement } from "lit";
-import { resetCSS } from "../styles/reset.css.ts";
-import { customCss } from "../styles/custom.css.ts";
-
+import { CSSResultGroup, LitElement } from "lit-element";
+import { customCss } from "../../styles/custom-css";
+import { globalCss } from "../../styles/global-css";
+import { resetCSS } from "../../styles/reset-css";
 /**
  * Base class for all components.
  * Automatically includes global styles and resets.
  */
-export abstract class Component extends LitElement {
+export abstract class EucideElement extends LitElement {
 	// Small hack to include global styles
 
 	private static _styles: CSSResultGroup;
@@ -15,8 +15,9 @@ export abstract class Component extends LitElement {
 		const derivedStyles = this._styles || [];
 		return [
 			resetCSS,
-			customCss,
+			globalCss,
 			...(Array.isArray(derivedStyles) ? derivedStyles : [derivedStyles]),
+			customCss,
 		];
 	}
 

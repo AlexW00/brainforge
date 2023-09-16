@@ -11,7 +11,8 @@
   "dependencies": {
     "@capacitor/cli": "^5.4.0",
     "@capacitor/core": "^5.4.0",
-    "lit": "^2.7.6"
+    "glob": "^10.3.4",
+    "lit": "^3.0.0-pre.0"
   },
   "devDependencies": {
     "typescript": "^5.0.2",
