@@ -1,13 +1,13 @@
-import { PouchDocService } from "./PouchDocService";
+import { PouchSingleDocService } from "./PouchSingleDocService";
 import {
 	DEFAULT_PREFERENCES,
 	Preferences,
-} from "../../../../data/models/Preferences";
+} from "../../../../../data/models/Preferences";
 import { inject, singleton } from "@launchtray/tsyringe-async";
-import { DbService } from "../DbService";
+import { DbService } from "../../DbService";
 
 @singleton()
-export class PouchPreferencesService extends PouchDocService<Preferences> {
+export class PouchPreferencesService extends PouchSingleDocService<Preferences> {
 	key: string = "preferences";
 	protected defaultDoc = DEFAULT_PREFERENCES;
 

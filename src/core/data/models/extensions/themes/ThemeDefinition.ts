@@ -3,7 +3,6 @@ import { ThemeMetadata } from "./ThemeMetadata";
 /**
  * Defines a theme.
  */
-export interface ThemeDefinition {
-	metadata: ThemeMetadata;
+export interface ThemeDefinition extends ThemeMetadata {
 	css: string;
 }

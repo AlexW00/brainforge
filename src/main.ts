@@ -6,10 +6,21 @@ import "./frontend/components/components.ts";
 // 	console.log(user);
 // });
 import { container } from "@launchtray/tsyringe-async";
-import { StorageService } from "./core/services/private/StorageService.ts";
+import { StorageService } from "./core/services/private/StorageService";
 
 const instance = await container.resolve(StorageService);
 
-instance.pouch.userService.getDoc().then((preferences) => {
-	console.log(preferences);
-});
+// await instance.pouch.cardService.setDoc({
+// 	id: "1",
+// 	templateId: "1",
+// 	reviewData: {
+// 		reviews: [],
+// 		dueOn: new Date(),
+// 	},
+// 	metadata: {
+// 		creationTimestamp: Date(),
+// 	},
+// });
+const card = await instance.pouch.cardService.getDoc("1");
+
+console.log(card);

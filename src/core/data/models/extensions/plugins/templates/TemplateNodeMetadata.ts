@@ -1,4 +1,4 @@
-import { Metadata } from "../../Metadata";
+import { Metadata } from "../../../../../types/Metadata";
 
 /**
  * Metadata for a template node.

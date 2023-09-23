@@ -1,8 +1,11 @@
-import { DbService } from "../DbService";
-import { ConstructableService } from "../../../ConstructableService";
 import { initializer } from "@launchtray/tsyringe-async";
+import { ConstructableService } from "../../../../ConstructableService";
+import { DbService } from "../../DbService";
 
-export abstract class PouchDocService<T> extends ConstructableService {
+/**
+ * A single store service only interacts with a single document in the database.
+ */
+export abstract class PouchSingleDocService<T> extends ConstructableService {
 	public abstract readonly key: string;
 
 	protected abstract readonly dbService: DbService;

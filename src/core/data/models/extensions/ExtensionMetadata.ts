@@ -1,5 +1,5 @@
 import { ExtensionCategory } from "./ExtensionCategory";
-import { Metadata } from "./Metadata";
+import { Metadata } from "../../../types/Metadata";
 
 /**
  * Metadata for an extension.

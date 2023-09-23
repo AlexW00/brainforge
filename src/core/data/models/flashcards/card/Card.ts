@@ -4,13 +4,13 @@ export interface Card {
 	id: string;
 	templateId: string;
 
-	renderCache: CardRenderCache;
+	renderCache?: CardRenderCache;
 	reviewData: CardReviewData;
-	metaData: CardMetaData;
+	metadata: CardMetaData;
 }
 
 export interface CardRenderCache {}
 
 export interface CardMetaData {
-	creationTimestamp: number;
+	creationTimestamp: Date;
 }
