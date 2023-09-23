@@ -4,6 +4,12 @@ import { PouchCardService } from "../storage/pouch/docs/multi/PouchCardService";
 import { PouchTemplateService } from "../storage/pouch/docs/multi/PouchTemplateService";
 import { Template } from "../../data/models/flashcards/template/Template";
 
+// TODOS:
+// check that edge.source and edge.target = nodeId
+// check that edge.sourceHandle and edge.targetHandle = name
+// check the special output node has an id of "output"
+// and an output handle with name "out"
+
 @singleton()
 export class CardRenderService {
 	constructor(
