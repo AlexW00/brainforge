@@ -3,6 +3,7 @@ import { Card, CardRenderCache } from "../../data/models/flashcards/card/Card";
 import { PouchCardService } from "../storage/pouch/docs/multi/PouchCardService";
 import { PouchTemplateService } from "../storage/pouch/docs/multi/PouchTemplateService";
 import { Template } from "../../data/models/flashcards/template/Template";
+import { LoggerService } from "./LoggerService";
 
 // TODOS:
 // check that edge.source and edge.target = nodeId
@@ -14,7 +15,8 @@ import { Template } from "../../data/models/flashcards/template/Template";
 export class CardRenderService {
 	constructor(
 		@inject(PouchTemplateService) private templateService: PouchTemplateService,
-		@inject(PouchCardService) private cardService: PouchCardService
+		@inject(PouchCardService) private cardService: PouchCardService,
+		@inject(LoggerService) private loggerService: LoggerService
 	) {}
 
 	/**
@@ -34,7 +36,13 @@ export class CardRenderService {
 		const existingOutputValue = newRenderCache[nodeId]?.find(
 			(handle) => handle.outputName === name
 		);
-		if (existingOutputValue) return existingOutputValue.value;
+		if (existingOutputValue) {
+			this.loggerService.debug(
+				`Re using old cache for output ${name} of node ${nodeId}`
+			);
+			return existingOutputValue.value;
+		}
+		this.loggerService.debug(`Calculating output ${name} of node ${nodeId}...`);
 
 		// Otherwise calculate the value
 		// Find the node in the template
@@ -105,9 +113,10 @@ export class CardRenderService {
 		const newRenderCache: CardRenderCache = {};
 		let cacheDidNotChange = true;
 		template.graph.nodes.forEach((node) => {
-			if (oldRenderCache[node.id] !== undefined && !node.data.doReRunOnRender)
+			if (oldRenderCache[node.id] !== undefined && !node.data.doReRunOnRender) {
 				newRenderCache[node.id] = oldRenderCache[node.id];
-			else cacheDidNotChange = false;
+				this.loggerService.debug(`Re using old cache for node ${node.id}`);
+			} else cacheDidNotChange = false;
 		});
 		if (cacheDidNotChange) return false;
 
