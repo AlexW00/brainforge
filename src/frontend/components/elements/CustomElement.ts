@@ -6,7 +6,7 @@ import { resetCSS } from "../../styles/reset-css";
  * Base class for all components.
  * Automatically includes global styles and resets.
  */
-export abstract class EucideElement extends LitElement {
+export abstract class CustomElement extends LitElement {
 	// Small hack to include global styles
 
 	private static _styles: CSSResultGroup;
