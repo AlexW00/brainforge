@@ -6,8 +6,8 @@ import _1 from "./elements/Card";
 export { _0, _1 };
 
 declare global {
-	interface HTMLElementTagNameMap {
-		"app-root": _0;
-		"card-element": _1;
-	}
+    interface HTMLElementTagNameMap {
+        'app-root': _0;
+        'card-element': _1;
+    }
 }
