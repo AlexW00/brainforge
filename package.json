@@ -12,7 +12,16 @@
     "@capacitor/cli": "^5.4.0",
     "@capacitor/core": "^5.4.0",
     "glob": "^10.3.4",
-    "lit": "^3.0.0-pre.0"
+    "immer": "^10.0.2",
+    "lit": "^3.0.0-pre.0",
+    "pouchdb": "^8.0.1",
+    "prouter": "^10.0.23",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "reactflow": "^11.8.3",
+    "reflect-metadata": "^0.1.13",
+    "typedi": "^0.10.0",
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "typescript": "^5.0.2",
