@@ -17,7 +17,9 @@ export interface Card {
 	metadata: CardMetaData;
 }
 
-export interface CardRenderCache {}
+export interface CardRenderCache {
+	[nodeId: string]: { outputName: string; value: any }[];
+}
 
 export interface CardMetaData {
 	creationTimestamp: Date;

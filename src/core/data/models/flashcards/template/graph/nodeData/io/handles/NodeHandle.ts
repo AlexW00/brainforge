@@ -8,9 +8,24 @@ export interface NodeHandle {
 	type: NodeHandleType;
 }
 
+export interface NodeInputHandle extends NodeHandle {}
+
+/**
+ * A function that returns the value of a node output handle.
+ * @param inputValues The values of the input handles of the node.
+ * @returns The value of the node output handle.
+ */
+export type NodeOutputHandleValueFunction = (
+	inputValues: { name: string; value: any }[]
+) => Promise<any>;
+
+export interface NodeOutputHandle extends NodeHandle {
+	getValue: NodeOutputHandleValueFunction;
+}
+
 /**
  * A map of node input or output handles of a node.
  */
-export interface NodeHandles {
-	[key: string]: NodeHandle;
+export interface NodeHandles<T extends NodeHandle> {
+	[key: string]: T;
 }

@@ -6,5 +6,5 @@ import { NodeIO } from "./io/NodeIO";
 export interface NodeData {
 	definitionId: string;
 	io: NodeIO;
-	doCache: boolean;
+	doReRunOnRender: boolean;
 }
