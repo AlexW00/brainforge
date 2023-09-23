@@ -1,4 +1,4 @@
-import NodeHandleType from "../../../models/flashcards/template/graph/nodeData/io/handles/NodeHandleType";
+import NodeHandleType from "../../../data/models/flashcards/template/graph/nodeData/io/handles/NodeHandleType";
 import { AnyHandle } from "./AnyHandle";
 
 export const BooleanHandle: NodeHandleType = {

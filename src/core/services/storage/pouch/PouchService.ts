@@ -9,8 +9,8 @@ import { PouchPreferencesService } from "./docs/single/PouchPreferencesService";
 import { PouchUserService } from "./docs/single/PouchUserService";
 
 /**
- * A service that provides access to the PouchDB database.
- */
+ * Service for managing cross-device, persisted state via PouchDB.
+ **/
 @singleton()
 export class PouchService {
 	constructor(

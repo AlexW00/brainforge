@@ -6,7 +6,7 @@ import "./frontend/components/components.ts";
 // 	console.log(user);
 // });
 import { container } from "@launchtray/tsyringe-async";
-import { StorageService } from "./core/services/private/StorageService";
+import { StorageService } from "./core/services/storage/StorageService";
 
 const instance = await container.resolve(StorageService);
 
@@ -21,6 +21,6 @@ const instance = await container.resolve(StorageService);
 // 		creationTimestamp: Date(),
 // 	},
 // });
-const card = await instance.pouch.cardService.getDoc("1");
+const card = await instance.pouch.cardService.get("1");
 
 console.log(card);

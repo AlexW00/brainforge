@@ -1,4 +1,4 @@
-import { AnyHandle } from "../../../../../../../static/nodeHandles/base/AnyHandle";
+import { AnyHandle } from "../../../../../../../../static/nodeHandles/base/AnyHandle";
 
 /**
  * A type of node input or output handle.

@@ -5,7 +5,7 @@ export interface CardReviewData {
 
 export interface CardReviewResult {
 	answer: CardReviewAnswer;
-	timestamp: number;
+	date: Date;
 }
 
 export enum CardReviewAnswer {
