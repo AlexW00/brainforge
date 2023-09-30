@@ -1,4 +1,4 @@
-export class EventBus<T extends Record<string, any>> extends EventTarget {
+export class Observable<T extends Record<string, any>> extends EventTarget {
 	/**
 	 * Emit an event
 	 * @param type The event type

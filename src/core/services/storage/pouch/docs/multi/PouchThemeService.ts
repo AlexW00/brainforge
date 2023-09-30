@@ -1,4 +1,4 @@
-import { inject, singleton } from "@launchtray/tsyringe-async";
+import { inject, singleton } from "tsyringe";
 import { ThemeDefinition } from "../../../../../data/models/extensions/themes/ThemeDefinition";
 import { DbService } from "../../DbService";
 import { PouchMultiDocService } from "./PouchMultiDocService";

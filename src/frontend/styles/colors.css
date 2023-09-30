@@ -1,6 +1,6 @@
 /* Color-scheme: Light */
 
-:root {
+body {
     --bg-color: white;
     --fg-color: black;
 
@@ -11,21 +11,27 @@
 
     --bg-color-accent: #black;
     --fg-color-accent: #white;
+
+    --behind-app-color: black;
+    --app-ribbon-item-color: white;
   }
   
-  /* Color-scheme: Dark */
-  
-  /* @media (prefers-color-scheme: dark) {
-    :root {
-        --bg-color: black;
-        --fg-color: white;
+/* Color-scheme: Dark */
 
-        --border-color: white;
+body.dark {
+  :root {
+      --bg-color: black;
+      --fg-color: white;
 
-        --shadow-color-soft: rgba(255, 255, 255, 0.25);
-        --shadow-color-hard: rgba(255, 255, 255, 1);
-  
-        --bg-color-accent: #white;
-        --fg-color-accent: #black;
-    }
-  } */
+      --border-color: white;
+
+      --shadow-color-soft: rgba(255, 255, 255, 0.25);
+      --shadow-color-hard: rgba(255, 255, 255, 1);
+
+      --bg-color-accent: #white;
+      --fg-color-accent: #black;
+
+      --behind-app-color: white;
+      --app-ribbon-item-color: black;
+  }
+}

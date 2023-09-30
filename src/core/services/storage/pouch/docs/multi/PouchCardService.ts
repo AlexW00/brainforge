@@ -1,4 +1,4 @@
-import { inject, singleton } from "@launchtray/tsyringe-async";
+import { inject, singleton } from "tsyringe";
 import {
 	Card,
 	CardStatus,

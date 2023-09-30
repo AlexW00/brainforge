@@ -3,7 +3,7 @@ import {
 	DEFAULT_PREFERENCES,
 	Preferences,
 } from "../../../../../data/models/Preferences";
-import { inject, singleton } from "@launchtray/tsyringe-async";
+import { inject, singleton } from "tsyringe";
 import { DbService } from "../../DbService";
 
 @singleton()

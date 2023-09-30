@@ -1,6 +1,6 @@
-import { ReviewAlgorithm } from "../classes/ReviewAlgorithm";
 import { Card } from "../data/models/flashcards/card/Card";
 import { CardReviewAnswer } from "../data/models/flashcards/card/CardReviewData";
+import { ReviewAlgorithm } from "../types/ReviewAlgorithm";
 
 export class DefaultReviewAlgorithm extends ReviewAlgorithm {
 	calculateNextDueDate(card: Card, answer: CardReviewAnswer): Date {

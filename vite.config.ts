@@ -6,8 +6,5 @@ export default defineConfig({
 	server: {
 		port: 3001,
 	},
-	plugins: [
-		runScript("build/vite/scripts/index-web-components.js"),
-		runScript("build/vite/scripts/index-ui-events.js"),
-	],
+	plugins: [runScript("build/vite/scripts/index-web-components.js")],
 });

@@ -1,5 +1,5 @@
-import Card from "../../../frontend/components/elements/Card";
-import { CardReviewAnswer } from "../../data/models/flashcards/card/CardReviewData";
+import { Card } from "../data/models/flashcards/card/Card";
+import { CardReviewAnswer } from "../data/models/flashcards/card/CardReviewData";
 
 export abstract class ReviewAlgorithm {
 	/**

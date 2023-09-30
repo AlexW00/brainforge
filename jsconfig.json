@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+      "moduleResolution": "nodenext",
+      "esModuleInterop": true
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "**/*.spec.js"]
+  }

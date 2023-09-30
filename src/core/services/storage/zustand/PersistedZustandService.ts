@@ -1,4 +1,4 @@
-import { singleton } from "@launchtray/tsyringe-async";
+import { singleton } from "tsyringe";
 
 /**
  * Service for managing device only, persisted state.

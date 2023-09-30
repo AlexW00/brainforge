@@ -1,4 +1,4 @@
-import { inject, singleton } from "@launchtray/tsyringe-async";
+import { inject, singleton } from "tsyringe";
 import { Card, CardRenderCache } from "../../data/models/flashcards/card/Card";
 import { PouchCardService } from "../storage/pouch/docs/multi/PouchCardService";
 import { PouchTemplateService } from "../storage/pouch/docs/multi/PouchTemplateService";

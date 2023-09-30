@@ -1,4 +1,4 @@
-import { Identifiable } from "../../../../../types/Identifiable";
+import { Identifiable } from "../../../../../types/general/Identifiable";
 import { DbService } from "../../DbService";
 
 /**

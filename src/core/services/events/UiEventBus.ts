@@ -1,6 +1,6 @@
-import { singleton } from "@launchtray/tsyringe-async";
-import { EventBus } from "../../classes/abstract/EventBus";
-import { UiEventDataMap } from "../../types/UiEventDataMap";
+import { singleton } from "tsyringe";
+import { UiEventDataMap } from "../../types/events/UiEventDataMap";
+import { Observable } from "../../types/events/Observable";
 
 @singleton()
-export class UiEventBus extends EventBus<UiEventDataMap> {}
+export class UiEventBus extends Observable<UiEventDataMap> {}

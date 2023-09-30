@@ -2,9 +2,20 @@
 
 @import url('./colors.css');
 
-body, app-root {
+html, body, root-component {
   background-color: var(--bg-color);
   color: var(--fg-color);
   margin: 0;
   padding: 0;
+  
+  width: 100%;
+  height: 100%;
+
+  box-sizing: border-box;
+  background-color: var(--behind-app-color);
+
+  display: flex;
+  flex: 1;
+  flex-grow: 1;
 }
+

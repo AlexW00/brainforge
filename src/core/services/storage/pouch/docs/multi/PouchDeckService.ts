@@ -1,4 +1,4 @@
-import { inject, singleton } from "@launchtray/tsyringe-async";
+import { inject, singleton } from "tsyringe";
 import { Deck } from "../../../../../data/models/flashcards/Deck";
 import { DbService } from "../../DbService";
 import { PouchMultiDocService } from "./PouchMultiDocService";
@@ -11,6 +11,11 @@ export class PouchDeckService extends PouchMultiDocService<Deck> {
 		super();
 	}
 
+	/**
+	 * Gets the IDs of the cards in a deck
+	 * @param deckId The ID of the deck to get the cards of
+	 * @returns The IDs of the cards in the deck
+	 */
 	async getCardIds(deckId: string) {
 		const deck = await this.get(deckId);
 		if (deck === undefined) throw new Error(`Deck with id ${deckId} not found`);

@@ -1,5 +1,4 @@
-import { inject, singleton } from "@launchtray/tsyringe-async";
-import { ReviewAlgorithm } from "../../classes/ReviewAlgorithm";
+import { inject, singleton } from "tsyringe";
 import { Card, CardStatus } from "../../data/models/flashcards/card/Card";
 import {
 	CardReviewAnswer,
@@ -8,6 +7,7 @@ import {
 import { DefaultReviewAlgorithm } from "../../static/DefaultReviewAlgorithm";
 import { PouchCardService } from "../storage/pouch/docs/multi/PouchCardService";
 import { PouchDeckService } from "../storage/pouch/docs/multi/PouchDeckService";
+import { ReviewAlgorithm } from "../../types/ReviewAlgorithm";
 
 @singleton()
 export class ReviewService {

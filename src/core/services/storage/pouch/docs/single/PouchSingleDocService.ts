@@ -1,22 +1,24 @@
-import { initializer } from "@launchtray/tsyringe-async";
+import { Initializeable } from "../../../../../types/general/Initializeable";
 import { DbService } from "../../DbService";
 
 /**
  * A single store service only interacts with a single document in the database.
  */
-export abstract class PouchSingleDocService<T> {
+export abstract class PouchSingleDocService<T> implements Initializeable {
 	public abstract readonly key: string;
 
 	protected abstract readonly dbService: DbService;
 	protected abstract readonly defaultDoc: T;
 
-	@initializer()
-	async construct() {
+	isInitialized: boolean = false;
+
+	async init() {
 		try {
 			await this.get();
 		} catch (err: any) {
 			if (err.status === 404) {
 				await this.set(this.defaultDoc);
+				this.isInitialized = true;
 			} else {
 				throw err;
 			}
