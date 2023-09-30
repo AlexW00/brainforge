@@ -58,7 +58,7 @@ export default class PageHeader extends CustomElement {
 			justify-content: space-between;
 			align-items: center;
 			background: var(--bg-color);
-			padding: 1rem;
+			padding: 0.5rem;
 			border-bottom: var(--border-width-small) solid var(--border-color);
 			height: var(--page-header-height);
 		}
