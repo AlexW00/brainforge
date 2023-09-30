@@ -32,9 +32,20 @@ export default class PageContent extends CustomElement {
 		}
 	}
 
+	private notifyInfoChanged() {
+		if (this.page) {
+			this.dispatchEvent(
+				new CustomEvent("onInfoChanged", {
+					detail: this.page.getInfo(),
+				})
+			);
+		}
+	}
+
 	private onPropertiesChanged() {
 		if (this.page) {
 			this.page.onUpdate(this.properties);
+			this.notifyInfoChanged();
 		}
 	}
 

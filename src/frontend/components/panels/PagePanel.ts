@@ -5,6 +5,7 @@ import { container } from "tsyringe";
 import { RouterService } from "../../../core/services/app/RouterService";
 import { PageDefinition } from "../../../core/types/views/PageDefinition";
 import { ElementRegistrarService } from "../../../core/services/app/ElementRegistrarService";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 @customElement("page-panel")
 export default class PagePanel extends Panel {
@@ -18,6 +19,9 @@ export default class PagePanel extends Panel {
 
 	@state()
 	properties?: any;
+
+	@state()
+	info?: string;
 
 	setPageDefinition(pageId?: string) {
 		if (!pageId) {
@@ -34,16 +38,21 @@ export default class PagePanel extends Panel {
 				this.setPageDefinition(newStep?.pageId);
 			}
 			this.properties = newStep?.properties;
-			console.log("new step", this.page, this.properties);
 		});
 	}
 
 	render() {
 		return html`
-			<page-header .page=${this.page}></page-header>
+			<page-header
+				info=${ifDefined(this.info)}
+				pageId=${ifDefined(this.page?.id)}
+				name=${ifDefined(this.page?.name)}
+				.actions=${this.page?.getActions()}
+			></page-header>
 			<page-content
 				.page=${this.page}
 				.properties=${this.properties}
+				@onInfoChanged=${(e: CustomEvent<string>) => (this.info = e.detail)}
 			></page-content>
 		`;
 	}

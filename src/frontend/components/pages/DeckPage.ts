@@ -2,14 +2,32 @@ import { customElement, property } from "lit/decorators.js";
 import { CustomElement } from "../atomic/CustomElement";
 import { PageDefinition } from "../../../core/types/views/PageDefinition";
 import { css, html } from "lit";
+import { Deck } from "../../../core/data/models/flashcards/Deck";
+import { container } from "tsyringe";
+import { PouchDeckService } from "../../../core/services/storage/pouch/docs/multi/PouchDeckService";
+import { Task } from "@lit-labs/task";
 
 @customElement("deck-page")
 export default class DeckPage extends CustomElement {
+	private readonly deckService = container.resolve(PouchDeckService);
+
 	@property({ type: Object })
-	properties: DeckPageProperties;
+	properties!: DeckPageProperties;
+
+	deck?: Deck;
+
+	private getDeckTask = new Task(
+		this,
+		async ([deckId]) => {
+			const deck = await this.deckService.get(deckId);
+			if (deck === undefined) throw new Error("Deck not found");
+			this.deck = deck;
+		},
+		() => [this.properties.deckId]
+	);
 
 	render() {
-		return html` Deck page for deck ${this.properties.deckId} `;
+		return html` <div id="title">${this.deck?.name}</div> `;
 	}
 
 	static styles = css`
@@ -32,8 +50,8 @@ export class DeckPageDefinition extends PageDefinition<DeckPageProperties> {
 
 	private deckPage: DeckPage;
 
-	getTitle() {
-		return this.deckPage?.properties?.deckId ?? "No deck";
+	getInfo() {
+		return this.deckPage.properties.deckId;
 	}
 
 	onLoad = (properties: DeckPageProperties, container: HTMLElement) => {
@@ -47,6 +65,12 @@ export class DeckPageDefinition extends PageDefinition<DeckPageProperties> {
 	};
 
 	getActions() {
-		return [];
+		return [
+			{
+				id: "add-card",
+				title: "Add card",
+				onClick: () => {},
+			},
+		];
 	}
 }

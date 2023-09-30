@@ -4,7 +4,6 @@ import { PageAction } from "../../../core/types/views/PageAction";
 import { css, html } from "lit";
 import { UiEventBus } from "../../../core/services/events/UiEventBus";
 import { container } from "tsyringe";
-import { PageDefinition } from "../../../core/types/views/PageDefinition";
 import { RouterService } from "../../../core/services/app/RouterService";
 
 @customElement("page-header")
@@ -12,13 +11,23 @@ export default class PageHeader extends CustomElement {
 	private readonly uiEventBus = container.resolve(UiEventBus);
 	private readonly router = container.resolve(RouterService);
 
-	@property({ type: Object })
-	page?: PageDefinition<any>;
+	@property({ type: String })
+	pageId?: string;
+
+	@property({ type: String })
+	name?: string;
+
+	@property({ type: String })
+	info?: string;
+
+	@property({ type: Array })
+	actions?: PageAction[];
 
 	private onClickAction = (action: PageAction) => {
-		if (!this.page) return;
+		if (!this.pageId) return;
+		action.onClick();
 		this.uiEventBus.emit("page-action-clicked", {
-			pageId: this.page.id,
+			pageId: this.pageId,
 			actionId: action.id,
 		});
 	};
@@ -38,32 +47,49 @@ export default class PageHeader extends CustomElement {
 					@click=${() => this.onClickNavButton(false)}
 				></ph-arrow-right>
 			</div>
-			<div id="name">${this.page?.name ?? "No active page"}</div>
-			<div id="info">${this.page?.getTitle() ?? "Empty"}</div>
+			<div id="name">${this.name ?? "No active page"}</div>
+			<div id="info">${this.info ?? "Empty"}</div>
 			<div id="actions">
-				${this.page
-					?.getActions()
-					.map(
-						(action) => html`
-							<button @click=${() => this.onClickAction(action)}>
-								${action.title}
-							</button>
-						`
-					)}
+				${this.actions?.map(
+					(action) => html`
+						<button @click=${() => this.onClickAction(action)}>
+							${action.title}
+						</button>
+					`
+				)}
 			</div>
 		`;
 	}
 
+	// info is center, nav buttons and name are left, actions are right
 	static styles = css`
 		:host {
 			display: flex;
-			flex-direction: row;
-			justify-content: space-between;
 			align-items: center;
-			background: var(--bg-color);
-			padding: 0.5rem;
-			border-bottom: var(--border-width-small) solid var(--border-color);
-			height: var(--page-header-height);
+			justify-content: space-between;
+			padding: 16px;
+		}
+
+		#nav-buttons {
+			display: flex;
+			align-items: center;
+		}
+
+		#name {
+			margin-left: 16px;
+			font-weight: bold;
+		}
+
+		#info {
+			flex: 1;
+			text-align: center;
+			opacity: 0.7;
+		}
+
+		#actions {
+			display: flex;
+			align-items: center;
+			gap: 8px;
 		}
 	`;
 }

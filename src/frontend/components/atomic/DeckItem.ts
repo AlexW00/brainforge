@@ -58,18 +58,23 @@ export default class DeckItem extends CustomElement {
 		});
 	};
 
-	private initLastSelectedDeck = () => {
-		this.sessionZustand.on("lastSelectedDeckIdChanged", (e) => {
-			const newLastSelectedDeckId = e.detail;
-			const isLastSelectedDeck = newLastSelectedDeckId === this.deckId;
+	private setIsLastSelectedDeck = () => {
+		if (this.deck === undefined) return;
+		const isLastSelectedDeck =
+			this.sessionZustand.state.lastSelectedDeckId === this.deck.id;
 
-			if (isLastSelectedDeck) {
-				this.classList.add("last-selected");
-				this.classList.add("selected");
-			} else {
-				this.classList.remove("last-selected");
-				this.classList.remove("selected");
-			}
+		if (isLastSelectedDeck) {
+			this.classList.add("last-selected");
+			this.classList.add("selected");
+		} else {
+			this.classList.remove("last-selected");
+			this.classList.remove("selected");
+		}
+	};
+
+	private initLastSelectedDeck = () => {
+		this.sessionZustand.on("lastSelectedDeckIdChanged", () => {
+			this.setIsLastSelectedDeck();
 		});
 	};
 
@@ -93,10 +98,11 @@ export default class DeckItem extends CustomElement {
 		return this.deck?.childDecksIds.length ?? 0 > 0;
 	}
 
-	private onExpanderClick = () => {
+	private onExpanderClick = (e: MouseEvent) => {
 		if (this.deck === undefined) return;
 		this.isExpanded = !this.isExpanded;
 		this.persistedZustand.state.toggleExpandedDeckId(this.deck.id);
+		e.stopPropagation();
 	};
 
 	private getExpandIcon() {
@@ -113,7 +119,7 @@ export default class DeckItem extends CustomElement {
 					() => html`
 						<div
 							class="pre-name expander"
-							@click=${() => this.onExpanderClick()}
+							@click=${(e: MouseEvent) => this.onExpanderClick(e)}
 						>
 							<div class="icon">${this.getExpandIcon()}</div>
 						</div>

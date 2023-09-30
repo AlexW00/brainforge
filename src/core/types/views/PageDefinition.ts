@@ -11,6 +11,6 @@ export abstract class PageDefinition<
 	 * Title info about the page.
 	 * E.g. in a nested  deck, this could be the name of the deck.
 	 */
-	public abstract getTitle(): string;
+	public abstract getInfo(): string;
 	public abstract getActions(): PageAction[];
 }
