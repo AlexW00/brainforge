@@ -36,7 +36,6 @@ export class RouterService extends Observable<EventMap> {
 
 	navigateBack() {
 		this.sessionZustand.state.undoNavigationStep();
-		// add to browser history
 	}
 
 	navigateForward() {

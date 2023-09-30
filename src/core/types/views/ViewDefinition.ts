@@ -11,7 +11,7 @@ export abstract class ViewDefinition<P extends ViewProperties>
 	public abstract readonly id: string;
 	public abstract readonly name: string;
 
-	public abstract onLoad: (properties: P, container: ShadowRoot) => void;
+	public abstract onLoad: (properties: P, container: HTMLElement) => void;
 	public onUnload: () => void = () => {};
 	public onUpdate: (properties: P) => void = () => {};
 }

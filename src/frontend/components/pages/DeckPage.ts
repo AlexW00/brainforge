@@ -36,14 +36,12 @@ export class DeckPageDefinition extends PageDefinition<DeckPageProperties> {
 		return this.deckPage?.properties?.deckId ?? "No deck";
 	}
 
-	onLoad = (properties: DeckPageProperties, container: ShadowRoot) => {
+	onLoad = (properties: DeckPageProperties, container: HTMLElement) => {
 		this.deckPage = new DeckPage();
 		this.deckPage.properties = properties;
 		container.appendChild(this.deckPage);
 	};
-	onUnload = () => {
-		this.deckPage.remove();
-	};
+	onUnload = () => {};
 	onUpdate = (properties: DeckPageProperties) => {
 		this.deckPage.properties = properties;
 	};

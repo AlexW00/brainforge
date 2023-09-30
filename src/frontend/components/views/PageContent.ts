@@ -16,11 +16,20 @@ export default class PageContent extends CustomElement {
 	@property({ type: Object })
 	page?: PageDefinition<any>;
 
-	private onPageDefinitionChanged() {
-		if (this.page) {
-			this.page.onLoad(this.properties, this.shadowRoot!);
+	private onPageDefinitionChanged(oldPage?: PageDefinition<any>) {
+		if (oldPage) {
+			oldPage.onUnload();
+			if (!this.shadowRoot) return;
+
+			const container = this.shadowRoot.querySelectorAll("div");
+			container.forEach((c) => c.remove());
 		}
-		this.requestUpdate();
+
+		if (this.page) {
+			const container = document.createElement("div");
+			this.shadowRoot!.appendChild(container);
+			this.page.onLoad(this.properties, container);
+		}
 	}
 
 	private onPropertiesChanged() {
@@ -33,19 +42,13 @@ export default class PageContent extends CustomElement {
 		changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>
 	): void {
 		if (changedProperties.has("page")) {
-			this.onPageDefinitionChanged();
+			const oldPage = changedProperties.get("page") as PageDefinition<any>;
+			this.onPageDefinitionChanged(oldPage);
 		}
 		if (changedProperties.has("properties")) {
 			this.onPropertiesChanged();
 		}
 		super.updated(changedProperties);
-	}
-
-	disconnectedCallback(): void {
-		if (this.page) {
-			this.page.onUnload();
-		}
-		super.disconnectedCallback();
 	}
 
 	static styles = css``;

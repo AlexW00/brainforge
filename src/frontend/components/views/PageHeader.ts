@@ -5,10 +5,12 @@ import { css, html } from "lit";
 import { UiEventBus } from "../../../core/services/events/UiEventBus";
 import { container } from "tsyringe";
 import { PageDefinition } from "../../../core/types/views/PageDefinition";
+import { RouterService } from "../../../core/services/app/RouterService";
 
 @customElement("page-header")
 export default class PageHeader extends CustomElement {
 	private readonly uiEventBus = container.resolve(UiEventBus);
+	private readonly router = container.resolve(RouterService);
 
 	@property({ type: Object })
 	page?: PageDefinition<any>;
@@ -22,7 +24,8 @@ export default class PageHeader extends CustomElement {
 	};
 
 	private onClickNavButton = (doNavigateBack: boolean) => {
-		console.log("clicked nav button");
+		if (doNavigateBack) this.router.navigateBack();
+		else this.router.navigateForward();
 	};
 
 	render() {

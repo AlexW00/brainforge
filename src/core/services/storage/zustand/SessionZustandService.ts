@@ -79,6 +79,7 @@ export class SessionZustandService extends Observable<EventMap> {
 				}),
 			undoNavigationStep: () =>
 				set((state) => {
+					// if (state.navigationUndoStack.length <= 1) return;
 					const step = state.navigationUndoStack.pop();
 					if (step) {
 						state.navigationRedoStack.push(step);
