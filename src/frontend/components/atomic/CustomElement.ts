@@ -2,6 +2,7 @@ import { CSSResultGroup, LitElement } from "lit-element";
 import { customCss } from "../../styles/custom-css";
 import { globalCss } from "../../styles/global-css";
 import { resetCSS } from "../../styles/reset-css";
+import { ViewStatus } from "../../../core/types/views/ViewState";
 /**
  * Base class for all components.
  * Automatically includes global styles and resets.
@@ -33,5 +34,17 @@ export abstract class CustomElement extends LitElement {
 			.replace(/([a-z0-9])([A-Z])/g, "$1-$2")
 			.toLowerCase();
 		this.classList.add(className);
+	}
+
+	private getStatusClass(status: ViewStatus) {
+		if (status === ViewStatus.INITIAL) return "initial";
+		if (status === ViewStatus.PENDING) return "loading";
+		if (status === ViewStatus.COMPLETE) return "loaded";
+		return "error";
+	}
+
+	protected setStatus(staus: ViewStatus) {
+		this.classList.remove("initial", "loading", "loaded", "error");
+		this.classList.add(this.getStatusClass(staus));
 	}
 }

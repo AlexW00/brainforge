@@ -1,0 +1,14 @@
+body {
+    --border-radius-small: 0.25rem;
+    --border-radius-normal: 0.5rem;
+    --border-radius-large: 1rem;
+
+    --border-width-small: 1px;
+    --border-width-normal: 2px;
+    --border-width-large: 4px;
+
+    --deck-tree-item-padding: 0.7rem;
+
+    --deck-tree-item-pre-name-width: 1rem;
+    --deck-tree-item-pre-name-padding-right: 0.2rem;
+}

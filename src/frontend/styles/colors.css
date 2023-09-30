@@ -14,6 +14,15 @@ body {
 
     --behind-app-color: black;
     --app-ribbon-item-color: white;
+
+    --bg-color-error: #ffb9b9;
+    --divider-color: #e0e0e0;
+
+    --bg-accent-color: black;
+    --bg-accent-color-soft: rgba(0, 0, 0, 0.25);
+
+    --fg-accent-color: white;
+    --fg-accent-color-soft: rgba(255, 255, 255, 0.25);
   }
   
 /* Color-scheme: Dark */
@@ -33,5 +42,14 @@ body.dark {
 
       --behind-app-color: white;
       --app-ribbon-item-color: black;
+
+      --bg-color-error: #b62f2f;
+      --divider-color: #424242;
+
+      --bg-accent-color: white;
+      --bg-accent-color-soft: rgba(255, 255, 255, 0.25);
+
+      --fg-accent-color: black;
+      --fg-accent-color-soft: rgba(0, 0, 0, 0.25);
   }
 }

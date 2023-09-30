@@ -16,4 +16,11 @@ export const globalCss = css`
 		flex-direction: column;
 		flex: 1;
 	}
+
+	.loading {
+		opacity: 0.5;
+	}
+	.error {
+		background: var(--bg-color-error);
+	}
 `;

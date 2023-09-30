@@ -10,9 +10,10 @@ import _6 from "./roots/Error";
 import _7 from "./roots/App";
 import _8 from "./atomic/Spacer";
 import _9 from "./atomic/RibbonItem";
-import _10 from "./atomic/Card";
+import _10 from "./atomic/DeckItem";
+import _11 from "./atomic/Card";
 
-export { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10 };
+export { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11 };
 
 declare global {
     interface HTMLElementTagNameMap {
@@ -26,6 +27,7 @@ declare global {
         'app-root': _7;
         'spacer-component': _8;
         'ribbon-item': _9;
-        'card-element': _10;
+        'deck-item': _10;
+        'card-element': _11;
     }
 }

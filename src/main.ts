@@ -1,14 +1,9 @@
 import "reflect-metadata"; // required for TypeDI
+import { PouchDebugService } from "./core/services/storage/pouch/docs/PouchDebugService";
+import { container } from "tsyringe";
+
+import "@phosphor-icons/webcomponents";
 import("./frontend/components/components");
 
-// await instance.pouch.cardService.setDoc({
-// 	id: "1",
-// 	templateId: "1",
-// 	reviewData: {
-// 		reviews: [],
-// 		dueOn: new Date(),
-// 	},
-// 	metadata: {
-// 		creationTimestamp: Date(),
-// 	},
-// });
+const debugService = container.resolve(PouchDebugService);
+// debugService.clearDb();

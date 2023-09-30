@@ -16,23 +16,26 @@ export default class DeckTreePanel extends Panel {
 	}
 
 	@state()
-	private decks: Deck[] = [];
+	private rootDecks: Deck[] = [];
 
 	firstUpdated() {
 		super.connectedCallback();
 
 		this.deckService.getAll().then((decks) => {
-			this.decks = decks;
+			// console.log(decks);
+			this.rootDecks = decks.filter((deck) =>
+				decks.every((d) => !d.childDecksIds.includes(deck.id))
+			);
 		});
 	}
 
 	render() {
-		return html`<div>Decks</div>
-			<ul>
-				${this.decks.map((deck) => {
-					return html`<li>${deck.name}</li>`;
+		return html`<div id="title">Decks</div>
+			<div id="decks">
+				${this.rootDecks.map((deck) => {
+					return html`<deck-item deckId=${deck.id}></deck-item>`;
 				})}
-			</ul> `;
+			</div> `;
 	}
 
 	static styles = css`
@@ -42,6 +45,22 @@ export default class DeckTreePanel extends Panel {
 			background: var(--bg-color);
 			flex: 1 1 20rem;
 			min-width: 20rem;
+			border-right: var(--border-width-small) solid var(--border-color);
+			border-top-left-radius: var(--border-radius-large);
+			border-bottom-left-radius: var(--border-radius-large);
+		}
+		#title {
+			font-size: 1.5rem;
+			font-weight: bold;
+			padding: 1rem;
+			text-align: center;
+		}
+		#decks {
+			display: flex;
+			flex-direction: column;
+			overflow-y: auto;
+			overflow-x: hidden;
+			padding: 0.5rem;
 		}
 	`;
 }

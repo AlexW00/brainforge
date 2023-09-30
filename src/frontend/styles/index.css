@@ -1,6 +1,7 @@
 /* load colors.css */
 
 @import url('./colors.css');
+@import url('./sizes.css');
 
 html, body, root-component {
   background-color: var(--bg-color);

@@ -6,14 +6,17 @@ import { Observable } from "../../../types/events/Observable";
 
 export interface SessionZustandActions {
 	setRibbonItems: (items: RibbonItem[]) => void;
+	setLastSelectedDeckId: (deckId: string) => void;
 }
 
 export interface SessionZustandState extends SessionZustandActions {
 	ribbonItems: RibbonItem[];
+	lastSelectedDeckId?: string;
 }
 
 type EventMap = {
 	changed: [newState: SessionZustandState, oldState: SessionZustandState];
+	lastSelectedDeckIdChanged: string | undefined;
 };
 
 /**
@@ -28,6 +31,10 @@ export class SessionZustandService extends Observable<EventMap> {
 				set((state) => {
 					state.ribbonItems = items;
 				}),
+			setLastSelectedDeckId: (deckId: string) =>
+				set((state) => {
+					state.lastSelectedDeckId = deckId;
+				}),
 		}))
 	);
 
@@ -39,6 +46,10 @@ export class SessionZustandService extends Observable<EventMap> {
 		this.zustand.subscribe((state, prevState) => {
 			this.state = state;
 			this.emit("changed", [state, prevState]);
+
+			if (state.lastSelectedDeckId !== prevState.lastSelectedDeckId) {
+				this.emit("lastSelectedDeckIdChanged", state.lastSelectedDeckId);
+			}
 		});
 	}
 }
