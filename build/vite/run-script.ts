@@ -1,14 +1,16 @@
 import { exec } from "child_process";
 import path from "path";
 
-function runScript() {
+/**
+ * Vite plugin to run a script at build start
+ * @param scriptRelativePath Relative path to the script to run
+ * @returns Vite plugin
+ */
+function runScript(scriptRelativePath: string) {
 	return {
 		name: "run-script",
 		buildStart() {
-			const scriptPath = path.resolve(
-				process.cwd(),
-				"scripts/vite/index-web-components.js"
-			);
+			const scriptPath = path.resolve(process.cwd(), scriptRelativePath);
 			exec(`node ${scriptPath}`, (error, stdout, stderr) => {
 				if (error) {
 					console.error(`exec error: ${error}`);

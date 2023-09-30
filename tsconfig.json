@@ -21,7 +21,8 @@
 
     // TypeDI
     "emitDecoratorMetadata": true,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "allowSyntheticDefaultImports": true, 
   },
-  "include": ["src", "vite.config.ts", "scripts/vite"]
+  "include": ["src", "vite.config.ts", "build/vite"]
 }

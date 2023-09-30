@@ -6,7 +6,10 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && vite build",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"run:index-web-components": "node build/vite/scripts/index-web-components.js",
+		"run:index-ui-events": "node build/vite/scripts/index-ui-events.js",
+		"run:index-all": "npm run run:index-web-components && npm run run:index-ui-events"
 	},
 	"dependencies": {
 		"@capacitor/cli": "^5.4.0",
