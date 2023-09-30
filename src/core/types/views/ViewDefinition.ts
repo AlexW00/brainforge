@@ -1,14 +1,17 @@
 import { Identifiable } from "../general/Identifiable";
 
-type ViewProperties = any;
+export type ViewProperties = any;
 
 /**
  * A view is a custom UI element.
  */
-export interface ViewDefinition extends Identifiable {
-	name: string;
+export abstract class ViewDefinition<P extends ViewProperties>
+	implements Identifiable
+{
+	public abstract readonly id: string;
+	public abstract readonly name: string;
 
-	onLoad: (properties: ViewProperties) => void;
-	onUnload: () => void;
-	onUpdate: (properties: ViewProperties) => void;
+	public abstract onLoad: (properties: P, container: ShadowRoot) => void;
+	public onUnload: () => void = () => {};
+	public onUpdate: (properties: P) => void = () => {};
 }

@@ -11,4 +11,6 @@ body {
 
     --deck-tree-item-pre-name-width: 1rem;
     --deck-tree-item-pre-name-padding-right: 0.2rem;
+
+    --page-header-height: 3rem;
 }

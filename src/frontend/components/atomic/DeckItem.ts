@@ -1,7 +1,6 @@
 import { customElement, property, state } from "lit/decorators.js";
 import { CustomElement } from "./CustomElement.js";
 import { css, html } from "lit";
-import { UiEventBus } from "../../../core/services/events/UiEventBus.js";
 import { container } from "tsyringe";
 import type { Deck } from "../../../core/data/models/flashcards/Deck.js";
 import { map } from "lit/directives/map.js";
@@ -12,14 +11,15 @@ import { choose } from "lit/directives/choose.js";
 import { when } from "lit/directives/when.js";
 import { PersistedZustandService } from "../../../core/services/storage/zustand/PersistedZustandService.js";
 import { SessionZustandService } from "../../../core/services/storage/zustand/SessionZustandService.js";
+import { RouterService } from "../../../core/services/app/RouterService.js";
 
 @customElement("deck-item")
 export default class DeckItem extends CustomElement {
-	private uiEventBus = container.resolve(UiEventBus);
 	private deckService = container.resolve(PouchDeckService);
 
 	private persistedZustand = container.resolve(PersistedZustandService);
 	private sessionZustand = container.resolve(SessionZustandService);
+	private readonly router: RouterService = container.resolve(RouterService);
 
 	@property()
 	deckId: string;
@@ -83,12 +83,9 @@ export default class DeckItem extends CustomElement {
 
 	onclick = (e: MouseEvent) => {
 		if (this.deck === undefined) return;
-
+		console.log("deck clicked", this.deck);
 		this.sessionZustand.state.setLastSelectedDeckId(this.deck.id);
-
-		this.uiEventBus.emit("deck-item-clicked", {
-			deckId: this.deck.id,
-		});
+		this.router.navigateTo("deck-page", { deckId: this.deck.id });
 		e.stopPropagation();
 	};
 

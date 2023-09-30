@@ -1,12 +1,16 @@
-import { ViewDefinition } from "./ViewDefinition";
+import { PageAction } from "./PageAction";
+import { ViewDefinition, ViewProperties } from "./ViewDefinition";
 
 /**
  * Definition of a page.
  */
-export interface PageDefinition extends ViewDefinition {
+export abstract class PageDefinition<
+	P extends ViewProperties
+> extends ViewDefinition<P> {
 	/**
-	 * Head info about the page.
+	 * Title info about the page.
 	 * E.g. in a nested  deck, this could be the name of the deck.
 	 */
-	getHead(): string;
+	public abstract getTitle(): string;
+	public abstract getActions(): PageAction[];
 }
