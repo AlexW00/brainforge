@@ -8,10 +8,12 @@ import { PouchTemplateService } from "../../../core/services/storage/pouch/docs/
 import { Template } from "../../../core/data/models/flashcards/template/Template";
 import { map } from "lit/directives/map.js";
 import { produce } from "immer";
+import { RouterService } from "../../../core/services/app/RouterService";
 
-@customElement("template-page")
-export default class TemplatePage extends CustomElement {
+@customElement("template-overview-page")
+export default class TemplateOverviewPage extends CustomElement {
 	private readonly templateService = container.resolve(PouchTemplateService);
+	private readonly router = container.resolve(RouterService);
 
 	@property({ type: Object })
 	properties!: TemplatePageProperties;
@@ -59,13 +61,23 @@ export default class TemplatePage extends CustomElement {
 		// this.unregisterTemplateChangeListener?.();
 	}
 
+	onClickTemplate = (template: Template) => {
+		console.log("Clicked template", template);
+		this.router.navigateTo("template-editor", {
+			templateId: template.id,
+		});
+	};
+
 	render() {
 		return html`
 			<div id="template-grid">
 				${map(
 					this.templates,
 					(template) => html`
-						<template-thumbnail .template=${template}></template-thumbnail>
+						<template-thumbnail
+							.template=${template}
+							@click=${() => this.onClickTemplate(template)}
+						></template-thumbnail>
 					`
 				)}
 			</div>
@@ -92,16 +104,16 @@ type TemplatePageProperties = {
 	openTemplateId?: string;
 };
 
-export class TemplatePageDefinition extends PageDefinition<TemplatePageProperties> {
-	id = "templates";
+export class TemplateOverviewPageDefinition extends PageDefinition<TemplatePageProperties> {
+	id = "template-overview";
 	name = "Templates";
 
-	private templatePage: TemplatePage;
+	private templatePage: TemplateOverviewPage;
 	private readonly templateService: PouchTemplateService =
 		container.resolve(PouchTemplateService);
 
 	onLoad = (properties: TemplatePageProperties, container: HTMLElement) => {
-		this.templatePage = new TemplatePage();
+		this.templatePage = new TemplateOverviewPage();
 		this.templatePage.properties = properties;
 		container.appendChild(this.templatePage);
 	};
