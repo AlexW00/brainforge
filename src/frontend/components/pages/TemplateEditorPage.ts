@@ -19,6 +19,11 @@ export default class TemplateEditorPage extends CustomElement {
 	@state()
 	private template?: Template;
 
+	constructor() {
+		super();
+		this.classList.add("container");
+	}
+
 	private unregisterTemplateChangeListener: (() => void) | undefined;
 
 	private loadTemplateTask = new Task(this, {
@@ -69,7 +74,7 @@ export default class TemplateEditorPage extends CustomElement {
 							this.template !== undefined,
 							() =>
 								html`<template-editor
-									.template=${this.template}
+									.template=${this.template!}
 								></template-editor>`
 						),
 				],

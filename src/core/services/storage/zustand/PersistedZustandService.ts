@@ -1,5 +1,5 @@
 import { singleton } from "tsyringe";
-import { createStore } from "zustand";
+import { create, createStore } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { Observable } from "../../../types/events/Observable";
 import { persist } from "zustand/middleware";
@@ -23,7 +23,7 @@ type EventMap = {
  */
 @singleton()
 export class PersistedZustandService extends Observable<EventMap> {
-	private readonly zustand = createStore(
+	private readonly zustand = create(
 		persist(
 			immer<PersistedZustandState>((set) => ({
 				expandedDeckIds: [],

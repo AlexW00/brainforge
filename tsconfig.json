@@ -23,6 +23,7 @@
     "emitDecoratorMetadata": true,
     "strictPropertyInitialization": false,
     "allowSyntheticDefaultImports": true, 
+    "jsx": "react"
   },
   "include": ["src", "vite.config.ts", "build/vite"]
 }

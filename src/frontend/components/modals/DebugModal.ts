@@ -27,6 +27,12 @@ export default class DebugModal extends CustomElement {
 		});
 	};
 
+	addTemplateWithNodes = () => {
+		this.debug.addTemplateWithNodes().then(() => {
+			console.log("Added template with nodes");
+		});
+	};
+
 	render() {
 		return html`
 			<div>Debug</div>
@@ -34,6 +40,10 @@ export default class DebugModal extends CustomElement {
 			<button @click=${this.addRandomTopLevelDeck}>
 				Add random top level deck
 			</button>
+			<button @click=${this.addTemplateWithNodes}>
+				Add template with nodes
+			</button>
+
 			<button @click=${this.addRandomChildDeck}>Add random child deck</button>
 		`;
 	}

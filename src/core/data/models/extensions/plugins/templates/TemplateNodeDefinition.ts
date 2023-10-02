@@ -6,5 +6,5 @@ import { TemplateNodeParams } from "./TemplateNodeParams";
  */
 export interface TemplateNodeDefinition {
 	metadata: TemplateNodeMetadata;
-	render: (params: TemplateNodeParams) => Promise<HTMLElement>;
+	onLoad: (parent: HTMLElement, params: TemplateNodeParams) => void;
 }

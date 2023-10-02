@@ -26,6 +26,7 @@ export default class PageContent extends CustomElement {
 
 		if (this.page) {
 			const container = document.createElement("div");
+			container.classList.add("container");
 			this.shadowRoot!.appendChild(container);
 			this.page.onLoad(this.properties, container);
 		}

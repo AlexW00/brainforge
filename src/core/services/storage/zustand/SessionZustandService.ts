@@ -1,20 +1,48 @@
 import { singleton } from "tsyringe";
 import { RibbonItem } from "../../../types/views/RibbonItem";
-import { createStore } from "zustand";
+import { create, createStore } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { Observable } from "../../../types/events/Observable";
 import { ModalDefinition } from "../../../types/views/ModalDefinition";
 import { PageDefinition } from "../../../types/views/PageDefinition";
 import { NavigationStep } from "../../../types/views/NavigationStep";
+import { Template } from "../../../data/models/flashcards/template/Template";
+import { TemplateEdge } from "../../../data/models/flashcards/template/graph/TemplateEdge";
+import { TemplateNode } from "../../../data/models/flashcards/template/graph/TemplateNode";
+import { NodeData } from "../../../data/models/flashcards/template/graph/nodeData/NodeData";
+import {
+	NodeHandles,
+	NodeOutputHandleValueFunction,
+} from "../../../data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
+import NodeHandleType from "../../../data/models/flashcards/template/graph/nodeData/io/handles/NodeHandleType";
+import {
+	Connection,
+	EdgeChange,
+	NodeChange,
+	addEdge,
+	applyEdgeChanges,
+	applyNodeChanges,
+} from "reactflow";
+import { TemplateNodeDefinition } from "../../../data/models/extensions/plugins/templates/TemplateNodeDefinition";
 
 export interface SessionZustandActions {
 	setRibbonItems: (items: RibbonItem[]) => void;
 	setLastSelectedDeckId: (deckId: string) => void;
 	addModalDefinitions: (definitions: ModalDefinition<any>[]) => void;
 	addPageDefinitions: (definitions: PageDefinition<any>[]) => void;
+	setTemplateNodeDefinition: (definition: TemplateNodeDefinition) => void;
+	getTemplateNodeDefinition: (id: string) => TemplateNodeDefinition | undefined;
+	getTemplateNodeDefinitions: () => TemplateNodeDefinition[];
+
 	pushNavigationStep: (step: NavigationStep) => void;
 	undoNavigationStep: () => void;
 	redoNavigationStep: () => void;
+
+	setEditorTemplate: (template: Template | undefined) => void;
+	setNodeData: (nodeId: string, data: NodeData) => void;
+	setNodeDataData: (nodeId: string, data: any) => void;
+	setNodeCaching: (nodeId: string, doCache: boolean) => void;
+	setEdges: (edges: TemplateEdge[]) => void;
 }
 
 export interface SessionZustandState extends SessionZustandActions {
@@ -22,8 +50,36 @@ export interface SessionZustandState extends SessionZustandActions {
 	lastSelectedDeckId?: string;
 	modalDefinitions: ModalDefinition<any>[];
 	pageDefinitions: PageDefinition<any>[];
+	templateNodeDefinitions: Map<string, TemplateNodeDefinition>;
 	navigationUndoStack: NavigationStep[];
 	navigationRedoStack: NavigationStep[];
+	editorTemplate: Template | undefined;
+
+	getEdges: () => TemplateEdge[];
+	getNodes: () => TemplateNode[];
+	setNodeData: (nodeId: string, data: NodeData) => void;
+	setNodeHandles: (
+		nodeId: string,
+		isInput: boolean,
+		handles: NodeHandles<any>
+	) => void;
+	setNodeHandleType: (
+		nodeId: string,
+		isInput: boolean,
+		name: string,
+		type: NodeHandleType
+	) => void;
+
+	setNodes: (nodes: TemplateNode[]) => void;
+	setOutputData: (
+		nodeId: string,
+		outputId: string,
+		data: NodeOutputHandleValueFunction
+	) => void;
+
+	onNodesChange: (nodeChanges: NodeChange[]) => void;
+	onEdgesChange: (edgeChanges: EdgeChange[]) => void;
+	onConnect: (connection: Connection) => void;
 }
 
 type EventMap = {
@@ -36,13 +92,15 @@ type EventMap = {
  */
 @singleton()
 export class SessionZustandService extends Observable<EventMap> {
-	private readonly zustand = createStore(
-		immer<SessionZustandState>((set) => ({
+	public readonly zustand = create(
+		immer<SessionZustandState>((set, get) => ({
 			ribbonItems: [],
 			modalDefinitions: [],
 			pageDefinitions: [],
+			templateNodeDefinitions: new Map(),
 			navigationUndoStack: [],
 			navigationRedoStack: [],
+			editorTemplate: undefined,
 			setRibbonItems: (items: RibbonItem[]) =>
 				set((state) => {
 					state.ribbonItems = items;
@@ -92,6 +150,140 @@ export class SessionZustandService extends Observable<EventMap> {
 						state.navigationUndoStack.push(step);
 					}
 				}),
+
+			setTemplateNodeDefinition: (definition: TemplateNodeDefinition) => {
+				set((state) => {
+					state.templateNodeDefinitions.set(definition.metadata.id, definition);
+				});
+			},
+
+			getTemplateNodeDefinition: (id: string) => {
+				return get().templateNodeDefinitions.get(id);
+			},
+
+			getTemplateNodeDefinitions: () => {
+				return Array.from(get().templateNodeDefinitions.values());
+			},
+
+			setEditorTemplate: (template: Template | undefined) =>
+				set((state) => {
+					state.editorTemplate = template;
+				}),
+
+			getEdges: () => {
+				return get().editorTemplate?.graph.edges ?? [];
+			},
+			getNodes: () => {
+				return get().editorTemplate?.graph.nodes ?? [];
+			},
+
+			setNodeData: (nodeId: string, data: NodeData) =>
+				set((state) => {
+					const node = state.editorTemplate?.graph.nodes.find(
+						(node) => node.id === nodeId
+					);
+					if (!node) return;
+
+					node.data = data;
+				}),
+
+			setNodeDataData: (nodeId: string, data: any) =>
+				set((state) => {
+					const node = state.editorTemplate?.graph.nodes.find(
+						(node) => node.id === nodeId
+					);
+					if (!node) return;
+
+					node.data.data = data;
+				}),
+
+			setNodeCaching: (nodeId: string, doCache: boolean) =>
+				set((state) => {
+					const node = state.editorTemplate?.graph.nodes.find(
+						(node) => node.id === nodeId
+					);
+					if (!node) return;
+
+					node.data.doReRunOnRender = !doCache;
+				}),
+
+			setNodeHandles: (
+				nodeId: string,
+				isInput: boolean,
+				handles: NodeHandles<any>
+			) =>
+				set((state) => {
+					const node = state.editorTemplate?.graph.nodes.find(
+						(node) => node.id === nodeId
+					);
+					if (!node) return;
+
+					if (isInput) {
+						node.data.io.inputs = handles;
+					} else {
+						node.data.io.outputs = handles;
+					}
+				}),
+
+			setNodeHandleType: (
+				nodeId: string,
+				isInput: boolean,
+				name: string,
+				type: NodeHandleType
+			) =>
+				set((state) => {
+					const node = state.editorTemplate?.graph.nodes.find(
+						(node) => node.id === nodeId
+					);
+					if (!node) return;
+
+					if (isInput) {
+						node.data.io.inputs[name].type = type;
+					} else {
+						node.data.io.outputs[name].type = type;
+					}
+				}),
+
+			setEdges: (edges: TemplateEdge[]) =>
+				set((state) => {
+					state.editorTemplate?.graph.edges.splice(0);
+					state.editorTemplate?.graph.edges.push(...edges);
+				}),
+
+			setNodes: (nodes: TemplateNode[]) =>
+				set((state) => {
+					state.editorTemplate?.graph.nodes.splice(0);
+					state.editorTemplate?.graph.nodes.push(...nodes);
+				}),
+
+			setOutputData: (
+				nodeId: string,
+				outputId: string,
+				data: NodeOutputHandleValueFunction
+			) =>
+				set((state) => {
+					const node = state.editorTemplate?.graph.nodes.find(
+						(node) => node.id === nodeId
+					);
+					if (!node) return;
+
+					node.data.io.outputs[outputId].getValue = data;
+				}),
+
+			onNodesChange: (changes: NodeChange[]) => {
+				const newNodes = applyNodeChanges(changes, this.state.getNodes());
+				this.state.setNodes(newNodes);
+			},
+
+			onEdgesChange: (changes: EdgeChange[]) => {
+				const newEdges = applyEdgeChanges(changes, this.state.getEdges());
+				this.state.setEdges(newEdges);
+			},
+
+			onConnect: (connection: Connection) => {
+				const newEdge = addEdge(connection, this.state.getEdges());
+				this.state.setEdges(newEdge);
+			},
 		}))
 	);
 
