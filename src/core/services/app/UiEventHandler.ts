@@ -6,10 +6,7 @@ import {
 } from "../../static/ui/StockAppRibbonItems";
 import { RouterService } from "./RouterService";
 import { ModalService } from "./ModalService";
-import {
-	SettingsModalDefinition,
-	SettingsModalProperties,
-} from "../../../frontend/components/modals/SettingsModal";
+import { SettingsModalProperties } from "../../../frontend/components/modals/SettingsModal";
 
 /**
  * Service to handle UI events.
@@ -24,10 +21,18 @@ export class UiEventHandler {
 		this.ui.on("ribbon-item-clicked", (e) =>
 			this.onRibbonItemClicked(e.detail)
 		);
+
+		window.addEventListener("keydown", (e) => {
+			// ? button
+			if (e.key === "!") {
+				this.modal.openModal("debug", {});
+			}
+		});
 	}
 
 	private onRibbonItemClicked(data: { ribbonItemId: string }) {
 		if (data.ribbonItemId === TEMPLATES_RIBBON_ITEM.id) {
+			console.log("Navigating to templates");
 			this.router.navigateTo("templates", {});
 		} else if (data.ribbonItemId === SETTINGS_RIBBON_ITEM.id) {
 			const props: SettingsModalProperties = {

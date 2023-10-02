@@ -6,4 +6,5 @@ import { TemplateGraph } from "./graph/TemplateGraph";
  */
 export interface Template extends Identifiable {
 	graph: TemplateGraph;
+	name: string;
 }

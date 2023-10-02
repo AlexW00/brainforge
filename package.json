@@ -27,10 +27,12 @@
 		"reflect-metadata": "^0.1.13",
 		"tsyringe": "^4.8.0",
 		"typedi": "^0.10.0",
+		"uuid": "^9.0.1",
 		"zustand": "^4.4.1"
 	},
 	"devDependencies": {
 		"@faker-js/faker": "^8.1.0",
+		"@types/uuid": "^9.0.4",
 		"typescript": "^5.1.3",
 		"vite": "^4.4.5"
 	}

@@ -4,6 +4,8 @@ import Panel from "./Panel";
 import { Deck } from "../../../core/data/models/flashcards/Deck";
 import { PouchDeckService } from "../../../core/services/storage/pouch/docs/multi/PouchDeckService";
 import { container } from "tsyringe";
+import { produce } from "immer";
+import { Task } from "@lit-labs/task";
 
 @customElement("deck-tree-panel")
 export default class DeckTreePanel extends Panel {
@@ -18,15 +20,42 @@ export default class DeckTreePanel extends Panel {
 	@state()
 	private rootDecks: Deck[] = [];
 
-	firstUpdated() {
-		super.connectedCallback();
+	private unregisterDeckChangeListener: (() => void) | undefined;
 
-		this.deckService.getAll().then((decks) => {
-			// console.log(decks);
-			this.rootDecks = decks.filter((deck) =>
+	private onDeckChanged = async (id: string, newValue?: Deck) => {
+		if (newValue === undefined) {
+			this.rootDecks = this.rootDecks.filter((d) => d.id !== id);
+			return;
+		}
+		this.loadRootDecksTask.run();
+	};
+
+	private sortDecksByName = (decks: Deck[]) => {
+		return decks.sort((a, b) => a.name.localeCompare(b.name));
+	};
+
+	private loadRootDecksTask = new Task(this, {
+		task: async () => {
+			const decks = await this.deckService.getAll();
+			const rootDecks = decks.filter((deck) =>
 				decks.every((d) => !d.childDecksIds.includes(deck.id))
 			);
-		});
+			this.rootDecks = produce(rootDecks, this.sortDecksByName);
+		},
+		autoRun: false,
+	});
+
+	connectedCallback() {
+		super.connectedCallback();
+		this.loadRootDecksTask.run();
+
+		this.unregisterDeckChangeListener = this.deckService.addChangeListener(
+			this.onDeckChanged
+		);
+	}
+
+	disconnectedCallback() {
+		this.unregisterDeckChangeListener?.();
 	}
 
 	render() {

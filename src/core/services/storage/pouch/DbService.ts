@@ -1,4 +1,5 @@
 import { singleton } from "tsyringe";
+import { v4 as uuidv4 } from "uuid";
 
 @singleton()
 export class DbService {
@@ -19,5 +20,9 @@ export class DbService {
 			});
 			return Promise.all(deletePromises);
 		});
+	}
+
+	generateId(): string {
+		return uuidv4();
 	}
 }

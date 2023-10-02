@@ -10,19 +10,22 @@ import _6 from "./roots/App";
 import _7 from "./panels/Panel";
 import _8 from "./panels/PagePanel";
 import _9 from "./panels/DeckTreePanel";
-import _10 from "./pages/DeckPage";
-import _11 from "./modals/SettingsModal";
-import _12 from "./modals/BaseModal";
-import _13 from "./atomic/TextButton";
-import _14 from "./atomic/Spacer";
-import _15 from "./atomic/RibbonItem";
-import _16 from "./atomic/ModalContent";
-import _17 from "./atomic/IconButton";
-import _18 from "./atomic/DimmedBackground";
-import _19 from "./atomic/DeckItem";
-import _20 from "./atomic/Card";
+import _10 from "./pages/TemplatePage";
+import _11 from "./pages/DeckPage";
+import _12 from "./modals/SettingsModal";
+import _13 from "./modals/DebugModal";
+import _14 from "./modals/BaseModal";
+import _15 from "./atomic/TextButton";
+import _16 from "./atomic/TemplateThumbnail";
+import _17 from "./atomic/Spacer";
+import _18 from "./atomic/RibbonItem";
+import _19 from "./atomic/ModalContent";
+import _20 from "./atomic/IconButton";
+import _21 from "./atomic/DimmedBackground";
+import _22 from "./atomic/DeckItem";
+import _23 from "./atomic/Card";
 
-export { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20 };
+export { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23 };
 
 declare global {
     interface HTMLElementTagNameMap {
@@ -36,16 +39,19 @@ declare global {
         'panel-element': _7;
         'page-panel': _8;
         'deck-tree-panel': _9;
-        'deck-page': _10;
-        'settings-modal': _11;
-        'base-modal': _12;
-        'text-button': _13;
-        'spacer-component': _14;
-        'ribbon-item': _15;
-        'modal-content': _16;
-        'icon-button': _17;
-        'dimmed-background': _18;
-        'deck-item': _19;
-        'card-element': _20;
+        'template-page': _10;
+        'deck-page': _11;
+        'settings-modal': _12;
+        'debug-modal': _13;
+        'base-modal': _14;
+        'text-button': _15;
+        'template-thumbnail': _16;
+        'spacer-component': _17;
+        'ribbon-item': _18;
+        'modal-content': _19;
+        'icon-button': _20;
+        'dimmed-background': _21;
+        'deck-item': _22;
+        'card-element': _23;
     }
 }

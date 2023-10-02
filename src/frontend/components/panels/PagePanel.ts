@@ -36,6 +36,7 @@ export default class PagePanel extends Panel {
 			return;
 		}
 		this.page = this.elementRegistrar.getPageDefinitionById(pageId);
+		console.log("Setting page", pageId, this.page);
 		this.page?.on("infoChanged", this.onInfoChanged);
 	}
 

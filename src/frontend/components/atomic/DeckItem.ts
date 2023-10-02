@@ -81,12 +81,31 @@ export default class DeckItem extends CustomElement {
 		});
 	};
 
+	private unregisterDeckChangeListener: (() => void) | undefined;
+
+	private onDeckChanged = async (newValue?: Deck) => {
+		if (newValue === undefined) {
+			this.remove();
+			return;
+		}
+		this.deck = newValue;
+		this.requestUpdate();
+	};
+
 	firstUpdated() {
 		super.connectedCallback();
 		this.initDeckExpansion();
 		this.initLastSelectedDeck();
 
 		this.loadDecks();
+		this.unregisterDeckChangeListener = this.deckService.addChangeListener(
+			(id, deck) => this.onDeckChanged(deck),
+			[this.deckId]
+		);
+	}
+
+	disconnectedCallback() {
+		this.unregisterDeckChangeListener?.();
 	}
 
 	onclick = (e: MouseEvent) => {

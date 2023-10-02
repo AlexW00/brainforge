@@ -137,8 +137,8 @@ export abstract class PouchMultiDocService<T extends Identifiable> {
 	 * @returns A function to remove the listener.
 	 */
 	public addChangeListener(
-		ids: string[],
-		listener: (doc?: T) => void
+		listener: (id: string, newValue?: T) => void,
+		ids?: string[]
 	): () => void {
 		return this.dbService
 			.getDb()
@@ -146,11 +146,13 @@ export abstract class PouchMultiDocService<T extends Identifiable> {
 				since: "now",
 				live: true,
 				include_docs: true,
-				doc_ids: ids,
+				doc_ids: ids?.map((id) => this.getKey(id)),
 			})
 			.on("change", (change) => {
-				const doc = change.doc as T | undefined;
-				listener(doc);
+				console.log(change);
+				const doc = change.doc as T | undefined,
+					id = doc?.id ?? change.id;
+				listener(id, doc);
 			}).cancel;
 	}
 }
