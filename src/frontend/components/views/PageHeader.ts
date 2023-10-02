@@ -40,21 +40,21 @@ export default class PageHeader extends CustomElement {
 	render() {
 		return html`
 			<div id="nav-buttons">
-				<ph-arrow-left
-					@click=${() => this.onClickNavButton(true)}
-				></ph-arrow-left>
-				<ph-arrow-right
-					@click=${() => this.onClickNavButton(false)}
-				></ph-arrow-right>
+				<icon-button @click=${() => this.onClickNavButton(true)}>
+					<ph-arrow-left></ph-arrow-left>
+				</icon-button>
+				<icon-button @click=${() => this.onClickNavButton(false)}>
+					<ph-arrow-right></ph-arrow-right>
+				</icon-button>
 			</div>
-			<div id="name">${this.name ?? "No active page"}</div>
+			<div id="name">[${this.name ?? "No active page"}]</div>
 			<div id="info">${this.info ?? "Empty"}</div>
 			<div id="actions">
 				${this.actions?.map(
 					(action) => html`
-						<button @click=${() => this.onClickAction(action)}>
+						<text-button @click=${() => this.onClickAction(action)}>
 							${action.title}
-						</button>
+						</text-button>
 					`
 				)}
 			</div>
@@ -78,15 +78,22 @@ export default class PageHeader extends CustomElement {
 		#name {
 			margin-left: 16px;
 			font-weight: bold;
+			font-size: var(--font-size-large);
 		}
 
 		#info {
 			flex: 1;
 			text-align: center;
-			opacity: 0.7;
+			opacity: 0.6;
 		}
 
 		#actions {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		#nav-buttons {
 			display: flex;
 			align-items: center;
 			gap: 8px;

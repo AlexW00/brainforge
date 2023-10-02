@@ -44,7 +44,10 @@ export default class DeckItem extends CustomElement {
 		this.setStatus(ViewStatus.PENDING);
 		this.loadDeckTask
 			.run()
-			.then(() => this.setStatus(ViewStatus.COMPLETE))
+			.then(() => {
+				this.setIsLastSelectedDeck();
+				this.setStatus(ViewStatus.COMPLETE);
+			})
 			.catch(() => this.setStatus(ViewStatus.ERROR));
 	};
 
