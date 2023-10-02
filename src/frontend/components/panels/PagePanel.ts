@@ -23,16 +23,20 @@ export default class PagePanel extends Panel {
 	@state()
 	info?: string;
 
+	private onInfoChanged = (e: CustomEvent<string>) => {
+		this.info = e.detail;
+	};
+
 	setPageDefinition(pageId?: string) {
-		this.page?.onUnload();
 		if (!pageId) {
+			this.page?.off("infoChanged", this.onInfoChanged);
+			this.info = undefined;
 			this.page = undefined;
+			this.properties = undefined;
 			return;
 		}
 		this.page = this.elementRegistrar.getPageDefinitionById(pageId);
-		this.page?.on("infoChanged", (e) => {
-			this.info = e.detail;
-		});
+		this.page?.on("infoChanged", this.onInfoChanged);
 	}
 
 	firstUpdated() {

@@ -17,6 +17,8 @@ export abstract class PageDefinition<
 	 */
 	public abstract getActions(): PageAction[];
 
+	public onUpdate: (properties: P) => void = () => {};
+
 	protected setInfo(title: string) {
 		this.emit("infoChanged", title);
 	}

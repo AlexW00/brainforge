@@ -18,6 +18,7 @@ export default class PageContent extends CustomElement {
 
 	private onPageDefinitionChanged(oldPage?: PageDefinition<any>) {
 		if (oldPage) {
+			oldPage.onUnload();
 			if (!this.shadowRoot) return;
 			const container = this.shadowRoot.querySelectorAll("div");
 			container.forEach((c) => c.remove());
@@ -46,6 +47,4 @@ export default class PageContent extends CustomElement {
 		}
 		super.updated(changedProperties);
 	}
-
-	static styles = css``;
 }

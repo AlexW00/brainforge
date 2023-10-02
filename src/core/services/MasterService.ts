@@ -9,6 +9,7 @@ import { stockAppRibbonItems } from "../static/ui/StockAppRibbonItems";
 import { ElementRegistrarService } from "./app/ElementRegistrarService";
 import { STOCK_PAGES } from "../../frontend/components/pages/StockPages";
 import { STOCK_MODALS } from "../../frontend/components/modals/StockModals";
+import { UiEventHandler } from "./app/UiEventHandler";
 
 @singleton()
 export class MasterService implements Initializeable {
@@ -21,7 +22,8 @@ export class MasterService implements Initializeable {
 		@inject(ReviewService) public reviewService: ReviewService,
 		@inject(LoggerService) public loggerService: LoggerService,
 		@inject(ElementRegistrarService)
-		public elementRegistrarService: ElementRegistrarService
+		public elementRegistrarService: ElementRegistrarService,
+		@inject(UiEventHandler) private _uiEventHandler: UiEventHandler
 	) {}
 
 	async init() {

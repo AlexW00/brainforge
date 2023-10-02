@@ -18,5 +18,4 @@ export abstract class ViewDefinition<
 
 	public abstract onLoad: (properties: P, container: HTMLElement) => void;
 	public onUnload: () => void = () => {};
-	public onUpdate: (properties: P) => void = () => {};
 }

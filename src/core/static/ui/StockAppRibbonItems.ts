@@ -1,6 +1,6 @@
 import { RibbonItem } from "../../types/views/RibbonItem";
 
-const templatesRibbonItem: RibbonItem = {
+export const TEMPLATES_RIBBON_ITEM: RibbonItem = {
 	id: "templates",
 	title: "Templates",
 };
@@ -10,4 +10,4 @@ export const SETTINGS_RIBBON_ITEM: RibbonItem = {
 	title: "Settings",
 };
 
-export const stockAppRibbonItems: RibbonItem[] = [templatesRibbonItem];
+export const stockAppRibbonItems: RibbonItem[] = [TEMPLATES_RIBBON_ITEM];
