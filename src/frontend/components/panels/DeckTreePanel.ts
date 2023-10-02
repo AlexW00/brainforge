@@ -30,7 +30,7 @@ export default class DeckTreePanel extends Panel {
 	}
 
 	render() {
-		return html`<div id="title">Decks</div>
+		return html`<div id="title" class="no-select">Decks</div>
 			<div id="decks">
 				${this.rootDecks.map((deck) => {
 					return html`<deck-item deckId=${deck.id}></deck-item>`;

@@ -23,4 +23,7 @@ export const globalCss = css`
 	.error {
 		background: var(--bg-color-error);
 	}
+	.no-select {
+		user-select: none;
+	}
 `;

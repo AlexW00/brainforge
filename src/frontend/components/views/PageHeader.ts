@@ -39,17 +39,22 @@ export default class PageHeader extends CustomElement {
 
 	render() {
 		return html`
-			<div id="nav-buttons">
-				<icon-button @click=${() => this.onClickNavButton(true)}>
-					<ph-arrow-left></ph-arrow-left>
-				</icon-button>
-				<icon-button @click=${() => this.onClickNavButton(false)}>
-					<ph-arrow-right></ph-arrow-right>
-				</icon-button>
+			<div class="left">
+				<div id="nav-buttons">
+					<icon-button @click=${() => this.onClickNavButton(true)}>
+						<ph-arrow-left></ph-arrow-left>
+					</icon-button>
+					<icon-button @click=${() => this.onClickNavButton(false)}>
+						<ph-arrow-right></ph-arrow-right>
+					</icon-button>
+				</div>
+				<div id="name" class="no-select">
+					[${this.name ?? "No active page"}]
+				</div>
 			</div>
-			<div id="name">[${this.name ?? "No active page"}]</div>
-			<div id="info">${this.info ?? "Empty"}</div>
-			<div id="actions">
+
+			<div id="info" class="center no-select">${this.info ?? "Empty"}</div>
+			<div id="actions" class="right">
 				${this.actions?.map(
 					(action) => html`
 						<text-button @click=${() => this.onClickAction(action)}>
@@ -61,7 +66,6 @@ export default class PageHeader extends CustomElement {
 		`;
 	}
 
-	// info is center, nav buttons and name are left, actions are right
 	static styles = css`
 		:host {
 			display: flex;
@@ -70,32 +74,37 @@ export default class PageHeader extends CustomElement {
 			padding: 16px;
 		}
 
-		#nav-buttons {
+		.left,
+		.right,
+		#nav-buttons,
+		#actions {
 			display: flex;
 			align-items: center;
+		}
+
+		.left {
+			justify-content: flex-start;
+			flex: 1;
+		}
+
+		.right {
+			justify-content: flex-end;
+			flex: 1;
+		}
+
+		.center {
+			flex: 2;
+			text-align: center;
+			opacity: 0.6;
 		}
 
 		#name {
 			margin-left: 16px;
 			font-weight: bold;
-			font-size: var(--font-size-large);
 		}
 
-		#info {
-			flex: 1;
-			text-align: center;
-			opacity: 0.6;
-		}
-
-		#actions {
-			display: flex;
-			align-items: center;
-			gap: 8px;
-		}
-
+		#actions,
 		#nav-buttons {
-			display: flex;
-			align-items: center;
 			gap: 8px;
 		}
 	`;
