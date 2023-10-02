@@ -24,11 +24,15 @@ export default class PagePanel extends Panel {
 	info?: string;
 
 	setPageDefinition(pageId?: string) {
+		this.page?.onUnload();
 		if (!pageId) {
 			this.page = undefined;
 			return;
 		}
 		this.page = this.elementRegistrar.getPageDefinitionById(pageId);
+		this.page?.on("infoChanged", (e) => {
+			this.info = e.detail;
+		});
 	}
 
 	firstUpdated() {

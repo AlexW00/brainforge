@@ -50,15 +50,13 @@ export class DeckPageDefinition extends PageDefinition<DeckPageProperties> {
 
 	private deckPage: DeckPage;
 
-	getInfo() {
-		return this.deckPage.properties.deckId;
-	}
-
 	onLoad = (properties: DeckPageProperties, container: HTMLElement) => {
 		this.deckPage = new DeckPage();
 		this.deckPage.properties = properties;
 		container.appendChild(this.deckPage);
+		this.setInfo("Deck XY");
 	};
+
 	onUnload = () => {};
 	onUpdate = (properties: DeckPageProperties) => {
 		this.deckPage.properties = properties;

@@ -18,9 +18,7 @@ export default class PageContent extends CustomElement {
 
 	private onPageDefinitionChanged(oldPage?: PageDefinition<any>) {
 		if (oldPage) {
-			oldPage.onUnload();
 			if (!this.shadowRoot) return;
-
 			const container = this.shadowRoot.querySelectorAll("div");
 			container.forEach((c) => c.remove());
 		}
@@ -32,21 +30,8 @@ export default class PageContent extends CustomElement {
 		}
 	}
 
-	private notifyInfoChanged() {
-		if (this.page) {
-			this.dispatchEvent(
-				new CustomEvent("onInfoChanged", {
-					detail: this.page.getInfo(),
-				})
-			);
-		}
-	}
-
 	private onPropertiesChanged() {
-		if (this.page) {
-			this.page.onUpdate(this.properties);
-			this.notifyInfoChanged();
-		}
+		if (this.page) this.page.onUpdate(this.properties);
 	}
 
 	updated(

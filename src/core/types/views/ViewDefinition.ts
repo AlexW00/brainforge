@@ -1,3 +1,4 @@
+import { Observable } from "../events/Observable";
 import { Identifiable } from "../general/Identifiable";
 
 export type ViewProperties = any;
@@ -5,7 +6,11 @@ export type ViewProperties = any;
 /**
  * A view is a custom UI element.
  */
-export abstract class ViewDefinition<P extends ViewProperties>
+export abstract class ViewDefinition<
+		P extends ViewProperties,
+		E extends Record<string, any>
+	>
+	extends Observable<E>
 	implements Identifiable
 {
 	public abstract readonly id: string;
