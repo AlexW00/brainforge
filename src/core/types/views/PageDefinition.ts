@@ -22,4 +22,9 @@ export abstract class PageDefinition<
 	protected setInfo(title: string) {
 		this.emit("infoChanged", title);
 	}
+
+	public onUnload = () => {
+		console.log("On unload", this.id);
+		this.setInfo("");
+	};
 }

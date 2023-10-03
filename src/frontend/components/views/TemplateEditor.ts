@@ -1,7 +1,7 @@
 import { customElement, property } from "lit/decorators.js";
 import { CustomElement } from "../atomic/CustomElement";
 import type { Template } from "../../../core/data/models/flashcards/template/Template";
-import { html, unsafeCSS } from "lit";
+import { css, html, unsafeCSS } from "lit";
 import ReactDOM from "react-dom/client";
 import { Editor } from "../../react/components/organisms/Editor";
 import React from "react";
@@ -33,5 +33,63 @@ export default class TemplateEditor extends CustomElement {
 		return html`<div id="react-container" class="container"></div>`; // use your React component
 	}
 
-	static styles = [unsafeCSS(rfcss)];
+	static styles = [
+		unsafeCSS(rfcss),
+		css`
+			.context-menu {
+			}
+			.title {
+				height: 2rem;
+				line-height: 2rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0.3rem;
+			}
+
+			.drawer {
+				display: flex;
+				flex-direction: row;
+			}
+
+			.categories,
+			.nodes {
+				background-color: var(--bg-color);
+				border: var(--border-width-small) solid var(--border-color);
+				border-radius: var(--border-radius-small);
+			}
+
+			.category {
+				display: flex;
+				flex-grow: 1;
+				align-items: center;
+			}
+
+			.category.expanded {
+				border-right: none;
+			}
+
+			.item {
+				height: 1.3rem;
+				line-height: 1.3rem;
+				text-align: left;
+				align-items: center;
+			}
+
+			.category-name {
+				width: 7rem;
+			}
+			.nodes {
+				display: flex;
+				flex-direction: column;
+				margin-top: 2.3rem;
+			}
+			.node-name {
+				cursor: pointer;
+			}
+			.nodes.hidden {
+				display: none;
+			}
+		`,
+	];
 }

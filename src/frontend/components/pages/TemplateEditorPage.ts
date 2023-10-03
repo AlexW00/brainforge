@@ -32,6 +32,12 @@ export default class TemplateEditorPage extends CustomElement {
 			this.template = await this.templateService.get(
 				this.properties.templateId
 			);
+			// emit event
+			this.dispatchEvent(
+				new CustomEvent("template-loaded", {
+					detail: this.template?.name,
+				})
+			);
 		},
 		autoRun: false,
 	});
@@ -112,6 +118,16 @@ export class TemplateEditorPageDefinition extends PageDefinition<TemplateEditorP
 		this.page = new TemplateEditorPage();
 		this.page.properties = properties;
 		container.appendChild(this.page);
+
+		this.page.addEventListener(
+			"template-loaded",
+			this.onTemplateLoaded as EventListener
+		);
+	};
+
+	private onTemplateLoaded = (e: CustomEvent) => {
+		const info = e.detail;
+		this.setInfo(info);
 	};
 
 	onUnload = () => {};

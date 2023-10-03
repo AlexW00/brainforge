@@ -58,6 +58,7 @@ export interface SessionZustandState extends SessionZustandActions {
 	templateNodeDefinitions: TemplateNodeDefintionMap;
 	navigationUndoStack: NavigationStep[];
 	navigationRedoStack: NavigationStep[];
+
 	editorTemplate: Template | undefined;
 
 	getEdges: () => TemplateEdge[];
@@ -286,8 +287,11 @@ export class SessionZustandService extends Observable<EventMap> {
 			},
 
 			onConnect: (connection: Connection) => {
-				const newEdge = addEdge(connection, this.state.getEdges());
-				this.state.setEdges(newEdge);
+				const newEdges = addEdge(
+					{ ...connection, type: "smoothstep", animated: true },
+					this.state.getEdges()
+				);
+				this.state.setEdges(newEdges);
 			},
 		}))
 	);
