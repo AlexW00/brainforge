@@ -34,5 +34,5 @@ export default class TemplateEditor extends CustomElement {
 		return html`<div id="react-container" class="container"></div>`; // use your React component
 	}
 
-	static styles = unsafeCSS(rfcss);
+	static styles = [unsafeCSS(rfcss)];
 }

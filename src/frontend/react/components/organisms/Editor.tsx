@@ -21,13 +21,20 @@ export const Editor = () => {
 
 
   const handleConnect = (connection: Connection) => {
-    if (!connection.source || !connection.target) return;
-    if (!connection.sourceHandle || !connection.targetHandle) return;
+    if (!connection.source || !connection.target) {
+      console.error("Cannot connect nodes, missing source or target");
+      return;
+    }
+    if (!connection.sourceHandle || !connection.targetHandle) {
+        console.error("Cannot connect nodes, missing sourceHandle or targetHandle");
+      return;}
 
     const sourceNode = selectNode(connection.source, nodes);
     const targetNode = selectNode(connection.target, nodes);
 
-    if (!sourceNode || !targetNode) return;
+    if (!sourceNode || !targetNode) {
+      console.error("Cannot connect nodes, missing source or target");
+      return;}
 
 
     const sourceHandleType =
@@ -38,27 +45,22 @@ export const Editor = () => {
       sourceNode.id !== targetNode.id &&
       areCompatible(sourceHandleType, targetHandleType)
     ) {
+      console.log("Connecting", sourceNode, targetNode);
       onConnect(connection);
     } else {
-      console.log("Cannot connect", sourceHandleType, targetHandleType);
+      console.log("Cannot connect", sourceHandleType, targetHandleType, "are not compatible");
     }
   };
 
   console.log("Rendering Editor");
 
-  const initialNodes = [
-    { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
-    { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
-  ];
-  const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
 
   console.log("Rendering Editor", nodes, edges);
   return (
-    <div style={{ width: '100vw', height: '100vh' }}>
       <ReactFlow
         nodeTypes={nodeTypes as any}
-        nodes={nodes ?? initialNodes}
-        edges={edges ?? initialEdges}
+        nodes={nodes}
+        edges={edges}
         onNodesChange={(nodeChanges) => onNodesChange(nodeChanges)}
         onEdgesChange={(edgeChanges) => onEdgesChange(edgeChanges)}
         onConnect={handleConnect}
@@ -69,7 +71,6 @@ export const Editor = () => {
         <Controls />
         <Background />
       </ReactFlow>
-    </div>
 
   );
 };

@@ -1,13 +1,9 @@
-import React, { FunctionComponent, PropsWithChildren, useRef } from "react";
+import React, { FunctionComponent, PropsWithChildren, useMemo, useRef } from "react";
 import { NodeIdContext } from "../../contexts/NodeIdContext";
 import { DragbarComponent } from "./Dragbar";
 import { HandlesComponent } from "./Handles";
 import { TemplateNode } from "../../../../core/data/models/flashcards/template/graph/TemplateNode";
 import { useTemplateNodeService } from "../../hooks/context/useTemplateNodeService";
-import { useSetNodeHandles } from "../../hooks/state/setters/useSetNodeHandles";
-import { useSetOutput } from "../../hooks/state/setters/useSetOutput";
-import { useSetDataData } from "../../hooks/state/setters/useSetDataData";
-import { useSetNodeCaching } from "../../hooks/state/setters/useSetNodeCaching";
 import { TemplateNodeParams } from "../../../../core/data/models/extensions/plugins/templates/TemplateNodeParams";
 
 export const NodeComponent: FunctionComponent<TemplateNode> = (
@@ -21,14 +17,15 @@ export const NodeComponent: FunctionComponent<TemplateNode> = (
   const [isCollapsed, setIsCollapsed] = React.useState(false);
   const contentRef = useRef(null);
 
-  const setInputHandles = useSetNodeHandles(true),
-    setOutputHandles = useSetNodeHandles(false);
+  // re write contentProps here with the correct hook
 
-  const setOutput = useSetOutput(),
-    setDataData = useSetDataData(),
-    setDoCache = useSetNodeCaching();
-  
-  // first update
+  const contentProps: TemplateNodeParams = useMemo(() => ({
+    data: props.data.data,
+    doCache: props.data.doReRunOnRender,
+    inputHandles: props.data.io.inputs,
+    outputHandles: props.data.io.outputs,
+  }), [props.data.data, props.data.doReRunOnRender, props.data.io.inputs, props.data.io.outputs]);
+
   React.useEffect(() => {
     if (!contentRef.current) return;
     const content = contentRef.current;
@@ -37,22 +34,9 @@ export const NodeComponent: FunctionComponent<TemplateNode> = (
       console.error("Definition not found!");
       return;
     }
-
-    const contentProps: TemplateNodeParams = {
-      data: props.data.data,
-      doCache: props.data.doReRunOnRender,
-      inputHandles: props.data.io.inputs,
-      outputHandles: props.data.io.outputs,
-
-      setInputHandles,
-      setOutputHandles,
-      setOutputHandleValue: setOutput,
-      setData: setDataData,
-      setDoCache,
-    }
-
     definition?.onLoad(content, contentProps);
   }, []);
+
 
   if (!definition) return <>Definition not found!</>;
 
@@ -67,7 +51,7 @@ export const NodeComponent: FunctionComponent<TemplateNode> = (
           isInput={true}
           handles={props.data.io.inputs}
         />
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex", flexDirection: "column"}}>
           <DragbarComponent
             name={definition?.metadata.name}
             isCollapsed={isCollapsed}

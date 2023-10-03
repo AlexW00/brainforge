@@ -3,7 +3,6 @@ import { NodeHandles } from "../../../../core/data/models/flashcards/template/gr
 import { Handle, Position, useUpdateNodeInternals } from "reactflow";
 import { useNodeId } from "../../hooks/context/useNodeId";
 
-
 export const HandlesComponent = React.memo(
   ({
     isInput,

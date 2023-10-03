@@ -2,7 +2,6 @@ import {
 	NodeHandles,
 	NodeInputHandle,
 	NodeOutputHandle,
-	NodeOutputHandleValueFunction,
 } from "../../../flashcards/template/graph/nodeData/io/handles/NodeHandle";
 
 /**
@@ -15,15 +14,4 @@ export type TemplateNodeParams = {
 	doCache: boolean;
 	inputHandles: NodeHandles<NodeInputHandle>;
 	outputHandles: NodeHandles<NodeOutputHandle>;
-
-	setData: (data: any) => void;
-	setDoCache: (doCache: boolean) => void;
-
-	setInputHandles: (handles: NodeHandles<NodeInputHandle>) => void;
-	setOutputHandles: (handles: NodeHandles<NodeOutputHandle>) => void;
-
-	setOutputHandleValue: (data: {
-		name: string;
-		value: NodeOutputHandleValueFunction;
-	}) => void;
 };

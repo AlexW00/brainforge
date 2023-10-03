@@ -45,12 +45,16 @@ export interface SessionZustandActions {
 	setEdges: (edges: TemplateEdge[]) => void;
 }
 
+type TemplateNodeDefintionMap = {
+	[id: string]: TemplateNodeDefinition;
+};
+
 export interface SessionZustandState extends SessionZustandActions {
 	ribbonItems: RibbonItem[];
 	lastSelectedDeckId?: string;
 	modalDefinitions: ModalDefinition<any>[];
 	pageDefinitions: PageDefinition<any>[];
-	templateNodeDefinitions: Map<string, TemplateNodeDefinition>;
+	templateNodeDefinitions: TemplateNodeDefintionMap;
 	navigationUndoStack: NavigationStep[];
 	navigationRedoStack: NavigationStep[];
 	editorTemplate: Template | undefined;
@@ -97,7 +101,7 @@ export class SessionZustandService extends Observable<EventMap> {
 			ribbonItems: [],
 			modalDefinitions: [],
 			pageDefinitions: [],
-			templateNodeDefinitions: new Map(),
+			templateNodeDefinitions: {},
 			navigationUndoStack: [],
 			navigationRedoStack: [],
 			editorTemplate: undefined,
@@ -153,16 +157,16 @@ export class SessionZustandService extends Observable<EventMap> {
 
 			setTemplateNodeDefinition: (definition: TemplateNodeDefinition) => {
 				set((state) => {
-					state.templateNodeDefinitions.set(definition.metadata.id, definition);
+					state.templateNodeDefinitions[definition.metadata.id] = definition;
 				});
 			},
 
 			getTemplateNodeDefinition: (id: string) => {
-				return get().templateNodeDefinitions.get(id);
+				return get().templateNodeDefinitions[id];
 			},
 
 			getTemplateNodeDefinitions: () => {
-				return Array.from(get().templateNodeDefinitions.values());
+				return Object.values(get().templateNodeDefinitions);
 			},
 
 			setEditorTemplate: (template: Template | undefined) =>

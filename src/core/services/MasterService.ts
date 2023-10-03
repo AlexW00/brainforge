@@ -10,6 +10,8 @@ import { ElementRegistrarService } from "./app/ElementRegistrarService";
 import { STOCK_PAGES } from "../../frontend/components/pages/StockPages";
 import { STOCK_MODALS } from "../../frontend/components/modals/StockModals";
 import { UiEventHandler } from "./app/UiEventHandler";
+import { TemplateNodeService } from "./app/TemplateNodeService";
+import { STOCK_NODES } from "../../frontend/components/nodes/StockNodes";
 
 @singleton()
 export class MasterService implements Initializeable {
@@ -23,7 +25,9 @@ export class MasterService implements Initializeable {
 		@inject(LoggerService) public loggerService: LoggerService,
 		@inject(ElementRegistrarService)
 		public elementRegistrarService: ElementRegistrarService,
-		@inject(UiEventHandler) private _uiEventHandler: UiEventHandler
+		@inject(UiEventHandler) private _uiEventHandler: UiEventHandler,
+		@inject(TemplateNodeService)
+		private templateNodeService: TemplateNodeService
 	) {}
 
 	async init() {
@@ -31,6 +35,7 @@ export class MasterService implements Initializeable {
 		this.loadRibbonItems();
 		this.loadPages();
 		this.loadModals();
+		this.loadTemplateNodes();
 		this.isInitialized = true;
 	}
 
@@ -50,6 +55,12 @@ export class MasterService implements Initializeable {
 	private loadModals() {
 		STOCK_MODALS.forEach((modal) =>
 			this.elementRegistrarService.registerModalDefinition(modal)
+		);
+	}
+
+	private loadTemplateNodes() {
+		STOCK_NODES.forEach((node) =>
+			this.templateNodeService.registerTemplateNode(node)
 		);
 	}
 }

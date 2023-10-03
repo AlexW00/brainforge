@@ -57,7 +57,7 @@ export class PouchDebugService {
 			id: faker.string.uuid(),
 			type: "custom",
 			data: {
-				definitionId: "1",
+				definitionId: "test-node",
 				io: {
 					inputs: {},
 					outputs: {},
