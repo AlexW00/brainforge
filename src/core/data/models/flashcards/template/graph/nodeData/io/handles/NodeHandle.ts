@@ -19,8 +19,13 @@ export type NodeOutputHandleValueFunction = (
 	inputValues: { name: string; value: any }[]
 ) => Promise<any>;
 
+export type NodeOutputHandleValue = {
+	get: NodeOutputHandleValueFunction;
+	timestamp: Date;
+};
+
 export interface NodeOutputHandle extends NodeHandle {
-	getValue: NodeOutputHandleValueFunction;
+	value: NodeOutputHandleValue;
 }
 
 /**

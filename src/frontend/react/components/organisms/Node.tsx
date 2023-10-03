@@ -20,6 +20,7 @@ export const NodeComponent: FunctionComponent<TemplateNode> = (
   // re write contentProps here with the correct hook
 
   const contentProps: TemplateNodeParams = useMemo(() => ({
+    id: props.id,
     data: props.data.data,
     doCache: props.data.doReRunOnRender,
     inputHandles: props.data.io.inputs,

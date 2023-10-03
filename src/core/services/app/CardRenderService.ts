@@ -87,7 +87,7 @@ export class CardRenderService {
 		if (!outputHandle) {
 			throw new Error(`Output handle ${name} of node ${nodeId} not found`);
 		}
-		const value = await outputHandle.getValue(inputValues);
+		const value = await outputHandle.value(inputValues);
 
 		// Cache the value
 		if (!newRenderCache[nodeId]) newRenderCache[nodeId] = [];

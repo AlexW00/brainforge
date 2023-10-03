@@ -1,13 +1,13 @@
 import { customElement, property } from "lit/decorators.js";
 import { CustomElement } from "../atomic/CustomElement";
 import type { Template } from "../../../core/data/models/flashcards/template/Template";
-import { css, html, unsafeCSS } from "lit";
+import { html, unsafeCSS } from "lit";
 import ReactDOM from "react-dom/client";
 import { Editor } from "../../react/components/organisms/Editor";
 import React from "react";
-import { SessionZustandService } from "../../../core/services/storage/zustand/SessionZustandService";
 import { container } from "tsyringe";
 import rfcss from "reactflow/dist/style.css";
+import { TemplateEditorService } from "../../../core/services/app/EditorNodeService";
 
 @customElement("template-editor")
 export default class TemplateEditor extends CustomElement {
@@ -19,11 +19,10 @@ export default class TemplateEditor extends CustomElement {
 	@property({ type: Object })
 	template!: Template;
 
-	private sessionZustand = container.resolve(SessionZustandService);
+	private editorService = container.resolve(TemplateEditorService);
 
 	firstUpdated() {
-		this.sessionZustand.state.setEditorTemplate(this.template);
-		console.log("firstUpdated", this.sessionZustand.state.editorTemplate);
+		this.editorService.loadTemplate(this.template);
 		const container = this.shadowRoot?.getElementById("react-container");
 		if (!container) return;
 		const root = ReactDOM.createRoot(container);

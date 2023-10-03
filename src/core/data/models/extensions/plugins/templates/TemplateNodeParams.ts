@@ -7,11 +7,11 @@ import {
 /**
  * Template node params.
  * During rendering, the params are passed to the render function of the node definition.
- * @TODO: Define the params.
  */
 export type TemplateNodeParams = {
-	data: any;
-	doCache: boolean;
-	inputHandles: NodeHandles<NodeInputHandle>;
-	outputHandles: NodeHandles<NodeOutputHandle>;
+	id: string; // The id of the node (different from the id of the node definition)
+	data: any; // Additional extra data of the node
+	doCache: boolean; // Whether to cache the outputs of the node
+	inputHandles: NodeHandles<NodeInputHandle>; // The input handles of the node
+	outputHandles: NodeHandles<NodeOutputHandle>; // The output handles of the node
 };

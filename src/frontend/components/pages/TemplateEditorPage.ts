@@ -8,6 +8,7 @@ import { PouchTemplateService } from "../../../core/services/storage/pouch/docs/
 import type { Template } from "../../../core/data/models/flashcards/template/Template";
 import { choose } from "lit/directives/choose.js";
 import { when } from "lit/directives/when.js";
+import { TemplateEditorService } from "../../../core/services/app/EditorNodeService";
 
 @customElement("template-editor-page")
 export default class TemplateEditorPage extends CustomElement {
@@ -102,8 +103,7 @@ export class TemplateEditorPageDefinition extends PageDefinition<TemplateEditorP
 	name = "Template Editor";
 
 	private page: TemplateEditorPage;
-	private readonly templateService: PouchTemplateService =
-		container.resolve(PouchTemplateService);
+	private readonly editorService = container.resolve(TemplateEditorService);
 
 	onLoad = (
 		properties: TemplateEditorPageProperties,
@@ -122,10 +122,10 @@ export class TemplateEditorPageDefinition extends PageDefinition<TemplateEditorP
 	getActions() {
 		return [
 			{
-				id: "add-node",
-				title: "Add Node",
-				onClick: () => {
-					console.log("Add node");
+				id: "save-template",
+				title: "Save Template",
+				onClick: async () => {
+					this.editorService.saveTemplate();
 				},
 			},
 		];

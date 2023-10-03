@@ -48,9 +48,22 @@ export abstract class PouchMultiDocService<T extends Identifiable> {
 	 * @param doc Document to set
 	 */
 	public async set(doc: T): Promise<void> {
+		console.log("set", doc);
+		const key = this.getKey(doc.id);
+		let existingDoc: PouchDB.Core.ExistingDocument<T> | null = null;
+
+		try {
+			existingDoc = await this.dbService.getDb().get(key);
+		} catch (error: any) {
+			if (error.name !== "not_found") {
+				throw error; // re-throw the error if it's not a "not found" error
+			}
+		}
+
 		await this.dbService.getDb().put({
-			_id: this.getKey(doc.id),
+			_id: key,
 			...doc,
+			_rev: existingDoc?._rev, // use the _rev from the existing document if it exists
 		});
 	}
 

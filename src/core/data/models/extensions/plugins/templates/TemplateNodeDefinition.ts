@@ -1,5 +1,5 @@
 import { container } from "tsyringe";
-import { EditorNodeService } from "../../../../../services/app/EditorNodeService";
+import { TemplateEditorService } from "../../../../../services/app/EditorNodeService";
 import { TemplateNodeMetadata } from "./TemplateNodeMetadata";
 import { TemplateNodeParams } from "./TemplateNodeParams";
 
@@ -8,7 +8,9 @@ import { TemplateNodeParams } from "./TemplateNodeParams";
  */
 export abstract class TemplateNodeDefinition {
 	metadata: TemplateNodeMetadata;
-	nodeService: EditorNodeService = container.resolve(EditorNodeService);
+	nodeService: TemplateEditorService = container.resolve(TemplateEditorService);
+
+	protected id: string;
 
 	abstract onLoad: (parent: HTMLElement, params: TemplateNodeParams) => void;
 }

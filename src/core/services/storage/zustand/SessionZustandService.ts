@@ -12,6 +12,7 @@ import { TemplateNode } from "../../../data/models/flashcards/template/graph/Tem
 import { NodeData } from "../../../data/models/flashcards/template/graph/nodeData/NodeData";
 import {
 	NodeHandles,
+	NodeOutputHandleValue,
 	NodeOutputHandleValueFunction,
 } from "../../../data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
 import NodeHandleType from "../../../data/models/flashcards/template/graph/nodeData/io/handles/NodeHandleType";
@@ -75,10 +76,10 @@ export interface SessionZustandState extends SessionZustandActions {
 	) => void;
 
 	setNodes: (nodes: TemplateNode[]) => void;
-	setOutputData: (
+	setOutputValue: (
 		nodeId: string,
 		outputId: string,
-		data: NodeOutputHandleValueFunction
+		value: NodeOutputHandleValue
 	) => void;
 
 	onNodesChange: (nodeChanges: NodeChange[]) => void;
@@ -260,10 +261,10 @@ export class SessionZustandService extends Observable<EventMap> {
 					state.editorTemplate?.graph.nodes.push(...nodes);
 				}),
 
-			setOutputData: (
+			setOutputValue: (
 				nodeId: string,
 				outputId: string,
-				data: NodeOutputHandleValueFunction
+				data: NodeOutputHandleValue
 			) =>
 				set((state) => {
 					const node = state.editorTemplate?.graph.nodes.find(
@@ -271,7 +272,7 @@ export class SessionZustandService extends Observable<EventMap> {
 					);
 					if (!node) return;
 
-					node.data.io.outputs[outputId].getValue = data;
+					node.data.io.outputs[outputId].value = data;
 				}),
 
 			onNodesChange: (changes: NodeChange[]) => {
