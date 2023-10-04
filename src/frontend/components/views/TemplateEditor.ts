@@ -21,6 +21,10 @@ export default class TemplateEditor extends CustomElement {
 
 	private editorService = container.resolve(TemplateEditorService);
 
+	protected contextMenu = {
+		entries: [],
+	};
+
 	firstUpdated() {
 		this.editorService.loadTemplate(this.template);
 		const container = this.shadowRoot?.getElementById("react-container");
@@ -36,8 +40,6 @@ export default class TemplateEditor extends CustomElement {
 	static styles = [
 		unsafeCSS(rfcss),
 		css`
-			.context-menu {
-			}
 			.title {
 				height: 2rem;
 				line-height: 2rem;
