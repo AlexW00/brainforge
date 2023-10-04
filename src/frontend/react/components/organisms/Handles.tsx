@@ -9,7 +9,7 @@ export const HandlesComponent = React.memo(
     handles,
   }: {
     isInput: boolean;
-    handles: NodeHandles<any>;
+    handles?: NodeHandles<any>;
   }): JSX.Element => {
     const calculateHandleTopOffset = (
       index: number,

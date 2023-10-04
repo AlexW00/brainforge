@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useRef } from "react";
 import ReactFlow, { Connection, Controls, Background, ConnectionLineType } from "reactflow";
 import { areCompatible } from "../../../../core/data/models/flashcards/template/graph/nodeData/io/handles/NodeHandleType";
 import { selectNode } from "../../../../core/data/selectors/editor/selectNode";
@@ -14,6 +14,7 @@ export const Editor = () => {
 
   const zustand = useZustand()
 
+  const ref = useRef<any>(null);
 
   const { onNodesChange, onEdgesChange, onConnect } = zustand();
 
@@ -38,9 +39,14 @@ export const Editor = () => {
 
 
     const sourceHandleType =
-      sourceNode.data.io.outputs[connection.sourceHandle].type;
+      sourceNode.data.io?.outputs[connection.sourceHandle].type;
     const targetHandleType =
-      targetNode.data.io.inputs[connection.targetHandle].type;
+      targetNode.data.io?.inputs[connection.targetHandle].type;
+
+    if (!sourceHandleType || !targetHandleType) {
+      console.error("Cannot connect nodes, missing sourceHandleType or targetHandleType");
+      return;}
+
     if (
       sourceNode.id !== targetNode.id &&
       areCompatible(sourceHandleType, targetHandleType)
@@ -54,21 +60,35 @@ export const Editor = () => {
 
 
   return (
-      <ReactFlow
-        connectionLineType={ConnectionLineType.Step}
-        nodeTypes={nodeTypes as any}
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={(nodeChanges) => onNodesChange(nodeChanges)}
-        onEdgesChange={(edgeChanges) => onEdgesChange(edgeChanges)}
-        onConnect={handleConnect}
-        fitView
-        snapToGrid
-        // onContextMenu={onContextMenu}
-      >
-        <Controls />
-        <Background />
-      </ReactFlow>
-
+    <ReactFlow
+      ref={ref}
+      connectionLineType={ConnectionLineType.Step}
+      nodeTypes={nodeTypes as any}
+      nodes={nodes}
+      edges={edges}
+      onNodesChange={(nodeChanges) => onNodesChange(nodeChanges)}
+      onEdgesChange={(edgeChanges) => onEdgesChange(edgeChanges)}
+      onConnect={handleConnect}
+      onClick={(event) => 
+        {
+          // necessary to create a new event here since
+          // the old one does not propagate for some reason
+          const newEvent = new MouseEvent('mousedown', {
+            bubbles: true,
+            cancelable: true,
+            clientX: event.clientX - ref.current.getBoundingClientRect().left,
+            clientY: event.clientY - ref.current.getBoundingClientRect().top,   
+          });
+          document.dispatchEvent(newEvent);
+        }
+                  
+      }
+      fitView
+      snapToGrid
+      // onContextMenu={onContextMenu}
+    >
+      <Controls />
+      <Background />
+    </ReactFlow>
   );
 };

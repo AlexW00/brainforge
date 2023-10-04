@@ -8,6 +8,8 @@ import React from "react";
 import { container } from "tsyringe";
 import rfcss from "reactflow/dist/style.css";
 import { TemplateEditorService } from "../../../core/services/app/EditorNodeService";
+import { TemplateNodeService } from "../../../core/services/app/TemplateNodeService";
+import { newTemplateNode } from "../../../core/data/models/flashcards/template/graph/TemplateNode";
 
 @customElement("template-editor")
 export default class TemplateEditor extends CustomElement {
@@ -20,10 +22,14 @@ export default class TemplateEditor extends CustomElement {
 	template!: Template;
 
 	private editorService = container.resolve(TemplateEditorService);
+	private nodeService = container.resolve(TemplateNodeService);
 
-	protected contextMenu = {
-		entries: [],
-	};
+	protected contextMenu = this.nodeService.getAsContextMenu(
+		(position, nodeDefinition) => {
+			console.log("clicked menu item in context");
+			this.editorService.addNode(nodeDefinition.id, position);
+		}
+	);
 
 	firstUpdated() {
 		this.editorService.loadTemplate(this.template);

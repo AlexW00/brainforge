@@ -10,7 +10,7 @@ export abstract class TemplateNodeDefinition {
 	metadata: TemplateNodeMetadata;
 	nodeService: TemplateEditorService = container.resolve(TemplateEditorService);
 
-	protected id: string;
+	id: string;
 
 	abstract onLoad: (parent: HTMLElement, params: TemplateNodeParams) => void;
 }

@@ -82,6 +82,7 @@ export interface SessionZustandState extends SessionZustandActions {
 		outputId: string,
 		value: NodeOutputHandleValue
 	) => void;
+	pushNode: (node: TemplateNode) => void;
 
 	onNodesChange: (nodeChanges: NodeChange[]) => void;
 	onEdgesChange: (edgeChanges: EdgeChange[]) => void;
@@ -224,6 +225,12 @@ export class SessionZustandService extends Observable<EventMap> {
 					);
 					if (!node) return;
 
+					if (node.data.io === undefined)
+						node.data.io = {
+							inputs: {},
+							outputs: {},
+						};
+
 					if (isInput) {
 						node.data.io.inputs = handles;
 					} else {
@@ -243,7 +250,14 @@ export class SessionZustandService extends Observable<EventMap> {
 					);
 					if (!node) return;
 
+					if (node.data.io === undefined)
+						node.data.io = {
+							inputs: {},
+							outputs: {},
+						};
+
 					if (isInput) {
+						node.data.io.inputs = {};
 						node.data.io.inputs[name].type = type;
 					} else {
 						node.data.io.outputs[name].type = type;
@@ -273,7 +287,18 @@ export class SessionZustandService extends Observable<EventMap> {
 					);
 					if (!node) return;
 
+					if (node.data.io === undefined)
+						node.data.io = {
+							inputs: {},
+							outputs: {},
+						};
+
 					node.data.io.outputs[outputId].value = data;
+				}),
+
+			pushNode: (node: TemplateNode) =>
+				set((state) => {
+					state.editorTemplate?.graph.nodes.push(node);
 				}),
 
 			onNodesChange: (changes: NodeChange[]) => {

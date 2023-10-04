@@ -5,7 +5,7 @@ import { NodeIO } from "./io/NodeIO";
  */
 export interface NodeData {
 	definitionId: string;
-	io: NodeIO;
+	io?: NodeIO;
 	doReRunOnRender: boolean;
 	data: any;
 }

@@ -23,9 +23,9 @@ export const NodeComponent: FunctionComponent<TemplateNode> = (
     id: props.id,
     data: props.data.data,
     doCache: props.data.doReRunOnRender,
-    inputHandles: props.data.io.inputs,
-    outputHandles: props.data.io.outputs,
-  }), [props.data.data, props.data.doReRunOnRender, props.data.io.inputs, props.data.io.outputs]);
+    inputHandles: props.data.io?.inputs,
+    outputHandles: props.data.io?.outputs,
+  }), [props.data.data, props.data.doReRunOnRender, props.data.io?.inputs, props.data.io?.outputs]);
 
   React.useEffect(() => {
     if (!contentRef.current) return;
@@ -50,7 +50,7 @@ export const NodeComponent: FunctionComponent<TemplateNode> = (
       >
         <HandlesComponent
           isInput={true}
-          handles={props.data.io.inputs}
+          handles={props.data.io?.inputs}
         />
         <div style={{ display: "flex", flexDirection: "column"}}>
           <DragbarComponent
@@ -69,7 +69,7 @@ export const NodeComponent: FunctionComponent<TemplateNode> = (
 
       <HandlesComponent
         isInput={false}
-        handles={props.data.io.outputs}
+        handles={props.data.io?.outputs}
       />
     </NodeIdContext.Provider>
   );

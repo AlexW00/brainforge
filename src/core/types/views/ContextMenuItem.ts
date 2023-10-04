@@ -1,10 +1,12 @@
+import { Position } from "../general/Position";
+
 export interface ContextMenuItem {
 	title: string;
-	onClick: () => void;
+	onClick: (position: Position) => void;
 }
 
 export interface ContextMenuGroup {
-	tile: string;
+	title: string;
 	items: ContextMenuItem[];
 }
 

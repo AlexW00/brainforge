@@ -4,6 +4,7 @@ import { globalCss } from "../../styles/global-css";
 import { resetCSS } from "../../styles/reset-css";
 import { ViewStatus } from "../../../core/types/views/ViewState";
 import { ContextMenu } from "../../../core/types/views/ContextMenuItem";
+import ContextMenuComponent from "../views/ContextMenu";
 /**
  * Base class for all components.
  * Automatically includes global styles and resets.
@@ -52,7 +53,12 @@ export abstract class CustomElement extends LitElement {
 	}
 
 	private showContextMenu(x: number, y: number) {
-		console.log("showing context menu", x, y, this.contextMenu);
+		const contextMenu = new ContextMenuComponent();
+		contextMenu.entries = this.contextMenu?.entries || [];
+		contextMenu.offsetLeft = x;
+		contextMenu.offsetTop = y;
+
+		document.body.appendChild(contextMenu);
 	}
 
 	oncontextmenu = (e: MouseEvent) => {

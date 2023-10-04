@@ -8,6 +8,13 @@ import {
 } from "../../data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
 import { Template } from "../../data/models/flashcards/template/Template";
 import { PouchTemplateService } from "../storage/pouch/docs/multi/PouchTemplateService";
+import { ContextMenu } from "../../types/views/ContextMenuItem";
+import { TemplateNodeDefinition } from "../../data/models/extensions/plugins/templates/TemplateNodeDefinition";
+import {
+	TemplateNode,
+	newTemplateNode,
+} from "../../data/models/flashcards/template/graph/TemplateNode";
+import { Position } from "../../types/general/Position";
 
 @singleton()
 export class TemplateEditorService {
@@ -31,6 +38,12 @@ export class TemplateEditorService {
 			throw new Error("No template loaded");
 
 		this.templateService.set(this.sessionZustand.state.editorTemplate);
+	}
+
+	addNode(nodeDefinitionId: string, position: Position) {
+		const node: TemplateNode = newTemplateNode(nodeDefinitionId, position);
+		console.log("new node", node);
+		this.sessionZustand.state.pushNode(node);
 	}
 
 	setOutputHandles = (
