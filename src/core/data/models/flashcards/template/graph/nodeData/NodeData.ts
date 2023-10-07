@@ -7,5 +7,6 @@ export interface NodeData {
 	definitionId: string;
 	io?: NodeIO;
 	doReRunOnRender: boolean;
+	lastEditTs?: Date;
 	data: any;
 }

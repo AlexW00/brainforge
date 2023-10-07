@@ -10,7 +10,6 @@ import { ElementRegistrarService } from "./app/ElementRegistrarService";
 import { STOCK_PAGES } from "../../frontend/components/pages/StockPages";
 import { STOCK_MODALS } from "../../frontend/components/modals/StockModals";
 import { UiEventHandler } from "./app/UiEventHandler";
-import { TemplateNodeService } from "./app/TemplateNodeService";
 import { STOCK_NODES } from "../../frontend/components/nodes/StockNodes";
 import { STOCK_CARD_INPUT_FIELDS } from "../static/cardInputs/StockCardInputFields";
 
@@ -26,9 +25,7 @@ export class MasterService implements Initializeable {
 		@inject(LoggerService) public loggerService: LoggerService,
 		@inject(ElementRegistrarService)
 		public elementRegistrarService: ElementRegistrarService,
-		@inject(UiEventHandler) public _uiEventHandler: UiEventHandler,
-		@inject(TemplateNodeService)
-		private templateNodeService: TemplateNodeService
+		@inject(UiEventHandler) public _uiEventHandler: UiEventHandler
 	) {}
 
 	async init() {
@@ -60,7 +57,7 @@ export class MasterService implements Initializeable {
 
 	private loadTemplateNodes() {
 		STOCK_NODES.forEach((node) =>
-			this.templateNodeService.registerTemplateNode(node)
+			this.elementRegistrarService.registerTemplateNode(node)
 		);
 	}
 

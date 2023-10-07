@@ -4,6 +4,8 @@ import { PouchCardService } from "../storage/pouch/docs/multi/PouchCardService";
 import { PouchTemplateService } from "../storage/pouch/docs/multi/PouchTemplateService";
 import { Template } from "../../data/models/flashcards/template/Template";
 import { LoggerService } from "./LoggerService";
+import { ElementRegistrarService } from "./ElementRegistrarService";
+import { NodeInputHandleWithValue } from "../../data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
 
 // TODOS:
 // check that edge.source and edge.target = nodeId
@@ -16,7 +18,9 @@ export class CardRenderService {
 	constructor(
 		@inject(PouchTemplateService) private templateService: PouchTemplateService,
 		@inject(PouchCardService) private cardService: PouchCardService,
-		@inject(LoggerService) private loggerService: LoggerService
+		@inject(LoggerService) private loggerService: LoggerService,
+		@inject(ElementRegistrarService)
+		private elementRegistrarService: ElementRegistrarService
 	) {}
 
 	/**
@@ -33,32 +37,34 @@ export class CardRenderService {
 		newRenderCache: CardRenderCache
 	): Promise<any> {
 		// Check if the value is already in the cache and return it if it is
+		console.log("evaluate output", name, nodeId);
 		const existingOutputValue = newRenderCache[nodeId]?.find(
 			(handle) => handle.outputName === name
 		);
 		if (existingOutputValue) {
-			this.loggerService.debug(
+			this.loggerService.log(
 				`Re using old cache for output ${name} of node ${nodeId}`
 			);
+
 			return existingOutputValue.value;
 		}
-		this.loggerService.debug(`Calculating output ${name} of node ${nodeId}...`);
+		this.loggerService.log(`Calculating output ${name} of node ${nodeId}...`);
 
 		// Otherwise calculate the value
 		// Find the node in the template
 		const node = template.graph.nodes.find((node) => node.id === nodeId);
 		if (!node) throw new Error(`Node with id ${nodeId} not found`);
 
-		if (node.data.definitionId === "input-node") {
-			return {
-				name: "input",
-				value: "TEST",
-			};
-		}
 		// Evaluate all input handles
-		const inputValues = await Promise.all(
+		const inputValues: NodeInputHandleWithValue[] = await Promise.all(
 			Object.entries(node.data.io?.inputs ?? {}).map(async ([inputName]) => {
 				// Find the edge that connects to this input handle
+				const input = node.data.io?.inputs[inputName];
+				if (!input) {
+					throw new Error(
+						`Input handle ${inputName} of node ${nodeId} not found`
+					);
+				}
 				const edge = template.graph.edges.find(
 					(edge) => edge.target === nodeId && edge.targetHandle === inputName
 				);
@@ -84,22 +90,43 @@ export class CardRenderService {
 					newRenderCache
 				);
 
-				return { name: inputName, value: inputNodeValue };
+				return {
+					name: inputName,
+					value: inputNodeValue,
+					type: input.type,
+				};
 			})
 		);
+		console.log("input values", inputValues);
 
 		// Calculate the output value
 		const outputHandle = node.data.io?.outputs[name];
 		if (!outputHandle) {
+			console.log(node);
 			throw new Error(`Output handle ${name} of node ${nodeId} not found`);
 		}
-		console.log(outputHandle);
-		const value = await outputHandle.value.get(inputValues);
+
+		const nodeDefintion = this.elementRegistrarService.getTemplateNode(
+			node.data.definitionId
+		);
+		if (!nodeDefintion) {
+			throw new Error(
+				`Node definition ${node.data.definitionId} of node ${nodeId} not found`
+			);
+		}
+
+		const value = await nodeDefintion.getOutputValue(
+			name,
+			{ ...node.data, id: nodeId, doCache: true },
+			inputValues
+		);
+		console.log("getOutputValue value", value, node.data.definitionId);
 
 		// Cache the value
 		if (!newRenderCache[nodeId]) newRenderCache[nodeId] = [];
-		newRenderCache[nodeId].push({ outputName: name, value });
+		newRenderCache[nodeId].push({ outputName: name, value, ts: new Date() });
 
+		console.log("new render cache", newRenderCache);
 		return value;
 	}
 
@@ -121,8 +148,17 @@ export class CardRenderService {
 		let cacheDidNotChange = true;
 		template.graph.nodes.forEach((node) => {
 			if (oldRenderCache[node.id] !== undefined && !node.data.doReRunOnRender) {
-				newRenderCache[node.id] = oldRenderCache[node.id];
-				this.loggerService.debug(`Re using old cache for node ${node.id}`);
+				const ts = oldRenderCache[node.id][0].ts;
+				const templateNodeTs = template.graph.nodes.find(
+					(n) => n.id === node.id
+				)?.data.lastEditTs;
+
+				if (templateNodeTs && ts > templateNodeTs) {
+					newRenderCache[node.id] = oldRenderCache[node.id];
+					this.loggerService.debug(`Re using old cache for node ${node.id}`);
+				} else {
+					cacheDidNotChange = false;
+				}
 			} else cacheDidNotChange = false;
 		});
 		if (cacheDidNotChange) return false;
@@ -153,13 +189,20 @@ export class CardRenderService {
 			throw new Error(`Template with id ${card.templateId} not found`);
 
 		const renderCache = await this.generateRenderCache(card, template);
+		console.log("render cache", renderCache);
+
+		const outputNodeId = template.graph.nodes.find(
+			(node) => node.data.definitionId === "output-node"
+		)?.id;
+		if (!outputNodeId) throw new Error("Output node not found");
 
 		// keep old cache if no new cache was generated and return old HTML
-		if (renderCache === false) return this.getCardHtml(card.renderCache!);
+		if (renderCache === false)
+			return this.getCardHtml(outputNodeId, card.renderCache!);
 
 		// update card with new cache and return new HTML
 		await this.cardService.updateFields(cardId, { renderCache });
-		return this.getCardHtml(renderCache);
+		return this.getCardHtml(outputNodeId, renderCache);
 	}
 
 	/**
@@ -167,9 +210,13 @@ export class CardRenderService {
 	 * @param renderCache The render cache of the card.
 	 * @returns The HTML of the card.
 	 */
-	private getCardHtml(renderCache: CardRenderCache): string {
-		const outputNodeCache = renderCache["output"],
+	private getCardHtml(
+		outputNodeId: string,
+		renderCache: CardRenderCache
+	): string {
+		const outputNodeCache = renderCache[outputNodeId],
 			value = outputNodeCache[0].value;
+		console.log("output node cache", outputNodeCache);
 		return value;
 	}
 }

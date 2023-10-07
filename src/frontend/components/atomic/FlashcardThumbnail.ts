@@ -7,6 +7,8 @@ import { PouchCardService } from "../../../core/services/storage/pouch/docs/mult
 import { css, html } from "lit";
 import { CardRenderService } from "../../../core/services/app/CardRenderService";
 import { ifDefined } from "lit/directives/if-defined.js";
+import { when } from "lit/directives/when.js";
+import { unsafeHTML } from "lit/directives/unsafe-html.js";
 
 @customElement("flashcard-thumbnail")
 export default class FlashcardThumbnail extends CustomElement {
@@ -32,7 +34,9 @@ export default class FlashcardThumbnail extends CustomElement {
 	renderCardTask = new Task(this, {
 		task: async () => {
 			if (this.card === undefined) return;
+			console.log("Rendering card", this.card);
 			this.cardHtml = await this.cardRendererServicew.renderCard(this.card.id);
+			console.log("Rendered card", this.cardHtml);
 		},
 		autoRun: false,
 	});
@@ -62,7 +66,13 @@ export default class FlashcardThumbnail extends CustomElement {
 	}
 
 	render() {
-		return html` <sl-card> ${ifDefined(this.cardHtml)} </sl-card> `;
+		return html`
+			<sl-card>
+				${when(this.cardHtml !== undefined, () =>
+					unsafeHTML(`<div class="card-content">${this.cardHtml}</div>`)
+				)}
+			</sl-card>
+		`;
 	}
 
 	static styles = css`
@@ -70,10 +80,13 @@ export default class FlashcardThumbnail extends CustomElement {
 			max-height: 40rem;
 			user-select: none;
 			cursor: pointer;
-			overflow: hidden;
 		}
 		sl-card::part(base):hover {
 			box-shadow: var(--sl-shadow-medium);
+		}
+		sl-card {
+			width: 100%;
+			height: 100%;
 		}
 	`;
 }

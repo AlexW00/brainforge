@@ -8,7 +8,7 @@ import React from "react";
 import { container } from "tsyringe";
 import rfcss from "reactflow/dist/style.css?inline";
 import { TemplateEditorService } from "../../../core/services/app/TemplateEditorService";
-import { TemplateNodeService } from "../../../core/services/app/TemplateNodeService";
+import { ElementRegistrarService } from "../../../core/services/app/ElementRegistrarService";
 
 @customElement("template-editor")
 export default class TemplateEditor extends CustomElement {
@@ -21,29 +21,33 @@ export default class TemplateEditor extends CustomElement {
 	template!: Template;
 
 	private editorService = container.resolve(TemplateEditorService);
-	private nodeService = container.resolve(TemplateNodeService);
+	private elementRegistrarService = container.resolve(ElementRegistrarService);
 
-	protected contextMenu = this.nodeService.getAsContextMenu(
-		(absolutePosition, nodeDefinition) => {
-			const template = this.editorService.getTemplate();
-			if (!template) return;
+	protected contextMenu =
+		this.elementRegistrarService.getTemplateNodesAsContextMenu(
+			(absolutePosition, nodeDefinition) => {
+				const template = this.editorService.getTemplate();
+				if (!template) return;
 
-			const editorViewport = template.viewport;
+				const editorViewport = template.viewport;
 
-			const thisOffset = this.getBoundingClientRect();
+				const thisOffset = this.getBoundingClientRect();
 
-			const positionInEditor = {
-				x:
-					(absolutePosition.x - thisOffset.x - editorViewport.x) /
-					editorViewport.zoom,
-				y:
-					(absolutePosition.y - thisOffset.y - editorViewport.y) /
-					editorViewport.zoom,
-			};
-			console.log("add node", nodeDefinition, positionInEditor);
-			this.editorService.addNode(nodeDefinition.metadata.id, positionInEditor);
-		}
-	);
+				const positionInEditor = {
+					x:
+						(absolutePosition.x - thisOffset.x - editorViewport.x) /
+						editorViewport.zoom,
+					y:
+						(absolutePosition.y - thisOffset.y - editorViewport.y) /
+						editorViewport.zoom,
+				};
+				console.log("add node", nodeDefinition, positionInEditor);
+				this.editorService.addNode(
+					nodeDefinition.metadata.id,
+					positionInEditor
+				);
+			}
+		);
 
 	firstUpdated() {
 		this.editorService.loadTemplate(this.template);

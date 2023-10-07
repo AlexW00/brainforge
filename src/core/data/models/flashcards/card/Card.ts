@@ -18,7 +18,7 @@ export interface Card {
 }
 
 export interface CardRenderCache {
-	[nodeId: string]: { outputName: string; value: any }[];
+	[nodeId: string]: { outputName: string; value: any; ts: Date }[];
 }
 
 export interface CardMetaData {

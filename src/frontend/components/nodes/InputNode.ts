@@ -3,6 +3,7 @@ import { TemplateNodeDefinition } from "../../../core/data/models/extensions/plu
 import type { TemplateNodeParams } from "../../../core/data/models/extensions/plugins/templates/TemplateNodeParams";
 import {
 	NodeHandles,
+	NodeInputHandleWithValue,
 	NodeOutputHandle,
 } from "../../../core/data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
 import { AnyHandle } from "../../../core/static/nodeHandles/base/AnyHandle";
@@ -86,12 +87,6 @@ export class InputNodeDefinition extends TemplateNodeDefinition {
 				"output-1": {
 					name: "Output",
 					type: AnyHandle,
-					value: {
-						timestamp: new Date(),
-						get: async (inputValues) => {
-							return inputValues[0].value;
-						},
-					},
 				},
 			};
 
@@ -108,4 +103,12 @@ export class InputNodeDefinition extends TemplateNodeDefinition {
 	};
 
 	onUnload = (params: TemplateNodeParams) => {};
+
+	getOutputValue = async (
+		outputId: string,
+		params: TemplateNodeParams,
+		inputs: NodeInputHandleWithValue[]
+	) => {
+		return "INPUT";
+	};
 }

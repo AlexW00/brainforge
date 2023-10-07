@@ -4,11 +4,12 @@ import type { TemplateNodeParams } from "../../../core/data/models/extensions/pl
 import type {
 	NodeHandles,
 	NodeInputHandle,
+	NodeInputHandleWithValue,
 	NodeOutputHandle,
 } from "../../../core/data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
 import { AnyHandle } from "../../../core/static/nodeHandles/base/AnyHandle";
 import { CustomElement } from "../atomic/CustomElement";
-import { css, html } from "lit";
+import { TemplateResult, css, html } from "lit";
 import { map } from "lit/directives/map.js";
 import { when } from "lit/directives/when.js";
 import { TemplateEditorService } from "../../../core/services/app/TemplateEditorService";
@@ -121,11 +122,11 @@ export class OutputNodeDefinition extends TemplateNodeDefinition {
 		if (params.inputHandles === undefined) {
 			const inputHandles: NodeHandles<NodeInputHandle> = {
 				front: {
-					name: "Side 1",
+					name: "front",
 					type: AnyHandle,
 				},
 				back: {
-					name: "Side 2",
+					name: "back",
 					type: AnyHandle,
 				},
 			};
@@ -134,15 +135,9 @@ export class OutputNodeDefinition extends TemplateNodeDefinition {
 
 		if (params.outputHandles === undefined) {
 			const outputHandles: NodeHandles<NodeOutputHandle> = {
-				output: {
+				out: {
 					name: "out",
 					type: AnyHandle,
-					value: {
-						timestamp: new Date(),
-						get: async (inputValues: { name: string; value: any }[]) => {
-							return inputValues[0].value;
-						},
-					},
 				},
 			};
 			this.nodeService.setOutputHandles(params.id, outputHandles);
@@ -157,5 +152,24 @@ export class OutputNodeDefinition extends TemplateNodeDefinition {
 	onUpdate = (params: TemplateNodeParams) => {
 		if (!this.content) return;
 		this.content.params = params;
+	};
+	getOutputValue = async (
+		outputId: string,
+		params: TemplateNodeParams,
+		inputs: NodeInputHandleWithValue[]
+	) => {
+		const value = inputs.map((input) => JSON.stringify(input.value));
+		const htmlString: string = `
+			${inputs
+				.map(
+					(input: NodeInputHandleWithValue, index) => `<div class="card-side">
+					${input.value}
+				</div>
+				${index !== inputs.length - 1 ? `<sl-divider></sl-divider>` : ""}
+				`
+				)
+				.join("")}
+		`;
+		return htmlString;
 	};
 }

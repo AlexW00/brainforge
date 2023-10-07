@@ -4,7 +4,6 @@ import {
 	NodeHandles,
 	NodeInputHandle,
 	NodeOutputHandle,
-	NodeOutputHandleValue,
 } from "../../data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
 import { Template } from "../../data/models/flashcards/template/Template";
 import { PouchTemplateService } from "../storage/pouch/docs/multi/PouchTemplateService";
@@ -61,7 +60,7 @@ export class TemplateEditorService {
 			Object.keys(inputHandles).length + 1
 		);
 		const [name, index] = key.split("-");
-		inputHandles[key] = {
+		inputHandles[name] = {
 			name: `${name}${index !== undefined ? ` ${index}` : ""}`,
 			type: "any",
 		};
@@ -86,13 +85,5 @@ export class TemplateEditorService {
 
 	setDoCache(nodeId: string, doCache: boolean) {
 		this.sessionZustand.state.setNodeCaching(nodeId, doCache);
-	}
-
-	setOutputHandleValue(
-		nodeId: string,
-		handleId: string,
-		value: NodeOutputHandleValue
-	) {
-		this.sessionZustand.state.setOutputValue(nodeId, handleId, value);
 	}
 }

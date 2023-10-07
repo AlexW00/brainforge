@@ -7,7 +7,6 @@ import React, {
 import { NodeIdContext } from "../../contexts/NodeIdContext";
 import { HandlesComponent } from "./Handles";
 import { TemplateNode } from "../../../../core/data/models/flashcards/template/graph/TemplateNode";
-import { useTemplateNodeService } from "../../hooks/context/useTemplateNodeService";
 import { TemplateNodeParams } from "../../../../core/data/models/extensions/plugins/templates/TemplateNodeParams";
 import {
 	SlCard,
@@ -17,16 +16,18 @@ import {
 	SlMenuItem,
 } from "@shoelace-style/shoelace/dist/react/index";
 import { useTemplateEditorService } from "../../hooks/context/useTemplateEditorService";
+import { container } from "tsyringe";
+import { ElementRegistrarService } from "../../../../core/services/app/ElementRegistrarService";
 
 export const NodeComponent: FunctionComponent<TemplateNode> = (
 	props: PropsWithChildren<TemplateNode>,
 	_context?: any
 ) => {
 	const definitionId = props.data.definitionId;
-	const templateNodeService = useTemplateNodeService();
 	const templateEditorService = useTemplateEditorService();
+	const elementRegistrarService = container.resolve(ElementRegistrarService);
 
-	const definition = templateNodeService.getTemplateNode(definitionId);
+	const definition = elementRegistrarService.getTemplateNode(definitionId);
 
 	const contentRef = useRef(null);
 
