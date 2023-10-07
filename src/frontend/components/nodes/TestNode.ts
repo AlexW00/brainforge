@@ -17,7 +17,7 @@ export class TestNodeDefinition extends TemplateNodeDefinition {
 
 	onLoad = (parent: HTMLElement, params: TemplateNodeParams) => {
 		// check if params.inputHandles is an empty object
-		if (Object.keys(params.inputHandles).length === 0) {
+		if (Object.keys(params.data.inputHandles).length === 0) {
 			const inputHandles: NodeHandles<NodeInputHandle> = {
 				"input-1": {
 					name: "Input 1",
@@ -27,7 +27,7 @@ export class TestNodeDefinition extends TemplateNodeDefinition {
 			this.nodeService.setInputHandles(params.id, inputHandles);
 		}
 
-		if (Object.keys(params.outputHandles).length === 0) {
+		if (Object.keys(params.data.outputHandles).length === 0) {
 			const outputHandles: NodeHandles<NodeOutputHandle> = {
 				"output-1": {
 					name: "Output 1",

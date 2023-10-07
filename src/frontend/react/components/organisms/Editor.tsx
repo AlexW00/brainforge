@@ -1,7 +1,6 @@
 import React, { useMemo, useRef } from "react";
 import ReactFlow, { Connection, Controls, Background, ConnectionLineType } from "reactflow";
 import { areCompatible } from "../../../../core/data/models/flashcards/template/graph/nodeData/io/handles/NodeHandleType";
-import { selectNode } from "../../../../core/data/selectors/editor/selectNode";
 import { useGetEdges } from "../../hooks/state/getters/useGetEdges";
 import { useGetNodes } from "../../hooks/state/getters/useGetNodes";
 import { NodeComponent } from "./Node";
@@ -19,6 +18,11 @@ export const Editor = () => {
   const { onNodesChange, onEdgesChange, onConnect } = zustand();
 
   const nodeTypes = useMemo(() => ({ custom: NodeComponent }), []);
+
+  const selectNode = (id: string, nodes: any[]) => {
+    return nodes.find((node) => node.id === id);
+  }
+  
 
 
   const handleConnect = (connection: Connection) => {

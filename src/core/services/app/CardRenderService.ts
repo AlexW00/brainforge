@@ -51,7 +51,7 @@ export class CardRenderService {
 
 		// Evaluate all input handles
 		const inputValues = await Promise.all(
-			Object.entries(node.data.io.inputs).map(async ([inputName]) => {
+			Object.entries(node.data.data.io.inputs).map(async ([inputName]) => {
 				// Find the edge that connects to this input handle
 				const edge = template.graph.edges.find(
 					(edge) => edge.target === nodeId && edge.targetHandle === inputName
@@ -83,7 +83,7 @@ export class CardRenderService {
 		);
 
 		// Calculate the output value
-		const outputHandle = node.data.io.outputs[name];
+		const outputHandle = node.data.data.io.outputs[name];
 		if (!outputHandle) {
 			throw new Error(`Output handle ${name} of node ${nodeId} not found`);
 		}

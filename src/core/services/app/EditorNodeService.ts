@@ -8,8 +8,6 @@ import {
 } from "../../data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
 import { Template } from "../../data/models/flashcards/template/Template";
 import { PouchTemplateService } from "../storage/pouch/docs/multi/PouchTemplateService";
-import { ContextMenu } from "../../types/views/ContextMenuItem";
-import { TemplateNodeDefinition } from "../../data/models/extensions/plugins/templates/TemplateNodeDefinition";
 import {
 	TemplateNode,
 	newTemplateNode,

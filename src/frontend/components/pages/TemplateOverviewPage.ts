@@ -2,7 +2,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { CustomElement } from "../atomic/CustomElement";
 import { PageDefinition } from "../../../core/types/views/PageDefinition";
 import { css, html } from "lit";
-import { container, inject } from "tsyringe";
+import { container } from "tsyringe";
 import { Task } from "@lit-labs/task";
 import { PouchTemplateService } from "../../../core/services/storage/pouch/docs/multi/PouchTemplateService";
 import { Template } from "../../../core/data/models/flashcards/template/Template";

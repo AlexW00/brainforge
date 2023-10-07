@@ -25,7 +25,7 @@ export class MasterService implements Initializeable {
 		@inject(LoggerService) public loggerService: LoggerService,
 		@inject(ElementRegistrarService)
 		public elementRegistrarService: ElementRegistrarService,
-		@inject(UiEventHandler) private _uiEventHandler: UiEventHandler,
+		@inject(UiEventHandler) public _uiEventHandler: UiEventHandler,
 		@inject(TemplateNodeService)
 		private templateNodeService: TemplateNodeService
 	) {}

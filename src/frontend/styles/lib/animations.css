@@ -1,0 +1,8 @@
+:root,
+:host {
+    --sl-transition-x-slow: 1000ms;
+    --sl-transition-slow: 500ms;
+    --sl-transition-medium: 250ms;
+    --sl-transition-fast: 150ms;
+    --sl-transition-x-fast: 50ms;
+}

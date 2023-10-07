@@ -129,8 +129,8 @@ export default class DeckItem extends CustomElement {
 
 	private getExpandIcon() {
 		return this.isExpanded
-			? html`<ph-caret-down></ph-caret-down>`
-			: html` <ph-caret-right></ph-caret-right>`;
+			? html`<sl-icon library="ph-regular" name="caret-up"></sl-icon>`
+			: html`<sl-icon library="ph-regular" name="caret-down"></sl-icon>`;
 	}
 
 	render() {

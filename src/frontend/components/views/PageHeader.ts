@@ -5,6 +5,7 @@ import { css, html } from "lit";
 import { UiEventBus } from "../../../core/services/events/UiEventBus";
 import { container } from "tsyringe";
 import { RouterService } from "../../../core/services/app/RouterService";
+import "@shoelace-style/shoelace/dist/components/icon-button/icon-button";
 
 @customElement("page-header")
 export default class PageHeader extends CustomElement {
@@ -41,12 +42,18 @@ export default class PageHeader extends CustomElement {
 		return html`
 			<div class="left">
 				<div id="nav-buttons">
-					<icon-button @click=${() => this.onClickNavButton(true)}>
-						<ph-arrow-left></ph-arrow-left>
-					</icon-button>
-					<icon-button @click=${() => this.onClickNavButton(false)}>
-						<ph-arrow-right></ph-arrow-right>
-					</icon-button>
+					<sl-icon-button
+						name="arrow-left"
+						library="ph-regular"
+						@click=${() => this.onClickNavButton(true)}
+					>
+					</sl-icon-button>
+					<sl-icon-button
+						name="arrow-right"
+						library="ph-regular"
+						@click=${() => this.onClickNavButton(false)}
+					>
+					</sl-icon-button>
 				</div>
 				<div id="name" class="no-select">
 					[${this.name ?? "No active page"}]
@@ -57,9 +64,13 @@ export default class PageHeader extends CustomElement {
 			<div id="actions" class="right">
 				${this.actions?.map(
 					(action) => html`
-						<text-button @click=${() => this.onClickAction(action)}>
+						<sl-icon-button
+							name="gear"
+							label="Settings"
+							@click=${() => this.onClickAction(action)}
+						>
 							${action.title}
-						</text-button>
+						</sl-icon-button>
 					`
 				)}
 			</div>

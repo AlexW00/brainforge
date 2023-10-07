@@ -1,23 +1,29 @@
 /* load colors.css */
 
-@import url('./colors.css');
-@import url('./sizes.css');
-@import url('./fonts.css');
+@import url("./lib/light.css");
+@import url("./lib/dark.css");
+@import url("./lib/shoelace.css");
 
-html, body, root-component {
-  background-color: var(--bg-color);
-  color: var(--fg-color);
-  margin: 0;
-  padding: 0;
-  
-  width: 100%;
-  height: 100%;
+@import url("./lib/colors.css");
+@import url("./lib/fonts.css");
+@import url("./lib/sizes.css");
+@import url("./lib/animations.css");
 
-  box-sizing: border-box;
-  background-color: var(--behind-app-color);
+html,
+body,
+root-component {
+	background-color: var(--bg-color);
+	color: var(--fg-color);
+	margin: 0;
+	padding: 0;
 
-  display: flex;
-  flex: 1;
-  flex-grow: 1;
+	width: 100%;
+	height: 100%;
+
+	box-sizing: border-box;
+	background-color: var(--behind-app-color);
+
+	display: flex;
+	flex: 1;
+	flex-grow: 1;
 }
-
