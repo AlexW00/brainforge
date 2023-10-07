@@ -28,7 +28,7 @@ import { TemplateNodeDefinition } from "../../../data/models/extensions/plugins/
 
 export interface SessionZustandActions {
 	setRibbonItems: (items: RibbonItem[]) => void;
-	setLastSelectedDeckId: (deckId: string) => void;
+	setSelectedDeckIds: (deckIds: string[]) => void;
 	addModalDefinitions: (definitions: ModalDefinition<any>[]) => void;
 	addPageDefinitions: (definitions: PageDefinition<any>[]) => void;
 	setTemplateNodeDefinition: (definition: TemplateNodeDefinition) => void;
@@ -52,7 +52,7 @@ type TemplateNodeDefintionMap = {
 
 export interface SessionZustandState extends SessionZustandActions {
 	ribbonItems: RibbonItem[];
-	lastSelectedDeckId?: string;
+	selectedDeckIds: string[];
 	modalDefinitions: ModalDefinition<any>[];
 	pageDefinitions: PageDefinition<any>[];
 	templateNodeDefinitions: TemplateNodeDefintionMap;
@@ -91,7 +91,7 @@ export interface SessionZustandState extends SessionZustandActions {
 
 type EventMap = {
 	changed: [newState: SessionZustandState, oldState: SessionZustandState];
-	lastSelectedDeckIdChanged: string | undefined;
+	selectedDeckIdsChanged: string[];
 };
 
 /**
@@ -108,13 +108,14 @@ export class SessionZustandService extends Observable<EventMap> {
 			navigationUndoStack: [],
 			navigationRedoStack: [],
 			editorTemplate: undefined,
+			selectedDeckIds: [],
 			setRibbonItems: (items: RibbonItem[]) =>
 				set((state) => {
 					state.ribbonItems = items;
 				}),
-			setLastSelectedDeckId: (deckId: string) =>
+			setSelectedDeckIds: (deckIds: string[]) =>
 				set((state) => {
-					state.lastSelectedDeckId = deckId;
+					state.selectedDeckIds = deckIds;
 				}),
 
 			addModalDefinitions: (definitions: ModalDefinition<any>[]) =>
@@ -330,8 +331,8 @@ export class SessionZustandService extends Observable<EventMap> {
 			this.state = state;
 			this.emit("changed", [state, prevState]);
 
-			if (state.lastSelectedDeckId !== prevState.lastSelectedDeckId) {
-				this.emit("lastSelectedDeckIdChanged", state.lastSelectedDeckId);
+			if (state.selectedDeckIds !== prevState.selectedDeckIds) {
+				this.emit("selectedDeckIdsChanged", state.selectedDeckIds);
 			}
 		});
 	}
