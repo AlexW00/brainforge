@@ -55,9 +55,7 @@ export default class PageHeader extends CustomElement {
 					>
 					</sl-icon-button>
 				</div>
-				<div id="name" class="no-select">
-					[${this.name ?? "No active page"}]
-				</div>
+				<div id="name" class="no-select">${this.name ?? "No active page"}</div>
 			</div>
 
 			<div id="info" class="center no-select">${this.info ?? "Empty"}</div>
@@ -89,7 +87,8 @@ export default class PageHeader extends CustomElement {
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			padding: 16px;
+			padding: var(--sl-spacing-medium);
+			height: var(--page-header-height);
 		}
 
 		.left,

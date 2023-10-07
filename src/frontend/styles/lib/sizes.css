@@ -1,46 +1,46 @@
 body {
-    --border-radius-small: 0.25rem;
-    --border-radius-normal: 0.5rem;
-    --border-radius-large: 1rem;
+	--border-radius-small: 0.25rem;
+	--border-radius-normal: 0.5rem;
+	--border-radius-large: 1rem;
 
-    --border-width-small: 1px;
-    --border-width-normal: 2px;
-    --border-width-large: 4px;
+	--border-width-small: 1px;
+	--border-width-normal: 2px;
+	--border-width-large: 4px;
 
-    --deck-tree-item-padding: 0.7rem;
+	--deck-tree-item-padding: 0.7rem;
 
-    --deck-tree-item-pre-name-width: 1rem;
-    --deck-tree-item-pre-name-padding-right: 0.2rem;
-
-    --page-header-height: 3rem;
+	--deck-tree-item-pre-name-width: 1rem;
+	--deck-tree-item-pre-name-padding-right: 0.2rem;
 }
 
 :root,
 :host {
-    --sl-border-radius-circle: 50%;
-    --sl-border-radius-pill: 9999px;
+	--page-header-height: 1.5rem;
 
-    --sl-border-radius-small: 0.1875rem;
-    --sl-border-radius-medium: 0.25rem;
-    --sl-border-radius-large: 0.5rem;
-    --sl-border-radius-x-large: 1rem;
+	--sl-border-radius-circle: 50%;
+	--sl-border-radius-pill: 9999px;
 
-    --sl-spacing-3x-small: 0.125rem;
-    --sl-spacing-2x-small: 0.25rem;
-    --sl-spacing-x-small: 0.5rem;
-    --sl-spacing-small: 0.75rem;
-    --sl-spacing-medium: 1rem;
-    --sl-spacing-large: 1.25rem;
-    --sl-spacing-x-large: 1.75rem;
-    --sl-spacing-2x-large: 2.25rem;
-    --sl-spacing-3x-large: 3rem;
-    --sl-spacing-4x-large: 4.5rem;
+	--sl-border-radius-small: 0.1875rem;
+	--sl-border-radius-medium: 0.25rem;
+	--sl-border-radius-large: 0.5rem;
+	--sl-border-radius-x-large: 1rem;
 
-    --sl-input-height-small: 1.875rem;
-    --sl-input-height-medium: 2.5rem;
-    --sl-input-height-large: 3.125rem;
+	--sl-spacing-3x-small: 0.125rem;
+	--sl-spacing-2x-small: 0.25rem;
+	--sl-spacing-x-small: 0.5rem;
+	--sl-spacing-small: 0.75rem;
+	--sl-spacing-medium: 1rem;
+	--sl-spacing-large: 1.25rem;
+	--sl-spacing-x-large: 1.75rem;
+	--sl-spacing-2x-large: 2.25rem;
+	--sl-spacing-3x-large: 3rem;
+	--sl-spacing-4x-large: 4.5rem;
 
-    --sl-toggle-size-small: 0.875rem;
-    --sl-toggle-size-medium: 1.125rem;
-    --sl-toggle-size-large: 1.375rem;
+	--sl-input-height-small: 1.875rem;
+	--sl-input-height-medium: 2.5rem;
+	--sl-input-height-large: 3.125rem;
+
+	--sl-toggle-size-small: 0.875rem;
+	--sl-toggle-size-medium: 1.125rem;
+	--sl-toggle-size-large: 1.375rem;
 }

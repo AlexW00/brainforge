@@ -32,8 +32,10 @@ export default class AppRoot extends CustomElement {
 	render() {
 		return html`
 			<app-ribbon></app-ribbon>
-			<deck-tree-panel></deck-tree-panel>
-			<page-panel></page-panel>
+			<sl-split-panel position="25">
+				<deck-tree-panel slot="start"></deck-tree-panel>
+				<page-panel slot="end"></page-panel>
+			</sl-split-panel>
 		`;
 	}
 
@@ -41,6 +43,16 @@ export default class AppRoot extends CustomElement {
 		:host {
 			display: flex;
 			flex-direction: row !important;
+		}
+		sl-split-panel {
+			flex: 1;
+			--min: 15rem;
+			--max: 35rem;
+			--divider-width: 2px;
+			/* --divider-width: 1px; */
+		}
+		sl-split-panel::part(divider) {
+			/* background-color: black; */
 		}
 	`;
 }

@@ -61,6 +61,7 @@ export default class PagePanel extends Panel {
 				name=${ifDefined(this.page?.name)}
 				.actions=${this.page?.getActions()}
 			></page-header>
+			<sl-divider></sl-divider>
 			<page-content
 				.page=${this.page}
 				.properties=${this.properties}
@@ -75,6 +76,9 @@ export default class PagePanel extends Panel {
 			flex-direction: column;
 			flex-grow: 12;
 			background: var(--bg-color);
+		}
+		sl-divider {
+			--spacing: 0;
 		}
 	`;
 }

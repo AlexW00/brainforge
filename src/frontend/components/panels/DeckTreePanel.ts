@@ -143,9 +143,6 @@ export default class DeckTreePanel extends Panel {
 			display: flex;
 			flex-direction: column;
 			background: var(--bg-color);
-			flex: 1 1 25rem;
-			min-width: 25rem;
-			max-width: 25rem;
 			border-right: var(--border-width-small) solid var(--border-color);
 			border-top-left-radius: var(--border-radius-large);
 			border-bottom-left-radius: var(--border-radius-large);
