@@ -7,7 +7,7 @@ import { Editor } from "../../react/components/organisms/Editor";
 import React from "react";
 import { container } from "tsyringe";
 import rfcss from "reactflow/dist/style.css?inline";
-import { TemplateEditorService } from "../../../core/services/app/EditorNodeService";
+import { TemplateEditorService } from "../../../core/services/app/TemplateEditorService";
 import { TemplateNodeService } from "../../../core/services/app/TemplateNodeService";
 
 @customElement("template-editor")
@@ -60,10 +60,18 @@ export default class TemplateEditor extends CustomElement {
 	static styles = [
 		unsafeCSS(rfcss),
 		css`
+			.react-flow__handle.connectionindicator {
+				margin-top: var(--node-header-height);
+			}
+
+			.custom-node-content {
+				min-width: 10rem;
+			}
 			.custom-node-header {
 				display: flex;
 				justify-content: space-between;
 				cursor: grab;
+				height: var(--node-header-height);
 			}
 			.custom-node-header > .title {
 				flex: 1;
@@ -79,6 +87,9 @@ export default class TemplateEditor extends CustomElement {
 			}
 			.custom-node:hover {
 				box-shadow: var(--sl-shadow-medium);
+			}
+			.custom-node::part(body) {
+				padding: var(--sl-spacing-small);
 			}
 			.react-flow__node.selected > .custom-node::part(base) {
 				border-color: var(--sl-color-primary-500);

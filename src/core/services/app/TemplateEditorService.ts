@@ -13,6 +13,7 @@ import {
 	newTemplateNode,
 } from "../../data/models/flashcards/template/graph/TemplateNode";
 import { Position } from "../../types/general/Position";
+import { getUniqueKeyForObject } from "../../util/getUniqueKeyForObject";
 
 @singleton()
 export class TemplateEditorService {
@@ -43,10 +44,29 @@ export class TemplateEditorService {
 	}
 
 	addNode(nodeDefinitionId: string, position: Position) {
-		console.log("add node", nodeDefinitionId, position);
 		const node: TemplateNode = newTemplateNode(nodeDefinitionId, position);
-		console.log("new node", node);
 		this.sessionZustand.state.pushNode(node);
+	}
+
+	addNewInputHandle(nodeId: string, prefix = "Input") {
+		const node = this.sessionZustand.state
+			.getNodes()
+			.find((n) => n.id === nodeId);
+		if (node === undefined) throw new Error("Node not found");
+		const inputHandles: any = { ...node.data.io?.inputs };
+		console.log("input handles", inputHandles);
+		const key = getUniqueKeyForObject(
+			inputHandles,
+			prefix,
+			Object.keys(inputHandles).length + 1
+		);
+		const [name, index] = key.split("-");
+		inputHandles[key] = {
+			name: `${name}${index !== undefined ? ` ${index}` : ""}`,
+			type: "any",
+		};
+
+		this.sessionZustand.state.setNodeHandles(nodeId, true, inputHandles);
 	}
 
 	setOutputHandles = (

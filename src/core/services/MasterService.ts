@@ -12,6 +12,7 @@ import { STOCK_MODALS } from "../../frontend/components/modals/StockModals";
 import { UiEventHandler } from "./app/UiEventHandler";
 import { TemplateNodeService } from "./app/TemplateNodeService";
 import { STOCK_NODES } from "../../frontend/components/nodes/StockNodes";
+import { STOCK_CARD_INPUT_FIELDS } from "../static/cardInputs/StockCardInputFields";
 
 @singleton()
 export class MasterService implements Initializeable {
@@ -36,14 +37,13 @@ export class MasterService implements Initializeable {
 		this.loadPages();
 		this.loadModals();
 		this.loadTemplateNodes();
+		this.loadCardInputFields();
 		this.isInitialized = true;
 	}
 
 	private loadRibbonItems() {
 		const stockItems = stockAppRibbonItems;
 		stockItems.forEach((item) => this.appRibbonService.addItem(item));
-
-		// Todo: load custom items from storage
 	}
 
 	private loadPages() {
@@ -61,6 +61,12 @@ export class MasterService implements Initializeable {
 	private loadTemplateNodes() {
 		STOCK_NODES.forEach((node) =>
 			this.templateNodeService.registerTemplateNode(node)
+		);
+	}
+
+	private loadCardInputFields() {
+		STOCK_CARD_INPUT_FIELDS.forEach((field) =>
+			this.elementRegistrarService.registerCardInputFieldDefinition(field)
 		);
 	}
 }

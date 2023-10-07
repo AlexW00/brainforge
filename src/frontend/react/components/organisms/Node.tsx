@@ -57,6 +57,17 @@ export const NodeComponent: FunctionComponent<TemplateNode> = (
 		definition?.onLoad(content, contentProps);
 	}, []);
 
+	React.useEffect(() => {
+		if (!contentRef.current) return;
+		const content = contentRef.current;
+
+		if (!definition) {
+			console.error("Definition not found!");
+			return;
+		}
+		definition?.onUpdate(contentProps);
+	}, [contentProps]);
+
 	if (!definition) return <>Definition not found!</>;
 
 	const handleDoCacheSwitchChange = (isChecked: boolean) => {
@@ -100,7 +111,6 @@ export const NodeComponent: FunctionComponent<TemplateNode> = (
 					id={"content-" + props.id}
 					className="custom-node-content"
 					ref={contentRef}
-					style={{ margin: "0.5rem" }}
 				></div>
 			</SlCard>
 

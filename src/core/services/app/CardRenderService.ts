@@ -49,6 +49,12 @@ export class CardRenderService {
 		const node = template.graph.nodes.find((node) => node.id === nodeId);
 		if (!node) throw new Error(`Node with id ${nodeId} not found`);
 
+		if (node.data.definitionId === "input-node") {
+			return {
+				name: "input",
+				value: "TEST",
+			};
+		}
 		// Evaluate all input handles
 		const inputValues = await Promise.all(
 			Object.entries(node.data.data.io.inputs).map(async ([inputName]) => {

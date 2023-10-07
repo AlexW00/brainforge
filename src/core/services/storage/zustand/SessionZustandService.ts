@@ -20,18 +20,29 @@ import {
 	Connection,
 	EdgeChange,
 	NodeChange,
+	NodeRemoveChange,
 	Viewport,
 	addEdge,
 	applyEdgeChanges,
 	applyNodeChanges,
 } from "reactflow";
 import { TemplateNodeDefinition } from "../../../data/models/extensions/plugins/templates/TemplateNodeDefinition";
+import { CardInputFieldDefinition } from "../../../types/views/CardInputField";
 
 export interface SessionZustandActions {
 	setRibbonItems: (items: RibbonItem[]) => void;
 	setSelectedDeckIds: (deckIds: string[]) => void;
 	addModalDefinitions: (definitions: ModalDefinition<any>[]) => void;
 	addPageDefinitions: (definitions: PageDefinition<any>[]) => void;
+
+	addCardInputFieldDefinitions: (
+		definitions: CardInputFieldDefinition<any, any>[]
+	) => void;
+	getCardInputFieldDefinition: (
+		id: string
+	) => CardInputFieldDefinition<any, any> | undefined;
+	getCardInputFieldDefinitions: () => CardInputFieldDefinition<any, any>[];
+
 	setTemplateNodeDefinition: (definition: TemplateNodeDefinition) => void;
 	getTemplateNodeDefinition: (id: string) => TemplateNodeDefinition | undefined;
 	getTemplateNodeDefinitions: () => TemplateNodeDefinition[];
@@ -50,12 +61,16 @@ export interface SessionZustandActions {
 type TemplateNodeDefintionMap = {
 	[id: string]: TemplateNodeDefinition;
 };
+type CardInputFieldDefinitionMap = {
+	[id: string]: CardInputFieldDefinition<any, any>;
+};
 
 export interface SessionZustandState extends SessionZustandActions {
 	ribbonItems: RibbonItem[];
 	selectedDeckIds: string[];
 	modalDefinitions: ModalDefinition<any>[];
 	pageDefinitions: PageDefinition<any>[];
+	cardInputFieldDefinitions: CardInputFieldDefinitionMap;
 	templateNodeDefinitions: TemplateNodeDefintionMap;
 	navigationUndoStack: NavigationStep[];
 	navigationRedoStack: NavigationStep[];
@@ -108,6 +123,7 @@ export class SessionZustandService extends Observable<EventMap> {
 			modalDefinitions: [],
 			pageDefinitions: [],
 			templateNodeDefinitions: {},
+			cardInputFieldDefinitions: {},
 			navigationUndoStack: [],
 			navigationRedoStack: [],
 			editorTemplate: undefined,
@@ -164,6 +180,15 @@ export class SessionZustandService extends Observable<EventMap> {
 
 			setTemplateNodeDefinition: (definition: TemplateNodeDefinition) => {
 				set((state) => {
+					const existingDefinition =
+						state.templateNodeDefinitions[definition.metadata.id];
+					if (existingDefinition !== undefined) {
+						console.warn(
+							`Template node definition with id ${definition.metadata.id} already exists.`,
+							definition
+						);
+						return;
+					}
 					state.templateNodeDefinitions[definition.metadata.id] = definition;
 				});
 			},
@@ -315,7 +340,30 @@ export class SessionZustandService extends Observable<EventMap> {
 				}),
 
 			onNodesChange: (changes: NodeChange[]) => {
-				const newNodes = applyNodeChanges(changes, this.state.getNodes());
+				// for now filters out the output node
+				// however, edges get deleted
+				const removeChanges = changes.filter(
+					(change) => change.type === "remove"
+				) as NodeRemoveChange[];
+
+				const otherChanges = changes.filter(
+					(change) => change.type !== "remove"
+				);
+
+				const removeChangesToApply = removeChanges.filter((change) => {
+					const node = this.state
+						.getNodes()
+						.find((node) => node.id === change.id);
+					if (node === undefined) return false;
+					return node.data.definitionId !== "output-node";
+				});
+
+				const changesToApply = [...otherChanges, ...removeChangesToApply];
+
+				const newNodes = applyNodeChanges(
+					changesToApply,
+					this.state.getNodes()
+				);
 				this.state.setNodes(newNodes);
 			},
 
@@ -336,6 +384,28 @@ export class SessionZustandService extends Observable<EventMap> {
 					if (state.editorTemplate === undefined) return;
 					state.editorTemplate.viewport = viewport;
 				});
+			},
+			addCardInputFieldDefinitions: (
+				definitions: CardInputFieldDefinition<any, any>[]
+			) =>
+				set((state) => {
+					definitions.forEach((definition) => {
+						const existingDefinition =
+							state.cardInputFieldDefinitions[definition.id];
+						if (existingDefinition !== undefined) {
+							console.warn(
+								`Card input field definition with id ${definition.id} already exists.`
+							);
+							return;
+						}
+						state.cardInputFieldDefinitions[definition.id] = definition;
+					});
+				}),
+			getCardInputFieldDefinition: (id: string) => {
+				return get().cardInputFieldDefinitions[id];
+			},
+			getCardInputFieldDefinitions: () => {
+				return Object.values(get().cardInputFieldDefinitions);
 			},
 		}))
 	);

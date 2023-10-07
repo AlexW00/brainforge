@@ -8,7 +8,7 @@ import { PouchTemplateService } from "../../../core/services/storage/pouch/docs/
 import type { Template } from "../../../core/data/models/flashcards/template/Template";
 import { choose } from "lit/directives/choose.js";
 import { when } from "lit/directives/when.js";
-import { TemplateEditorService } from "../../../core/services/app/EditorNodeService";
+import { TemplateEditorService } from "../../../core/services/app/TemplateEditorService";
 
 @customElement("template-editor-page")
 export default class TemplateEditorPage extends CustomElement {

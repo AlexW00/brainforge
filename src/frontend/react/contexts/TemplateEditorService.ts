@@ -1,6 +1,6 @@
 import React from "react";
 import { container } from "tsyringe";
-import { TemplateEditorService } from "../../../core/services/app/EditorNodeService";
+import { TemplateEditorService } from "../../../core/services/app/TemplateEditorService";
 
 const templateEditorService = container.resolve(TemplateEditorService);
 

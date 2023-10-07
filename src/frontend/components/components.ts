@@ -15,17 +15,19 @@ import _11 from "./panels/DeckTreePanel";
 import _12 from "./pages/TemplateOverviewPage";
 import _13 from "./pages/TemplateEditorPage";
 import _14 from "./pages/DeckPage";
-import _15 from "./modals/SettingsModal";
-import _16 from "./modals/DebugModal";
-import _17 from "./modals/BaseModal";
-import _18 from "./atomic/TextButton";
-import _19 from "./atomic/TemplateThumbnail";
-import _20 from "./atomic/Spacer";
-import _21 from "./atomic/RibbonItem";
-import _22 from "./atomic/ModalContent";
-import _23 from "./atomic/DimmedBackground";
+import _15 from "./nodes/OutputNode";
+import _16 from "./nodes/InputNode";
+import _17 from "./modals/SettingsModal";
+import _18 from "./modals/DebugModal";
+import _19 from "./modals/BaseModal";
+import _20 from "./atomic/TextButton";
+import _21 from "./atomic/TemplateThumbnail";
+import _22 from "./atomic/Spacer";
+import _23 from "./atomic/RibbonItem";
+import _24 from "./atomic/ModalContent";
+import _25 from "./atomic/DimmedBackground";
 
-export { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23 };
+export { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25 };
 
 declare global {
     interface HTMLElementTagNameMap {
@@ -44,14 +46,16 @@ declare global {
         'template-overview-page': _12;
         'template-editor-page': _13;
         'deck-page': _14;
-        'settings-modal': _15;
-        'debug-modal': _16;
-        'base-modal': _17;
-        'text-button': _18;
-        'template-thumbnail': _19;
-        'spacer-component': _20;
-        'ribbon-item': _21;
-        'modal-content': _22;
-        'dimmed-background': _23;
+        'output-node': _15;
+        'input-node': _16;
+        'settings-modal': _17;
+        'debug-modal': _18;
+        'base-modal': _19;
+        'text-button': _20;
+        'template-thumbnail': _21;
+        'spacer-component': _22;
+        'ribbon-item': _23;
+        'modal-content': _24;
+        'dimmed-background': _25;
     }
 }
