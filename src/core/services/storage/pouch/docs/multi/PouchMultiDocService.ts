@@ -57,7 +57,6 @@ export abstract class PouchMultiDocService<
 	 * @param doc Document to set
 	 */
 	public async set(doc: T): Promise<void> {
-		console.log("set", doc);
 		const key = this.getKey(doc.id);
 		let existingDoc: PouchDB.Core.ExistingDocument<T> | null = null;
 
