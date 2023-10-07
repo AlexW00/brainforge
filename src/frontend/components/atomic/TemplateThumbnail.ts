@@ -10,29 +10,34 @@ export default class TemplateThumbnail extends CustomElement {
 
 	render() {
 		return html`
-			<card-element>
+			<sl-card class="card-footer">
 				<div id="image">Thumbnail image</div>
-				<div id="name" class="no-select">${this.template.name}</div>
-			</card-element>
+				<div id="name" slot="footer" class="no-select">
+					${this.template.name}
+				</div>
+			</sl-card>
 		`;
 	}
 
 	static styles = css`
-		card-element {
-			max-width: 1fr;
-			height: 10rem;
-			display: flex;
-			flex-direction: column;
-		}
 		#image {
 			flex: 1;
+			height: 10rem;
 		}
 		#name {
 			height: 2rem;
 			line-height: 2rem;
-
-			border-top: var(--border-width-small) solid var(--border-color);
 			text-align: center;
+		}
+		sl-card::part(base):hover {
+			box-shadow: var(--sl-shadow-medium);
+		}
+		sl-card::part(footer) {
+			padding: var(--sl-spacing-x-small);
+		}
+		sl-card {
+			width: 100%;
+			height: 100%;
 		}
 	`;
 }

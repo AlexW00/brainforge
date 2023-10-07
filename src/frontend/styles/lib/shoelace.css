@@ -69,7 +69,7 @@
 	--sl-input-help-text-font-size-large: var(--sl-font-size-medium);
 	--sl-input-help-text-color: var(--sl-color-neutral-500);
 
-	--sl-panel-background-color: var(--sl-color-neutral-50);
+	--sl-panel-background-color: var(--sl-color-neutral-0);
 	--sl-panel-border-color: var(--sl-color-neutral-200);
 	--sl-panel-border-width: 1px;
 
