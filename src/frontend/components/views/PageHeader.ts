@@ -5,7 +5,6 @@ import { css, html } from "lit";
 import { UiEventBus } from "../../../core/services/events/UiEventBus";
 import { container } from "tsyringe";
 import { RouterService } from "../../../core/services/app/RouterService";
-import "@shoelace-style/shoelace/dist/components/icon-button/icon-button";
 
 @customElement("page-header")
 export default class PageHeader extends CustomElement {
@@ -64,13 +63,12 @@ export default class PageHeader extends CustomElement {
 			<div id="actions" class="right">
 				${this.actions?.map(
 					(action) => html`
-						<sl-icon-button
-							name="gear"
-							label="Settings"
+						<sl-button
+							variant="text"
 							@click=${() => this.onClickAction(action)}
 						>
 							${action.title}
-						</sl-icon-button>
+						</sl-button>
 					`
 				)}
 			</div>

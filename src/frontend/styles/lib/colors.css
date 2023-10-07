@@ -3,7 +3,7 @@ body {
 	--fg-color: var(--sl-color-neutral-1000);
 	--behind-app-color: black;
 	--dimmed-bg-color: var(--sl-overlay-background-color);
-	--app-ribbon-item-color: var(--fg-color);
+	--app-ribbon-item-color: var(--bg-color);
 }
 
 :root,
