@@ -107,6 +107,7 @@ type TemplatePageProperties = {
 export class TemplateOverviewPageDefinition extends PageDefinition<TemplatePageProperties> {
 	id = "template-overview";
 	name = "Templates";
+	defaultInfo = "Templates";
 
 	private templatePage: TemplateOverviewPage;
 	private readonly templateService: PouchTemplateService =

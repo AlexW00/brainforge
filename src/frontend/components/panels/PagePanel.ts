@@ -35,12 +35,11 @@ export default class PagePanel extends Panel {
 			this.properties = undefined;
 			return;
 		}
-		console.log("Unloading page", this.page?.id);
 		this.page?.onUnload();
 
 		this.page = this.elementRegistrar.getPageDefinitionById(pageId);
-		console.log("Setting page", pageId, this.page);
 		this.page?.on("infoChanged", this.onInfoChanged);
+		this.info = this.page?.defaultInfo;
 	}
 
 	firstUpdated() {

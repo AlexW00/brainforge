@@ -107,6 +107,7 @@ type TemplateEditorPageProperties = {
 export class TemplateEditorPageDefinition extends PageDefinition<TemplateEditorPageProperties> {
 	id = "template-editor";
 	name = "Template Editor";
+	defaultInfo = "Template";
 
 	private page: TemplateEditorPage;
 	private readonly editorService = container.resolve(TemplateEditorService);

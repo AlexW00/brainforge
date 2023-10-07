@@ -43,7 +43,7 @@ export default class RibbonItem extends CustomElement {
 			font-size: var(--sl-font-size-large);
 		}
 
-		:host(:hover) > #text {
+		:host(:hover) #text {
 			text-decoration: underline;
 		}
 	`;

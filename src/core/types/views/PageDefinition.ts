@@ -16,6 +16,7 @@ export abstract class PageDefinition<
 	 * E.g. in a nested  deck, this could be the name of the deck.
 	 */
 	public abstract getActions(): PageAction[];
+	public abstract defaultInfo: string;
 
 	public onUpdate: (properties: P) => void = () => {};
 

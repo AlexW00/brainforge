@@ -40,7 +40,7 @@ export default class ModalContent extends CustomElement {
 		:host {
 			width: 50%;
 			background: var(--bg-color);
-			border-radius: var(--border-radius-normal);
+			border-radius: var(--sl-border-radius-large);
 			padding: 1rem;
 			overflow-y: auto;
 			overflow-x: hidden;

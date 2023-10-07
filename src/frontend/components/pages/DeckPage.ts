@@ -47,6 +47,7 @@ type DeckPageProperties = {
 export class DeckPageDefinition extends PageDefinition<DeckPageProperties> {
 	id = "deck-page";
 	name = "Deck";
+	defaultInfo = "Deck";
 
 	private deckPage: DeckPage;
 
