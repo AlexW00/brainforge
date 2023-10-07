@@ -30,18 +30,19 @@ export default class TemplateOverviewPage extends CustomElement {
 	});
 
 	private unregisterTemplateChangeListener: (() => void) | undefined;
+	private onTemplateChanged = (e: CustomEvent<Template>) => {
+		this.loadTemplatesTask.run();
+	};
 
 	connectedCallback() {
-		this.unregisterTemplateChangeListener =
-			this.templateService.addChangeListener(() =>
-				this.loadTemplatesTask.run()
-			);
+		this.templateService.on("change", this.onTemplateChanged);
 		this.loadTemplatesTask.run();
 		super.connectedCallback();
 	}
 
 	disconnectedCallback() {
-		// this.unregisterTemplateChangeListener?.();
+		super.disconnectedCallback();
+		this.templateService.off("change", this.onTemplateChanged);
 	}
 
 	onClickTemplate = (template: Template) => {

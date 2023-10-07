@@ -1,14 +1,23 @@
+import { Observable } from "../../../../../types/events/Observable";
 import { Identifiable } from "../../../../../types/general/Identifiable";
 import { DbService } from "../../DbService";
+
+interface EventMap<T> {
+	change: T;
+}
 
 /**
  * A multi doc service interacts with multiple documents in the database
  * based on a prefix and an id.
  */
-export abstract class PouchMultiDocService<T extends Identifiable> {
+export abstract class PouchMultiDocService<
+	T extends Identifiable
+> extends Observable<EventMap<T>> {
 	protected abstract readonly prefix: string;
 
 	protected abstract readonly dbService: DbService;
+
+	private cancelChangeListener: () => void;
 
 	protected getKey(id: string): string {
 		return `${this.prefix}:${id}`;
@@ -146,28 +155,32 @@ export abstract class PouchMultiDocService<T extends Identifiable> {
 		return docs.filter(predicate);
 	}
 
-	/**
-	 * Adds a change listener to this substore.
-	 * @param listener The listener to add, called with the new document (or undefined if the document was deleted)
-	 * @returns A function to remove the listener.
-	 */
-	public addChangeListener(
-		listener: (id: string, newValue?: T) => void,
-		ids?: string[]
-	): () => void {
-		return this.dbService
-			.getDb()
-			.changes({
-				since: "now",
-				live: true,
-				include_docs: true,
-				doc_ids: ids?.map((id) => this.getKey(id)),
-			})
-			.on("change", (change) => {
-				console.log(change);
-				const doc = change.doc as T | undefined,
-					id = doc?.id ?? change.id;
-				listener(id, doc);
-			}).cancel;
+	public override on<K extends "change">(
+		type: K,
+		listener: (event: CustomEvent<EventMap<T>[K]>) => void,
+		options?: boolean | AddEventListenerOptions | undefined
+	): void {
+		if (!this.cancelChangeListener) {
+			this.dbService
+				.getDb()
+				.changes({
+					since: "now",
+					live: true,
+					include_docs: true,
+				})
+				.on("change", (change) => {
+					const doc = change.doc as T | undefined,
+						id = doc?.id ?? change.id;
+					this.dispatchEvent(
+						new CustomEvent("change", {
+							detail: {
+								id,
+								...doc,
+							},
+						})
+					);
+				});
+		}
+		super.on(type, listener, options);
 	}
 }

@@ -26,13 +26,7 @@ export default class DeckTreePanel extends Panel {
 	@state()
 	private lastSelectedDeckId?: string;
 
-	private unregisterDeckChangeListener: (() => void) | undefined;
-
-	private onDeckChanged = async (id: string, newValue?: Deck) => {
-		if (newValue === undefined) {
-			this.decks = this.decks.filter((d) => d.id !== id);
-			return;
-		}
+	private onDeckChanged = (e: CustomEvent<Deck>) => {
 		this.loadRootDecksTask.run();
 	};
 
@@ -72,9 +66,7 @@ export default class DeckTreePanel extends Panel {
 		super.connectedCallback();
 		this.loadRootDecksTask.run();
 
-		this.unregisterDeckChangeListener = this.deckService.addChangeListener(
-			this.onDeckChanged
-		);
+		this.deckService.on("change", this.onDeckChanged);
 
 		this.sessionZustand.addEventListener(
 			"selectedDeckIdsChanged",
@@ -85,11 +77,11 @@ export default class DeckTreePanel extends Panel {
 	}
 
 	disconnectedCallback() {
-		this.unregisterDeckChangeListener?.();
 		this.sessionZustand.removeEventListener(
 			"selectedDeckIdsChanged",
 			this.onSelectedDeckIdsChanged
 		);
+		this.deckService.off("change", this.onDeckChanged);
 	}
 
 	private updateLastSelectedDeckId = () => {

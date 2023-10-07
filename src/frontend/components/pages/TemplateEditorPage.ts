@@ -42,16 +42,16 @@ export default class TemplateEditorPage extends CustomElement {
 		autoRun: false,
 	});
 
-	private onTemplateChanged = (_id: string, newValue?: Template) => {
-		this.template = newValue;
+	private onTemplateChanged = (e: CustomEvent<Template>) => {
+		if (e.detail.id !== this.properties.templateId) return;
+		this.template = e.detail;
 	};
 
 	onTemplateIdChanged() {
 		if (this.properties === undefined) return;
-
 		this.loadTemplateTask.run();
-		this.unregisterTemplateChangeListener =
-			this.templateService.addChangeListener(this.onTemplateChanged);
+		this.templateService.off("change", this.onTemplateChanged);
+		this.templateService.on("change", this.onTemplateChanged);
 	}
 
 	connectedCallback() {
@@ -60,7 +60,8 @@ export default class TemplateEditorPage extends CustomElement {
 	}
 
 	disconnectedCallback() {
-		// this.unregisterTemplateChangeListener?.();
+		super.disconnectedCallback();
+		this.templateService.off("change", this.onTemplateChanged);
 	}
 
 	update(changedProperties: Map<string | number | symbol, unknown>) {
