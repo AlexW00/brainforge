@@ -57,7 +57,7 @@ export class CardRenderService {
 		}
 		// Evaluate all input handles
 		const inputValues = await Promise.all(
-			Object.entries(node.data.data.io.inputs).map(async ([inputName]) => {
+			Object.entries(node.data.io?.inputs ?? {}).map(async ([inputName]) => {
 				// Find the edge that connects to this input handle
 				const edge = template.graph.edges.find(
 					(edge) => edge.target === nodeId && edge.targetHandle === inputName
@@ -89,11 +89,12 @@ export class CardRenderService {
 		);
 
 		// Calculate the output value
-		const outputHandle = node.data.data.io.outputs[name];
+		const outputHandle = node.data.io?.outputs[name];
 		if (!outputHandle) {
 			throw new Error(`Output handle ${name} of node ${nodeId} not found`);
 		}
-		const value = await outputHandle.value(inputValues);
+		console.log(outputHandle);
+		const value = await outputHandle.value.get(inputValues);
 
 		// Cache the value
 		if (!newRenderCache[nodeId]) newRenderCache[nodeId] = [];
@@ -129,7 +130,12 @@ export class CardRenderService {
 		// evaluate all nodes starting from the output node
 		// also provide the new cache so that calculated values can be skipped
 
-		this.evaluateOutput("out", "output", template, newRenderCache);
+		const outputNode = template.graph.nodes.find(
+			(node) => node.data.definitionId === "output-node"
+		);
+		if (!outputNode) throw new Error("Output node not found");
+
+		this.evaluateOutput("out", outputNode.id, template, newRenderCache);
 		return newRenderCache;
 	}
 

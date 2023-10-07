@@ -4,6 +4,7 @@ import type { TemplateNodeParams } from "../../../core/data/models/extensions/pl
 import type {
 	NodeHandles,
 	NodeInputHandle,
+	NodeOutputHandle,
 } from "../../../core/data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
 import { AnyHandle } from "../../../core/static/nodeHandles/base/AnyHandle";
 import { CustomElement } from "../atomic/CustomElement";
@@ -129,6 +130,22 @@ export class OutputNodeDefinition extends TemplateNodeDefinition {
 				},
 			};
 			this.nodeService.setInputHandles(params.id, inputHandles);
+		}
+
+		if (params.outputHandles === undefined) {
+			const outputHandles: NodeHandles<NodeOutputHandle> = {
+				output: {
+					name: "out",
+					type: AnyHandle,
+					value: {
+						timestamp: new Date(),
+						get: async (inputValues: { name: string; value: any }[]) => {
+							return inputValues[0].value;
+						},
+					},
+				},
+			};
+			this.nodeService.setOutputHandles(params.id, outputHandles);
 		}
 
 		this.content = new OutputNode();

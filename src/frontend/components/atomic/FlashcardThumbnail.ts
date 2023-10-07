@@ -5,16 +5,22 @@ import { Task } from "@lit-labs/task";
 import { container } from "tsyringe";
 import { PouchCardService } from "../../../core/services/storage/pouch/docs/multi/PouchCardService";
 import { css, html } from "lit";
+import { CardRenderService } from "../../../core/services/app/CardRenderService";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 @customElement("flashcard-thumbnail")
 export default class FlashcardThumbnail extends CustomElement {
 	private readonly cardService = container.resolve(PouchCardService);
+	private readonly cardRendererServicew = container.resolve(CardRenderService);
 
 	@property({ type: String })
 	cardId: string;
 
 	@state()
 	private card?: Card;
+
+	@state()
+	private cardHtml?: string;
 
 	loadCardTask = new Task(this, {
 		task: async () => {
@@ -23,9 +29,20 @@ export default class FlashcardThumbnail extends CustomElement {
 		autoRun: false,
 	});
 
+	renderCardTask = new Task(this, {
+		task: async () => {
+			if (this.card === undefined) return;
+			this.cardHtml = await this.cardRendererServicew.renderCard(this.card.id);
+		},
+		autoRun: false,
+	});
+
 	onCardIdChanged() {
 		if (this.cardId === undefined) return;
-		this.loadCardTask.run();
+		this.loadCardTask
+			.run()
+			.then(() => this.renderCardTask.run())
+			.catch((e) => console.error(e));
 	}
 
 	onCardChanged = (e: CustomEvent<Card>) => {
@@ -45,9 +62,7 @@ export default class FlashcardThumbnail extends CustomElement {
 	}
 
 	render() {
-		return html`
-			<sl-card> ${this.card?.id}, ${this.card?.templateId} </sl-card>
-		`;
+		return html` <sl-card> ${ifDefined(this.cardHtml)} </sl-card> `;
 	}
 
 	static styles = css`
@@ -55,6 +70,7 @@ export default class FlashcardThumbnail extends CustomElement {
 			max-height: 40rem;
 			user-select: none;
 			cursor: pointer;
+			overflow: hidden;
 		}
 		sl-card::part(base):hover {
 			box-shadow: var(--sl-shadow-medium);
