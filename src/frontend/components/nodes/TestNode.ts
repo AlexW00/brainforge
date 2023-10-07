@@ -35,7 +35,7 @@ export class TestNodeDefinition extends TemplateNodeDefinition {
 					value: {
 						timestamp: new Date(),
 						get: async (inputValues) => {
-							return inputValues[0].value;
+							return inputValues[0].value + "!";
 						},
 					},
 				},

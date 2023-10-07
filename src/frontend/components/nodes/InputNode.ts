@@ -88,8 +88,8 @@ export class InputNodeDefinition extends TemplateNodeDefinition {
 					type: AnyHandle,
 					value: {
 						timestamp: new Date(),
-						get: async (inputValues: any) => {
-							return inputValues["input"].value;
+						get: async (inputValues) => {
+							return inputValues[0].value;
 						},
 					},
 				},
