@@ -31,28 +31,11 @@ export default class TemplateOverviewPage extends CustomElement {
 
 	private unregisterTemplateChangeListener: (() => void) | undefined;
 
-	private onTemplateChanged = (id: string, newValue?: Template) => {
-		if (newValue === undefined) {
-			this.templates = this.templates.filter((t) => t.id !== id);
-			return;
-		}
-		const index = this.templates.findIndex((t) => t.id === id);
-
-		if (index === -1) {
-			this.templates = produce(this.templates, (draft) => {
-				draft.push(newValue);
-			});
-			return;
-		}
-
-		this.templates = produce(this.templates, (draft) => {
-			draft[index] = newValue;
-		});
-	};
-
 	connectedCallback() {
 		this.unregisterTemplateChangeListener =
-			this.templateService.addChangeListener(this.onTemplateChanged);
+			this.templateService.addChangeListener(() =>
+				this.loadTemplatesTask.run()
+			);
 		this.loadTemplatesTask.run();
 		super.connectedCallback();
 	}
