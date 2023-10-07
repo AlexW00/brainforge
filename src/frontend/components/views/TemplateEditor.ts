@@ -6,7 +6,7 @@ import ReactDOM from "react-dom/client";
 import { Editor } from "../../react/components/organisms/Editor";
 import React from "react";
 import { container } from "tsyringe";
-import rfcss from "reactflow/dist/style.css";
+import rfcss from "reactflow/dist/style.css?inline";
 import { TemplateEditorService } from "../../../core/services/app/EditorNodeService";
 import { TemplateNodeService } from "../../../core/services/app/TemplateNodeService";
 
@@ -37,9 +37,8 @@ export default class TemplateEditor extends CustomElement {
 					(absolutePosition.x - thisOffset.x - editorViewport.x) /
 					editorViewport.zoom,
 				y:
-					absolutePosition.y -
-					thisOffset.y -
-					editorViewport.y / editorViewport.zoom,
+					(absolutePosition.y - thisOffset.y - editorViewport.y) /
+					editorViewport.zoom,
 			};
 			console.log("add node", nodeDefinition, positionInEditor);
 			this.editorService.addNode(nodeDefinition.metadata.id, positionInEditor);
