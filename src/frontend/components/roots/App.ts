@@ -32,10 +32,6 @@ export default class AppRoot extends CustomElement {
 			--min: 15rem;
 			--max: 35rem;
 			--divider-width: 2px;
-			/* --divider-width: 1px; */
-		}
-		sl-split-panel::part(divider) {
-			/* background-color: black; */
 		}
 	`;
 }
