@@ -155,7 +155,7 @@ export default class DeckTreePanel extends Panel {
 		}
 
 		sl-tree {
-			padding-right: var(--sl-spacing-medium);
+			padding-right: var(--sl-spacing-x-small);
 		}
 
 		sl-tree-item::part(item--selected) {

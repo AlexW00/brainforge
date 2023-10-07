@@ -1,7 +1,7 @@
 body {
 	--bg-color: var(--sl-color-neutral-0);
 	--fg-color: var(--sl-color-neutral-1000);
-	--behind-app-color: black;
+	--behind-app-color: var(--sl-color-primary-900);
 	--dimmed-bg-color: var(--sl-overlay-background-color);
 	--app-ribbon-item-color: var(--bg-color);
 }

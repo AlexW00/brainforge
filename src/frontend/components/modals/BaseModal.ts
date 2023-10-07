@@ -58,6 +58,7 @@ export default class BaseModal extends CustomElement {
 			align-items: center;
 
 			background: var(--dimmed-bg-color);
+			z-index: 10001;
 		}
 	`;
 }
