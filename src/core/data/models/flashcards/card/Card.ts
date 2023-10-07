@@ -15,6 +15,7 @@ export interface Card {
 	renderCache?: CardRenderCache;
 	reviewData: CardReviewData;
 	metadata: CardMetaData;
+	inputData: CardInputData;
 }
 
 export interface CardRenderCache {
@@ -23,4 +24,8 @@ export interface CardRenderCache {
 
 export interface CardMetaData {
 	creationTimestamp: Date;
+}
+
+export interface CardInputData {
+	[key: string]: any;
 }

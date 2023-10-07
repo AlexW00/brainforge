@@ -109,6 +109,6 @@ export class InputNodeDefinition extends TemplateNodeDefinition {
 		params: TemplateNodeParams,
 		inputs: NodeInputHandleWithValue[]
 	) => {
-		return "INPUT";
+		throw new Error("BRO dont call this shit");
 	};
 }

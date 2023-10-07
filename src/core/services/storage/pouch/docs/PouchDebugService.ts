@@ -96,6 +96,7 @@ export class PouchDebugService {
 			metadata: {
 				creationTimestamp: new Date(),
 			},
+			inputData: {},
 		};
 	}
 

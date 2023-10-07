@@ -41,8 +41,7 @@ export class TestNodeDefinition extends TemplateNodeDefinition {
 
 		parent.innerHTML = `
             <div style="padding: 10px;">
-                <h1>Test Node</h1>
-                <p>This is a test node.</p>
+                <p>Appends "-TEST".</p>
             </div>
         `;
 	};

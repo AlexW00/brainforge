@@ -34,7 +34,8 @@ export class CardRenderService {
 		name: string,
 		nodeId: string,
 		template: Template,
-		newRenderCache: CardRenderCache
+		newRenderCache: CardRenderCache,
+		card: Card
 	): Promise<any> {
 		// Check if the value is already in the cache and return it if it is
 		console.log("evaluate output", name, nodeId);
@@ -54,6 +55,16 @@ export class CardRenderService {
 		// Find the node in the template
 		const node = template.graph.nodes.find((node) => node.id === nodeId);
 		if (!node) throw new Error(`Node with id ${nodeId} not found`);
+
+		if (node.data.definitionId === "input-node") {
+			const inputData =
+				card.inputData[node.id + "-" + node.data.data.inputTypeId];
+			if (inputData === undefined)
+				console.error(
+					`Input data for input node ${node.id} not found in card ${card.id}`
+				);
+			return inputData ?? "UNSET";
+		}
 
 		// Evaluate all input handles
 		const inputValues: NodeInputHandleWithValue[] = await Promise.all(
@@ -87,7 +98,8 @@ export class CardRenderService {
 					sourceHandleName,
 					sourceNodeId,
 					template,
-					newRenderCache
+					newRenderCache,
+					card
 				);
 
 				return {
@@ -171,7 +183,7 @@ export class CardRenderService {
 		);
 		if (!outputNode) throw new Error("Output node not found");
 
-		this.evaluateOutput("out", outputNode.id, template, newRenderCache);
+		this.evaluateOutput("out", outputNode.id, template, newRenderCache, card);
 		return newRenderCache;
 	}
 

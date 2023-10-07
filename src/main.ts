@@ -6,4 +6,4 @@ initShoelace();
 
 import("./frontend/components/components");
 
-setPrimaryColor(PrimaryColor.emerald);
+setPrimaryColor(PrimaryColor.pink);
