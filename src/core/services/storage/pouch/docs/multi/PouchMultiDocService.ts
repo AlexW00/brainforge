@@ -59,10 +59,12 @@ export abstract class PouchMultiDocService<T extends Identifiable> {
 				throw error; // re-throw the error if it's not a "not found" error
 			}
 		}
+		// circular reference workaround
+		const cleanDoc = JSON.parse(JSON.stringify(doc));
 
 		await this.dbService.getDb().put({
 			_id: key,
-			...doc,
+			...cleanDoc,
 			_rev: existingDoc?._rev, // use the _rev from the existing document if it exists
 		});
 	}

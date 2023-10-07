@@ -1,28 +1,29 @@
-import React, { useMemo, useRef } from "react";
-import ReactFlow, { Connection, Controls, Background, ConnectionLineType } from "reactflow";
+import React, { useCallback, useMemo, useRef } from "react";
+import ReactFlow, { Connection, Controls, Background, ConnectionLineType, useOnViewportChange, Viewport } from "reactflow";
 import { areCompatible } from "../../../../core/data/models/flashcards/template/graph/nodeData/io/handles/NodeHandleType";
 import { useGetEdges } from "../../hooks/state/getters/useGetEdges";
 import { useGetNodes } from "../../hooks/state/getters/useGetNodes";
 import { NodeComponent } from "./Node";
 import { useZustand } from "../../hooks/context/useZustand";
+import { useGetViewport } from "../../hooks/state/getters/useGetViewport";
 
 
 export const Editor = () => {
   const nodes = useGetNodes();
   const edges = useGetEdges();
+  const viewport = useGetViewport();
 
   const zustand = useZustand()
 
   const ref = useRef<any>(null);
 
-  const { onNodesChange, onEdgesChange, onConnect } = zustand();
+  const { onNodesChange, onEdgesChange, onConnect, onViewportChange } = zustand();
 
   const nodeTypes = useMemo(() => ({ custom: NodeComponent }), []);
 
   const selectNode = (id: string, nodes: any[]) => {
     return nodes.find((node) => node.id === id);
   }
-  
 
 
   const handleConnect = (connection: Connection) => {
@@ -62,7 +63,6 @@ export const Editor = () => {
     }
   };
 
-
   return (
     <ReactFlow
       ref={ref}
@@ -73,26 +73,29 @@ export const Editor = () => {
       onNodesChange={(nodeChanges) => onNodesChange(nodeChanges)}
       onEdgesChange={(edgeChanges) => onEdgesChange(edgeChanges)}
       onConnect={handleConnect}
-      onClick={(event) => 
-        {
-          // necessary to create a new event here since
-          // the old one does not propagate for some reason
-          const newEvent = new MouseEvent('mousedown', {
-            bubbles: true,
-            cancelable: true,
-            clientX: event.clientX - ref.current.getBoundingClientRect().left,
-            clientY: event.clientY - ref.current.getBoundingClientRect().top,   
-          });
-          document.dispatchEvent(newEvent);
-        }
-                  
-      }
-      fitView
+      defaultViewport={viewport}
       snapToGrid
-      // onContextMenu={onContextMenu}
     >
+
       <Controls />
       <Background />
+      <ViewportListener onViewportChange={onViewportChange} />
     </ReactFlow>
   );
 };
+
+// child component
+const ViewportListener = (
+  {
+    onViewportChange,
+  } : {
+    onViewportChange: (viewport: Viewport) => void
+  }
+) => {
+  useOnViewportChange({
+    onChange: useCallback(onViewportChange, []),
+  });
+
+  return (
+    <></>)
+}

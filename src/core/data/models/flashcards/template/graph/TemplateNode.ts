@@ -10,6 +10,7 @@ export const newTemplateNode = (
 ): TemplateNode => ({
 	position,
 	id: uuidv4(),
+	type: "custom",
 	data: {
 		definitionId,
 		doReRunOnRender: false,

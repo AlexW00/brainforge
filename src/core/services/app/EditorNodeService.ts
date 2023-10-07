@@ -27,6 +27,10 @@ export class TemplateEditorService {
 		this.sessionZustand.state.setEditorTemplate(template);
 	}
 
+	getTemplate() {
+		return this.sessionZustand.state.editorTemplate;
+	}
+
 	clearTemplate() {
 		this.sessionZustand.state.setEditorTemplate(undefined);
 	}
@@ -39,6 +43,7 @@ export class TemplateEditorService {
 	}
 
 	addNode(nodeDefinitionId: string, position: Position) {
+		console.log("add node", nodeDefinitionId, position);
 		const node: TemplateNode = newTemplateNode(nodeDefinitionId, position);
 		console.log("new node", node);
 		this.sessionZustand.state.pushNode(node);

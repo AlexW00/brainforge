@@ -1,4 +1,4 @@
-import { LitElement, PropertyValueMap, css, html } from "lit";
+import { CSSResultGroup, LitElement, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import {
 	ContextMenuEntry,
@@ -8,6 +8,8 @@ import {
 
 @customElement("context-menu")
 export default class ContextMenuComponent extends LitElement {
+	static KEY_SEPARATOR = ".*.";
+
 	@property({ type: Array })
 	entries: ContextMenuEntry[] = [];
 
@@ -17,126 +19,111 @@ export default class ContextMenuComponent extends LitElement {
 	@property({ type: Number })
 	offsetTop = 0;
 
-	static styles = css`
-		.context-menu {
-			position: absolute;
-			background-color: white;
-			border: var(--border-width-small) solid var(--border-color);
-			z-index: 1000;
-		}
-
-		.context-menu-item,
-		.context-menu-group-title {
-			padding: 8px 12px;
-			cursor: pointer;
-		}
-
-		.context-menu-item:hover {
-			background-color: #f5f5f5;
-		}
-
-		.context-menu-group-title {
-			font-weight: bold;
-		}
-		.context-menu-group-items {
-			display: none;
-			position: absolute;
-			top: 0;
-			left: 100%;
-			border: var(--border-width-small) solid var(--border-color);
-			background-color: white;
-			white-space: nowrap;
-		}
-
-		.context-menu-group:hover .context-menu-group-items {
-			display: block;
-		}
-	`;
+	isClosing = false;
 
 	private removeOtherContextMenus() {
 		const contextMenus = document.querySelectorAll("context-menu");
 		contextMenus.forEach((contextMenu) => {
-			if (contextMenu !== this) {
-				contextMenu.remove();
-			}
+			if (contextMenu !== this) this.onClose();
 		});
 	}
 
 	private onClickDocument = (event: MouseEvent) => {
-		if (event.target !== this) this.remove();
+		if (event.target !== this) this.onClose();
 	};
 
 	firstUpdated() {
-		document.addEventListener("mousedown", this.onClickDocument);
+		document.addEventListener("click", this.onClickDocument);
 	}
 
 	disconnectedCallback() {
 		document.removeEventListener("click", this.onClickDocument);
 	}
+	private onSelect(event: CustomEvent) {
+		const menuItem = this.getMenuItem(event.detail.item.value);
+		if (!menuItem) return;
+		if (!("onClick" in menuItem)) return;
+		this.onClose(menuItem);
+	}
+
+	private onClose(clickedMenuItem?: ContextMenuItem) {
+		if (this.isClosing) return;
+		this.isClosing = true;
+		clickedMenuItem?.onClick({ x: this.offsetLeft, y: this.offsetTop });
+		this.remove();
+	}
 
 	render() {
 		this.removeOtherContextMenus();
 		return html`
-			<div class="context-menu">
+			<sl-menu
+				class="context-menu"
+				style="left: ${this.offsetLeft}px; top: ${this.offsetTop}px;"
+				@sl-select=${this.onSelect}
+			>
 				${this.entries.map((entry) => this.renderEntry(entry))}
-			</div>
+			</sl-menu>
 		`;
-	}
-
-	private updatePosition() {
-		if (this.offsetLeft && this.offsetTop) {
-			const contextMenu = this.shadowRoot?.querySelector(".context-menu");
-			if (contextMenu) {
-				contextMenu.setAttribute(
-					"style",
-					`left: ${this.offsetLeft}px; top: ${this.offsetTop}px;`
-				);
-			}
-		}
-	}
-
-	protected updated(
-		_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>
-	): void {
-		if (
-			_changedProperties.has("offsetLeft") ||
-			_changedProperties.has("offsetTop")
-		) {
-			this.updatePosition();
-		}
 	}
 
 	renderEntry(entry: ContextMenuEntry) {
 		if ("onClick" in entry) {
 			return this.renderItem(entry);
 		} else {
-			return this.renderGroup(entry);
+			return this.renderGroup(entry, entry.title);
 		}
 	}
 
-	renderItem(item: ContextMenuItem) {
+	private getKey(id: string, title: string) {
+		return `${id}${ContextMenuComponent.KEY_SEPARATOR}${title}`;
+	}
+
+	private getMenuItem(
+		key: string,
+		contextMenu = this.entries
+	): undefined | ContextMenuEntry {
+		if (!contextMenu) return undefined;
+		if (key === "") return undefined;
+
+		const keypath = key.split(ContextMenuComponent.KEY_SEPARATOR);
+		if (keypath.length === 1) {
+			return contextMenu.find((entry) => entry.title === keypath[0]);
+		} else {
+			const group = contextMenu.find(
+				(entry) => entry.title === keypath[0]
+			) as ContextMenuGroup;
+			if (!group) return undefined;
+			return this.getMenuItem(
+				keypath.slice(1).join(ContextMenuComponent.KEY_SEPARATOR),
+				group.items
+			);
+		}
+	}
+
+	renderItem(item: ContextMenuItem, id: string = "") {
+		return html` <sl-menu-item value="${id}"> ${item.title} </sl-menu-item> `;
+	}
+
+	renderGroup(group: ContextMenuGroup, id: string) {
 		return html`
-			<div
-				class="context-menu-item"
-				@click="${() =>
-					item.onClick({
-						x: this.offsetLeft,
-						y: this.offsetTop,
-					})}"
-			>
-				${item.title}
-			</div>
+			<sl-menu-item>
+				${group.title}
+				<sl-menu slot="submenu">
+					${group.items.map((item) =>
+						this.renderItem(item, this.getKey(id, item.title))
+					)}
+				</sl-menu>
+			</sl-menu-item>
 		`;
 	}
 
-	renderGroup(group: ContextMenuGroup) {
-		return html`
-			<div class="context-menu-group">
-				<div class="context-menu-group-title">${group.title}</div>
-				<div class="context-menu-group-items">
-					${group.items.map((item) => this.renderItem(item))}
-				</div>
-			</div>
-		`;
-	}
+	static styles = css`
+		:host {
+			position: absolute;
+			z-index: 100;
+		}
+		sl-menu {
+			max-width: 20rem;
+		}
+	`;
 }

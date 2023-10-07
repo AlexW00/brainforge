@@ -1,3 +1,4 @@
+import { Viewport } from "reactflow";
 import { Identifiable } from "../../../../types/general/Identifiable";
 import { TemplateGraph } from "./graph/TemplateGraph";
 
@@ -7,4 +8,5 @@ import { TemplateGraph } from "./graph/TemplateGraph";
 export interface Template extends Identifiable {
 	graph: TemplateGraph;
 	name: string;
+	viewport: Viewport;
 }

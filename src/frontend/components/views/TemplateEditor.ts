@@ -9,7 +9,6 @@ import { container } from "tsyringe";
 import rfcss from "reactflow/dist/style.css";
 import { TemplateEditorService } from "../../../core/services/app/EditorNodeService";
 import { TemplateNodeService } from "../../../core/services/app/TemplateNodeService";
-import { newTemplateNode } from "../../../core/data/models/flashcards/template/graph/TemplateNode";
 
 @customElement("template-editor")
 export default class TemplateEditor extends CustomElement {
@@ -25,9 +24,25 @@ export default class TemplateEditor extends CustomElement {
 	private nodeService = container.resolve(TemplateNodeService);
 
 	protected contextMenu = this.nodeService.getAsContextMenu(
-		(position, nodeDefinition) => {
-			console.log("clicked menu item in context");
-			this.editorService.addNode(nodeDefinition.id, position);
+		(absolutePosition, nodeDefinition) => {
+			const template = this.editorService.getTemplate();
+			if (!template) return;
+
+			const editorViewport = template.viewport;
+
+			const thisOffset = this.getBoundingClientRect();
+
+			const positionInEditor = {
+				x:
+					(absolutePosition.x - thisOffset.x - editorViewport.x) /
+					editorViewport.zoom,
+				y:
+					absolutePosition.y -
+					thisOffset.y -
+					editorViewport.y / editorViewport.zoom,
+			};
+			console.log("add node", nodeDefinition, positionInEditor);
+			this.editorService.addNode(nodeDefinition.metadata.id, positionInEditor);
 		}
 	);
 

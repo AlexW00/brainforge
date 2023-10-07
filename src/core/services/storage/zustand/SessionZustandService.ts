@@ -20,6 +20,7 @@ import {
 	Connection,
 	EdgeChange,
 	NodeChange,
+	Viewport,
 	addEdge,
 	applyEdgeChanges,
 	applyNodeChanges,
@@ -63,6 +64,7 @@ export interface SessionZustandState extends SessionZustandActions {
 
 	getEdges: () => TemplateEdge[];
 	getNodes: () => TemplateNode[];
+	getViewport: () => Viewport;
 	setNodeData: (nodeId: string, data: NodeData) => void;
 	setNodeHandles: (
 		nodeId: string,
@@ -87,6 +89,7 @@ export interface SessionZustandState extends SessionZustandActions {
 	onNodesChange: (nodeChanges: NodeChange[]) => void;
 	onEdgesChange: (edgeChanges: EdgeChange[]) => void;
 	onConnect: (connection: Connection) => void;
+	onViewportChange: (viewport: Viewport) => void;
 }
 
 type EventMap = {
@@ -183,6 +186,15 @@ export class SessionZustandService extends Observable<EventMap> {
 			},
 			getNodes: () => {
 				return get().editorTemplate?.graph.nodes ?? [];
+			},
+			getViewport: () => {
+				if (get().editorTemplate === undefined)
+					return {
+						x: 0,
+						y: 0,
+						zoom: 1,
+					};
+				return get().editorTemplate!.viewport;
 			},
 
 			setNodeData: (nodeId: string, data: NodeData) =>
@@ -318,6 +330,12 @@ export class SessionZustandService extends Observable<EventMap> {
 					this.state.getEdges()
 				);
 				this.state.setEdges(newEdges);
+			},
+			onViewportChange: (viewport: Viewport) => {
+				set((state) => {
+					if (state.editorTemplate === undefined) return;
+					state.editorTemplate.viewport = viewport;
+				});
 			},
 		}))
 	);
