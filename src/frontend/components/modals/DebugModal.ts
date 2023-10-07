@@ -33,6 +33,12 @@ export default class DebugModal extends CustomElement {
 		});
 	};
 
+	addRandomCardToRandomDeck = () => {
+		this.debug.addRandomCardToRandomDeck().then(() => {
+			console.log("Added random card to random deck");
+		});
+	};
+
 	render() {
 		return html`
 			<div>Debug</div>
@@ -45,6 +51,9 @@ export default class DebugModal extends CustomElement {
 			</button>
 
 			<button @click=${this.addRandomChildDeck}>Add random child deck</button>
+			<button @click=${this.addRandomCardToRandomDeck}>
+				Add random card to random deck
+			</button>
 		`;
 	}
 

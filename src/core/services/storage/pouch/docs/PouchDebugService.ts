@@ -5,6 +5,7 @@ import { Deck } from "../../../../data/models/flashcards/Deck";
 import { PouchTemplateService } from "./multi/PouchTemplateService";
 import { TemplateNode } from "../../../../data/models/flashcards/template/graph/TemplateNode";
 import { Template } from "../../../../data/models/flashcards/template/Template";
+import { Card, CardStatus } from "../../../../data/models/flashcards/card/Card";
 
 @singleton()
 export class PouchDebugService {
@@ -78,6 +79,45 @@ export class PouchDebugService {
 		};
 	}
 
+	private getRandomTemplateId = async () => {
+		const templates = await this.templateService.getAll();
+		return templates[faker.number.int(templates.length - 1)].id;
+	};
+
+	private createFakeCard(templateId: string): Card {
+		return {
+			id: faker.string.uuid(),
+			templateId,
+			status: CardStatus.New,
+			reviewData: {
+				reviews: [],
+				dueOn: new Date(),
+			},
+			metadata: {
+				creationTimestamp: new Date(),
+			},
+		};
+	}
+
+	async createRandomCard() {
+		const templateId = await this.getRandomTemplateId();
+		const card = this.createFakeCard(templateId);
+
+		await this.pouchService.cardService.set(card);
+		return card;
+	}
+
+	async addRandomCardToRandomDeck() {
+		const deckId = await this.getRandomDeckId();
+		const deck = await this.pouchService.deckService.get(deckId);
+
+		if (deck === undefined) throw new Error(`Deck with id ${deckId} not found`);
+
+		const card = await this.createRandomCard();
+		deck.cardsIds.push(card.id);
+		await this.pouchService.deckService.set(deck);
+	}
+
 	async addTemplateWithNodes() {
 		const nodes: TemplateNode[] = [];
 
@@ -91,6 +131,11 @@ export class PouchDebugService {
 			graph: {
 				nodes,
 				edges: [],
+			},
+			viewport: {
+				x: 0,
+				y: 0,
+				zoom: 1,
 			},
 		};
 

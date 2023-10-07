@@ -1,11 +1,12 @@
-import { customElement, property } from "lit/decorators.js";
+import { customElement, property, state } from "lit/decorators.js";
 import { CustomElement } from "../atomic/CustomElement";
 import { PageDefinition } from "../../../core/types/views/PageDefinition";
 import { css, html } from "lit";
-import { Deck } from "../../../core/data/models/flashcards/Deck";
+import type { Deck } from "../../../core/data/models/flashcards/Deck";
 import { container } from "tsyringe";
 import { PouchDeckService } from "../../../core/services/storage/pouch/docs/multi/PouchDeckService";
 import { Task } from "@lit-labs/task";
+import { produce } from "immer";
 
 @customElement("deck-page")
 export default class DeckPage extends CustomElement {
@@ -14,6 +15,7 @@ export default class DeckPage extends CustomElement {
 	@property({ type: Object })
 	properties!: DeckPageProperties;
 
+	@state()
 	deck?: Deck;
 
 	private getDeckTask = new Task(
@@ -26,8 +28,33 @@ export default class DeckPage extends CustomElement {
 		() => [this.properties.deckId]
 	);
 
+	onDeckChanged = (e: CustomEvent<Deck>) => {
+		if (e.detail.id !== this.properties.deckId) return;
+		this.deck = e.detail;
+		this.requestUpdate();
+	};
+
+	connectedCallback() {
+		this.getDeckTask.run();
+		this.deckService.on("change", this.onDeckChanged);
+
+		super.connectedCallback();
+	}
+
+	disconnectedCallback() {
+		this.deckService.off("change", this.onDeckChanged);
+		super.disconnectedCallback();
+	}
+
+	private getCardIds() {
+		const ids = this.deck?.cardsIds || [];
+		return ids;
+	}
+
 	render() {
-		return html` <div id="title">${this.deck?.name}</div> `;
+		return html`
+			<flashcard-grid .cardIds=${this.getCardIds()}></flashcard-grid>
+		`;
 	}
 
 	static styles = css`

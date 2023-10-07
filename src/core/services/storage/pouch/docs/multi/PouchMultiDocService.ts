@@ -167,14 +167,14 @@ export abstract class PouchMultiDocService<
 					live: true,
 					include_docs: true,
 				})
-				.on("change", (change) => {
-					const doc = change.doc as T | undefined,
+				.on("change", async (change) => {
+					const doc = (change.doc ?? {}) as T,
 						id = doc?.id ?? change.id;
 					this.dispatchEvent(
 						new CustomEvent("change", {
 							detail: {
-								id,
 								...doc,
+								id,
 							},
 						})
 					);

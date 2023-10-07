@@ -72,7 +72,6 @@ export default class TemplateOverviewPage extends CustomElement {
 		:host {
 			display: flex;
 			flex-direction: column;
-			background: var(--bg-color);
 			flex: 1;
 		}
 		#template-grid {
