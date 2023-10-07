@@ -118,6 +118,7 @@ export class TemplateEditorPageDefinition extends PageDefinition<TemplateEditorP
 		this.page = new TemplateEditorPage();
 		this.page.properties = properties;
 		container.appendChild(this.page);
+		// console.log("load template", properties.templateId);
 
 		this.page.addEventListener(
 			"template-loaded",

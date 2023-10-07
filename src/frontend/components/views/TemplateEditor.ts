@@ -60,57 +60,34 @@ export default class TemplateEditor extends CustomElement {
 	static styles = [
 		unsafeCSS(rfcss),
 		css`
-			.title {
-				height: 2rem;
-				line-height: 2rem;
+			.custom-node-header {
 				display: flex;
-				align-items: center;
-				justify-content: center;
-				padding: 0.3rem;
+				justify-content: space-between;
+				cursor: grab;
 			}
-
-			.drawer {
+			.custom-node-header > .title {
+				flex: 1;
 				display: flex;
-				flex-direction: row;
-			}
-
-			.categories,
-			.nodes {
-				background-color: var(--bg-color);
-				border: var(--border-width-small) solid var(--border-color);
-				border-radius: var(--border-radius-small);
-			}
-
-			.category {
-				display: flex;
-				flex-grow: 1;
+				justify-content: flex-start;
 				align-items: center;
 			}
-
-			.category.expanded {
-				border-right: none;
+			sl-icon-button::part(base) {
+				padding: 0;
 			}
-
-			.item {
-				height: 1.3rem;
-				line-height: 1.3rem;
-				text-align: left;
-				align-items: center;
+			.custom-node {
+				cursor: default;
 			}
-
-			.category-name {
-				width: 7rem;
+			.custom-node:hover {
+				box-shadow: var(--sl-shadow-medium);
 			}
-			.nodes {
-				display: flex;
-				flex-direction: column;
-				margin-top: 2.3rem;
+			.react-flow__node.selected > .custom-node::part(base) {
+				border-color: var(--sl-color-primary-500);
 			}
-			.node-name {
-				cursor: pointer;
+			.react-flow__edge.selected > path {
+				stroke: var(--sl-color-primary-500) !important;
 			}
-			.nodes.hidden {
-				display: none;
+			.react-flow__edge.selected {
+				stroke: var(--sl-color-primary-500) !important;
 			}
 		`,
 	];

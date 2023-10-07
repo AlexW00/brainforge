@@ -1,76 +1,110 @@
-import React, { FunctionComponent, PropsWithChildren, useMemo, useRef } from "react";
+import React, {
+	FunctionComponent,
+	PropsWithChildren,
+	useMemo,
+	useRef,
+} from "react";
 import { NodeIdContext } from "../../contexts/NodeIdContext";
-import { DragbarComponent } from "./Dragbar";
 import { HandlesComponent } from "./Handles";
 import { TemplateNode } from "../../../../core/data/models/flashcards/template/graph/TemplateNode";
 import { useTemplateNodeService } from "../../hooks/context/useTemplateNodeService";
 import { TemplateNodeParams } from "../../../../core/data/models/extensions/plugins/templates/TemplateNodeParams";
+import {
+	SlCard,
+	SlDropdown,
+	SlIconButton,
+	SlMenu,
+	SlMenuItem,
+} from "@shoelace-style/shoelace/dist/react/index";
+import { useTemplateEditorService } from "../../hooks/context/useTemplateEditorService";
 
 export const NodeComponent: FunctionComponent<TemplateNode> = (
-  props: PropsWithChildren<TemplateNode>,
-  _context?: any
+	props: PropsWithChildren<TemplateNode>,
+	_context?: any
 ) => {
-  const definitionId = props.data.definitionId;
-  const templateNodeService = useTemplateNodeService()
-  const definition = templateNodeService.getTemplateNode(definitionId);
+	const definitionId = props.data.definitionId;
+	const templateNodeService = useTemplateNodeService();
+	const templateEditorService = useTemplateEditorService();
 
-  const [isCollapsed, setIsCollapsed] = React.useState(false);
-  const contentRef = useRef(null);
+	const definition = templateNodeService.getTemplateNode(definitionId);
 
-  // re write contentProps here with the correct hook
+	const contentRef = useRef(null);
 
-  const contentProps: TemplateNodeParams = useMemo(() => ({
-    id: props.id,
-    data: props.data.data,
-    doCache: props.data.doReRunOnRender,
-    inputHandles: props.data.io?.inputs,
-    outputHandles: props.data.io?.outputs,
-  }), [props.data.data, props.data.doReRunOnRender, props.data.io?.inputs, props.data.io?.outputs]);
+	const contentProps: TemplateNodeParams = useMemo(
+		() => ({
+			id: props.id,
+			data: props.data.data,
+			doCache: props.data.doReRunOnRender,
+			inputHandles: props.data.io?.inputs,
+			outputHandles: props.data.io?.outputs,
+		}),
+		[
+			props.data.data,
+			props.data.doReRunOnRender,
+			props.data.io?.inputs,
+			props.data.io?.outputs,
+		]
+	);
 
-  React.useEffect(() => {
-    if (!contentRef.current) return;
-    const content = contentRef.current;
-  
-    if (!definition) {
-      console.error("Definition not found!");
-      return;
-    }
-    definition?.onLoad(content, contentProps);
-  }, []);
+	React.useEffect(() => {
+		if (!contentRef.current) return;
+		const content = contentRef.current;
 
+		if (!definition) {
+			console.error("Definition not found!");
+			return;
+		}
+		definition?.onLoad(content, contentProps);
+	}, []);
 
-  if (!definition) return <>Definition not found!</>;
+	if (!definition) return <>Definition not found!</>;
 
-  return (
-    <NodeIdContext.Provider value={props.id}>
-      <div
-        className="custom-node react-flow__node-default"
-        style={{ padding: 0, height: "auto", width: "auto", display: "flex"
-      }}
-      >
-        <HandlesComponent
-          isInput={true}
-          handles={props.data.io?.inputs}
-        />
-        <div style={{ display: "flex", flexDirection: "column"}}>
-          <DragbarComponent
-            name={definition?.metadata.name}
-            isCollapsed={isCollapsed}
-            setIsCollapsed={setIsCollapsed}
-          />
+	const handleDoCacheSwitchChange = (isChecked: boolean) => {
+		templateEditorService.setDoCache(props.id, isChecked);
+	};
 
-          {/* <div in={!isCollapsed} animateOpacity> */}
-          <div>
-            <div id={"content-" + props.id} ref={contentRef} style={{ margin: "0.5rem" }}>
-            </div>
-          </div>
-        </div>
-      </div>
+	const handleSettingsSelect = (event: any) => {
+		const element = event.detail.item;
+		const id = element.id;
 
-      <HandlesComponent
-        isInput={false}
-        handles={props.data.io?.outputs}
-      />
-    </NodeIdContext.Provider>
-  );
+		if (id === "cache-result") handleDoCacheSwitchChange(element.checked);
+	};
+
+	return (
+		<NodeIdContext.Provider value={props.id}>
+			<HandlesComponent isInput={true} handles={props.data.io?.inputs} />
+			<SlCard
+				className="custom-node card-header"
+				style={{ padding: 0, height: "auto", width: "auto", display: "flex" }}
+			>
+				<div className="custom-node-header" slot="header">
+					<div className="title">{definition?.metadata.name}</div>
+					<SlDropdown className="settings">
+						<SlIconButton
+							library="ph-regular"
+							name="gear-six"
+							slot="trigger"
+						></SlIconButton>
+						<SlMenu onSlSelect={handleSettingsSelect}>
+							<SlMenuItem
+								id="cache-result"
+								type="checkbox"
+								checked={!props.data.doReRunOnRender}
+							>
+								Cache Result
+							</SlMenuItem>
+						</SlMenu>
+					</SlDropdown>
+				</div>
+				<div
+					id={"content-" + props.id}
+					className="custom-node-content"
+					ref={contentRef}
+					style={{ margin: "0.5rem" }}
+				></div>
+			</SlCard>
+
+			<HandlesComponent isInput={false} handles={props.data.io?.outputs} />
+		</NodeIdContext.Provider>
+	);
 };
