@@ -151,7 +151,7 @@ export default class DeckTreePanel extends Panel {
 			border-bottom-left-radius: var(--border-radius-large);
 		}
 		#title {
-			font-size: var(--sl-font-size-large);
+			font-size: var(--sl-font-size-x-large);
 			font-weight: bold;
 			padding: var(--sl-spacing-medium);
 			text-align: center;

@@ -10,4 +10,4 @@ export const SETTINGS_RIBBON_ITEM: RibbonItem = {
 	title: "Settings",
 };
 
-export const stockAppRibbonItems: RibbonItem[] = [TEMPLATES_RIBBON_ITEM];
+export const stockAppRibbonItems: RibbonItem[] = [];

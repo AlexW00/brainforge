@@ -127,7 +127,8 @@ export class TemplateOverviewPageDefinition extends PageDefinition<TemplatePageP
 		return [
 			{
 				id: "add-template",
-				title: "Add template",
+				title: "Create",
+				icon: "file-plus",
 				onClick: () => {
 					this.templateService.createNew();
 				},

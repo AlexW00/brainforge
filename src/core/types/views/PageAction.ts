@@ -5,5 +5,6 @@ import { Identifiable } from "../general/Identifiable";
  */
 export interface PageAction extends Identifiable {
 	title: string;
+	icon?: string;
 	onClick: () => void;
 }

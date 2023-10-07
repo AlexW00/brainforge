@@ -5,7 +5,10 @@ import { container } from "tsyringe";
 import { AppRibbonService } from "../../../core/services/app/AppRibbonService";
 import { map } from "lit/directives/map.js";
 import { RibbonItem } from "../../../core/types/views/RibbonItem";
-import { SETTINGS_RIBBON_ITEM } from "../../../core/static/ui/StockAppRibbonItems";
+import {
+	SETTINGS_RIBBON_ITEM,
+	TEMPLATES_RIBBON_ITEM,
+} from "../../../core/static/ui/StockAppRibbonItems";
 
 @customElement("app-ribbon")
 export default class AppRibbon extends CustomElement {
@@ -27,7 +30,8 @@ export default class AppRibbon extends CustomElement {
 				})}
 			</div>
 			<spacer-component></spacer-component>
-			<div id="static-items" class="item-container">
+			<div id="static-items" class="item-container system">
+				<ribbon-item .model=${TEMPLATES_RIBBON_ITEM}></ribbon-item>
 				<ribbon-item .model=${SETTINGS_RIBBON_ITEM}></ribbon-item>
 			</div>
 		`;
@@ -37,8 +41,8 @@ export default class AppRibbon extends CustomElement {
 		:host {
 			display: flex;
 			flex-direction: column;
-			width: 2rem;
-			min-width: 2rem;
+			width: 2.5rem;
+			min-width: 2.5rem;
 			background: var(--behind-app-color);
 
 			padding: 1rem 0.5rem 1rem 0.5rem;
@@ -46,6 +50,10 @@ export default class AppRibbon extends CustomElement {
 		.item-container {
 			display: flex;
 			flex-direction: column;
+			gap: 1rem;
+		}
+		.item-container.system {
+			gap: 1.5rem;
 		}
 	`;
 }

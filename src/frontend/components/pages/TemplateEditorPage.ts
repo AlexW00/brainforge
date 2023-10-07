@@ -139,7 +139,8 @@ export class TemplateEditorPageDefinition extends PageDefinition<TemplateEditorP
 		return [
 			{
 				id: "save-template",
-				title: "Save Template",
+				title: "Save",
+				icon: "floppy-disk",
 				onClick: async () => {
 					this.editorService.saveTemplate();
 				},

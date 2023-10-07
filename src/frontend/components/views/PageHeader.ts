@@ -5,6 +5,7 @@ import { css, html } from "lit";
 import { UiEventBus } from "../../../core/services/events/UiEventBus";
 import { container } from "tsyringe";
 import { RouterService } from "../../../core/services/app/RouterService";
+import { when } from "lit/directives/when.js";
 
 @customElement("page-header")
 export default class PageHeader extends CustomElement {
@@ -63,10 +64,18 @@ export default class PageHeader extends CustomElement {
 			<div id="actions" class="right">
 				${this.actions?.map(
 					(action) => html`
-						<sl-button
-							variant="text"
-							@click=${() => this.onClickAction(action)}
-						>
+						<sl-button @click=${() => this.onClickAction(action)}>
+							${when(
+								action.icon,
+								() => html`
+									<sl-icon
+										slot="prefix"
+										library="ph-regular"
+										name=${action.icon!}
+										size="small"
+									></sl-icon>
+								`
+							)}
 							${action.title}
 						</sl-button>
 					`
@@ -105,11 +114,12 @@ export default class PageHeader extends CustomElement {
 			flex: 2;
 			text-align: center;
 			opacity: 0.6;
+			font-size: var(--sl-font-size-medium);
 		}
 
 		#name {
 			margin-left: 16px;
-			font-weight: bold;
+			font-size: var(--sl-font-size-large);
 		}
 
 		#actions,

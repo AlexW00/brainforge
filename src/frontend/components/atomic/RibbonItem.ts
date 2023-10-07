@@ -21,7 +21,7 @@ export default class RibbonItem extends CustomElement {
 	};
 
 	render() {
-		return html` <div id="text">${this.model.title}</div> `;
+		return html`<div id="text">${this.model.title}</div>`;
 	}
 
 	// text rotated by -90deg
@@ -40,9 +40,10 @@ export default class RibbonItem extends CustomElement {
 			cursor: pointer;
 			color: var(--app-ribbon-item-color);
 			user-select: none;
+			font-size: var(--sl-font-size-large);
 		}
 
-		#text:hover {
+		:host(:hover) > #text {
 			text-decoration: underline;
 		}
 	`;
