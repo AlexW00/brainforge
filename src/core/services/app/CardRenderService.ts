@@ -59,11 +59,8 @@ export class CardRenderService {
 		if (node.data.definitionId === "input-node") {
 			const inputData =
 				card.inputData[node.id + "-" + node.data.data.inputTypeId];
-			if (inputData === undefined)
-				console.error(
-					`Input data for input node ${node.id} not found in card ${card.id}`
-				);
-			return inputData ?? "UNSET";
+
+			return inputData;
 		}
 
 		// Evaluate all input handles
@@ -80,9 +77,11 @@ export class CardRenderService {
 					(edge) => edge.target === nodeId && edge.targetHandle === inputName
 				);
 				if (!edge) {
-					throw new Error(
-						`Edge for input handle ${inputName} of node ${nodeId} not found`
-					);
+					return {
+						name: inputName,
+						value: undefined,
+						type: input.type,
+					};
 				}
 
 				// Recursively evaluate the output handle that this input handle is connected to
