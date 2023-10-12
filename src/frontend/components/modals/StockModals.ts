@@ -1,8 +1,12 @@
 import { ModalDefinition } from "../../../core/types/views/ModalDefinition";
+import { CardCreatorModalDefinition } from "./CardCreatorModal";
 import { DebugModalDefinition } from "./DebugModal";
 import { SettingsModalDefinition } from "./SettingsModal";
 
-const PROD_MODALS: ModalDefinition<any>[] = [new SettingsModalDefinition()];
+const PROD_MODALS: ModalDefinition<any>[] = [
+	new SettingsModalDefinition(),
+	new CardCreatorModalDefinition(),
+];
 
 const DEBUG_MODALS: ModalDefinition<any>[] = [new DebugModalDefinition()];
 

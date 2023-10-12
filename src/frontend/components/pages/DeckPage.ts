@@ -7,6 +7,8 @@ import { container } from "tsyringe";
 import { PouchDeckService } from "../../../core/services/storage/pouch/docs/multi/PouchDeckService";
 import { Task } from "@lit-labs/task";
 import { produce } from "immer";
+import { ModalService } from "../../../core/services/app/ModalService";
+import { CardCreatorProps } from "../modals/CardCreatorModal";
 
 @customElement("deck-page")
 export default class DeckPage extends CustomElement {
@@ -77,6 +79,7 @@ export class DeckPageDefinition extends PageDefinition<DeckPageProperties> {
 	defaultInfo = "Deck";
 
 	private deckPage: DeckPage;
+	private readonly modalService = container.resolve(ModalService);
 
 	onLoad = (properties: DeckPageProperties, container: HTMLElement) => {
 		this.deckPage = new DeckPage();
@@ -95,7 +98,13 @@ export class DeckPageDefinition extends PageDefinition<DeckPageProperties> {
 			{
 				id: "add-card",
 				title: "Add card",
-				onClick: () => {},
+				onClick: () => {
+					const cardCreatorProps: CardCreatorProps = {
+						deckId: this.deckPage.properties.deckId,
+						templateId: this.deckPage.deck?.defaultTemplateId,
+					};
+					this.modalService.openModal("card-creator", cardCreatorProps);
+				},
 			},
 		];
 	}

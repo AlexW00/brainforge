@@ -4,6 +4,7 @@ export interface Deck extends Identifiable {
 	name: string;
 	cardsIds: string[];
 	childDecksIds: string[];
+	defaultTemplateId?: string;
 }
 
 // NestedDeck is like a deck but without childDecksIds

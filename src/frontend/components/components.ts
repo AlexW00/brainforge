@@ -20,16 +20,18 @@ import _16 from "./nodes/OutputNode";
 import _17 from "./nodes/InputNode";
 import _18 from "./modals/SettingsModal";
 import _19 from "./modals/DebugModal";
-import _20 from "./modals/BaseModal";
-import _21 from "./atomic/TextButton";
-import _22 from "./atomic/TemplateThumbnail";
-import _23 from "./atomic/Spacer";
-import _24 from "./atomic/RibbonItem";
-import _25 from "./atomic/ModalContent";
-import _26 from "./atomic/FlashcardThumbnail";
-import _27 from "./atomic/DimmedBackground";
+import _20 from "./modals/CardCreatorModal";
+import _21 from "./modals/BaseModal";
+import _22 from "./atomic/TextButton";
+import _23 from "./atomic/TemplateThumbnail";
+import _24 from "./atomic/TemplateSelect";
+import _25 from "./atomic/Spacer";
+import _26 from "./atomic/RibbonItem";
+import _27 from "./atomic/ModalContent";
+import _28 from "./atomic/FlashcardThumbnail";
+import _29 from "./atomic/DimmedBackground";
 
-export { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27 };
+export { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29 };
 
 declare global {
     interface HTMLElementTagNameMap {
@@ -53,13 +55,15 @@ declare global {
         'input-node': _17;
         'settings-modal': _18;
         'debug-modal': _19;
-        'base-modal': _20;
-        'text-button': _21;
-        'template-thumbnail': _22;
-        'spacer-component': _23;
-        'ribbon-item': _24;
-        'modal-content': _25;
-        'flashcard-thumbnail': _26;
-        'dimmed-background': _27;
+        'card-creator': _20;
+        'base-modal': _21;
+        'text-button': _22;
+        'template-thumbnail': _23;
+        'template-select': _24;
+        'spacer-component': _25;
+        'ribbon-item': _26;
+        'modal-content': _27;
+        'flashcard-thumbnail': _28;
+        'dimmed-background': _29;
     }
 }
