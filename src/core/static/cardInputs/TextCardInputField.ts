@@ -30,7 +30,7 @@ export class TextCardInputField extends CardInputFieldDefinition<
 		input.label = properties.label;
 		input.placeholder = properties.placeholder ?? "";
 		input.value = properties.value ?? "";
-		input.addEventListener("sl-change", () => {
+		input.addEventListener("sl-input", () => {
 			this.onChange(input.value);
 		});
 		container.appendChild(input);
