@@ -4,7 +4,7 @@ import type {
 	CardInputField,
 	FilledOutCardInputField,
 } from "../../../core/data/models/flashcards/card/Card";
-import { PropertyValueMap, html } from "lit";
+import { PropertyValueMap, css, html } from "lit";
 import { ElementRegistrarService } from "../../../core/services/app/ElementRegistrarService";
 import { container } from "tsyringe";
 import { CardInputFieldDefinition } from "../../../core/types/views/CardInputField";
@@ -74,4 +74,23 @@ export default class CardInputFieldView extends CustomElement {
 			<div id="container"></div>
 		`;
 	}
+
+	static styles = css`
+		:host {
+			display: flex;
+			flex-direction: row;
+			gap: var(--sl-spacing-x-small);
+			align-items: center;
+			justify-content: center;
+		}
+		#name {
+			width: 10rem;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+		#container {
+			flex: 1;
+		}
+	`;
 }

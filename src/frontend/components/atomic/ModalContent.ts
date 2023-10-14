@@ -34,11 +34,18 @@ export default class ModalContent extends CustomElement {
 			this.shadowRoot!.querySelector(".container")!;
 		this.modal.onLoad(this.properties, container);
 		this.modal.once("close", this.closeModal);
+
+		if (!this.modal.doShowBackground) {
+			this.style.background = "transparent";
+			this.style.borderRadius = "0";
+			this.style.padding = "0";
+		}
 	}
 
 	static styles = css`
 		:host {
-			width: 50%;
+			width: "wrap-content";
+			height: "wrap-content";
 			background: var(--bg-color);
 			border-radius: var(--sl-border-radius-large);
 			padding: 1rem;

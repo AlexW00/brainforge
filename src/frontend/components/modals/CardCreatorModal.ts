@@ -1,7 +1,7 @@
 import { customElement, property, state } from "lit/decorators.js";
 import { ModalDefinition } from "../../../core/types/views/ModalDefinition";
 import { CustomElement } from "../atomic/CustomElement";
-import { html } from "lit";
+import { css, html } from "lit";
 import { Template } from "../../../core/data/models/flashcards/template/Template";
 import { Task } from "@lit-labs/task";
 import { container } from "tsyringe";
@@ -100,21 +100,35 @@ export default class CardCreator extends CustomElement {
 
 	render() {
 		return html`
-			<template-select
-				.templates=${this.templates}
-				.selectedTemplateId=${this.selectedTemplateId}
-				@template-select=${(e: CustomEvent<string>) => {
-					const templateId = e.detail;
-					if (templateId === undefined) return;
-					this.selectTemplate(templateId);
-				}}
-			></template-select>
-			<card-input-editor
-				.filledOutCardInputFields=${this.filledOutCardInputFields}
-				@cardInputFieldsChanged=${this.handleCardInputFieldsChanged}
-			></card-input-editor>
+			<sl-card>
+				<card-editor-header slot="header">
+					<template-select
+						slot="center-action"
+						.templates=${this.templates}
+						.selectedTemplateId=${this.selectedTemplateId}
+						@template-select=${(e: CustomEvent<string>) => {
+							const templateId = e.detail;
+							if (templateId === undefined) return;
+							this.selectTemplate(templateId);
+						}}
+					></template-select>
+				</card-editor-header>
+				<card-input-editor
+					.filledOutCardInputFields=${this.filledOutCardInputFields}
+					@cardInputFieldsChanged=${this.handleCardInputFieldsChanged}
+				></card-input-editor>
+			</sl-card>
 		`;
 	}
+
+	static styles = css`
+		sl-card::part(base) {
+			border-radius: var(--sl-border-radius-large);
+		}
+		sl-card::part(footer) {
+			padding: var(--sl-spacing-small);
+		}
+	`;
 }
 
 export type CardCreatorProps = {
@@ -125,6 +139,7 @@ export type CardCreatorProps = {
 export class CardCreatorModalDefinition extends ModalDefinition<CardCreatorProps> {
 	public id = "card-creator";
 	public name = "Card Creator";
+	doShowBackground = false;
 	public onLoad = (properties: CardCreatorProps, container: HTMLElement) => {
 		const settingsModal = new CardCreator(properties);
 		container.appendChild(settingsModal);

@@ -15,6 +15,7 @@ export default class TemplateSelect extends CustomElement {
 	render() {
 		return html`
 			<sl-select
+				size="small"
 				.value=${this.selectedTemplateId ?? ""}
 				@sl-select=${(e: CustomEvent) => {
 					const templateId = e.detail.value;

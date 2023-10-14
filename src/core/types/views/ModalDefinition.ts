@@ -11,6 +11,7 @@ export abstract class ModalDefinition<
 	P extends ViewProperties
 > extends ViewDefinition<P, EventMap> {
 	protected doAllowMultipleInstances: boolean = false;
+	doShowBackground: boolean = true;
 
 	protected close() {
 		this.emit("close", undefined);
