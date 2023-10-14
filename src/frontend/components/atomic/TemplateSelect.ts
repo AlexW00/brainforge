@@ -17,8 +17,8 @@ export default class TemplateSelect extends CustomElement {
 			<sl-select
 				size="small"
 				.value=${this.selectedTemplateId ?? ""}
-				@sl-select=${(e: CustomEvent) => {
-					const templateId = e.detail.value;
+				@sl-change=${(e: any) => {
+					const templateId = e.target?.value;
 					if (templateId === undefined) return;
 					this.dispatchEvent(
 						new CustomEvent("template-select", {

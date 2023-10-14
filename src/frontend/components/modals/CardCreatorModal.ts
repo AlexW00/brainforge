@@ -43,6 +43,7 @@ export default class CardCreator extends CustomElement {
 	filledOutCardInputFields: FilledOutCardInputField[] = [];
 
 	private selectTemplate = (templateId?: string): boolean => {
+		console.log("select template", templateId);
 		if (templateId === undefined) return false;
 		if (this.templates.find((template) => template.id === templateId)) {
 			this.selectedTemplateId = templateId;
@@ -51,6 +52,7 @@ export default class CardCreator extends CustomElement {
 
 			return true;
 		}
+		console.error("Template not found", templateId);
 		return false;
 	};
 
