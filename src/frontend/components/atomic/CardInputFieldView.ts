@@ -55,12 +55,12 @@ export default class CardInputFieldView extends CustomElement {
 			return;
 		}
 
-		this.cardInputFieldDefinition.onLoad(
+		this.cardInputFieldDefinition?.onLoad(
 			this.filledOutCardInputField,
 			container as HTMLElement
 		);
 
-		this.cardInputFieldDefinition.on("valueChanged", this.onValueChanged);
+		this.cardInputFieldDefinition?.on("valueChanged", this.onValueChanged);
 	}
 
 	disconnectedCallback() {

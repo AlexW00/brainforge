@@ -3,6 +3,7 @@ import React, {
 	PropsWithChildren,
 	useMemo,
 	useRef,
+	useState,
 } from "react";
 import { NodeIdContext } from "../../contexts/NodeIdContext";
 import { HandlesComponent } from "./Handles";
@@ -28,7 +29,9 @@ export const NodeComponent: FunctionComponent<TemplateNode> = (
 	const elementRegistrarService = container.resolve(ElementRegistrarService);
 
 	const Definition = elementRegistrarService.getTemplateNode(definitionId);
-	const definition = Definition ? new Definition.constructor() : undefined;
+	const [definition, setDefinition] = useState(
+		Definition ? new Definition.constructor() : undefined
+	);
 
 	const contentRef = useRef(null);
 
@@ -60,14 +63,13 @@ export const NodeComponent: FunctionComponent<TemplateNode> = (
 	}, []);
 
 	React.useEffect(() => {
-		if (!contentRef.current) return;
-		const content = contentRef.current;
+		console.log("onUpdate", contentProps);
 
-		if (!Definition) {
+		if (!definition) {
 			console.error("Definition not found!");
 			return;
 		}
-		definition?.onUpdate(contentProps);
+		definition.onUpdate(contentProps);
 	}, [contentProps]);
 
 	if (!Definition) return <>Definition not found!</>;

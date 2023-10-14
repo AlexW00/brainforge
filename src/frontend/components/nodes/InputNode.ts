@@ -58,28 +58,24 @@ export default class InputNode extends CustomElement {
 		};
 	};
 
-	updatedCardInputField = (props: {
+	updatedCardInputField = (args: {
 		cardInputField?: CardInputField;
 		id?: string;
 		name?: string;
 		inputTypeId?: string;
 	}): CardInputField => {
-		const cardInputField = props.cardInputField ?? this.defaultCardInputField();
+		const cardInputField = args.cardInputField ?? this.defaultCardInputField();
 
+		console.log("updated card input field", args, this.params, cardInputField);
 		return {
-			id: props.id ?? cardInputField.id,
-			name: props.name ?? cardInputField.name,
-			inputTypeId: props.inputTypeId ?? cardInputField.inputTypeId,
+			id: args.id ?? this.params.data?.inputField?.id ?? cardInputField.id,
+			name:
+				args.name ?? this.params.data?.inputField?.name ?? cardInputField.name,
+			inputTypeId:
+				args.inputTypeId ??
+				this.params.data?.inputField?.inputTypeId ??
+				cardInputField.inputTypeId,
 		};
-	};
-
-	onChangeInputType = (id: string) => {
-		this.templateEditor.setData(this.params.id, {
-			...this.params.data,
-			inputField: this.updatedCardInputField({
-				inputTypeId: id,
-			}),
-		});
 	};
 
 	onChangeName = (e: Event) => {
@@ -87,6 +83,22 @@ export default class InputNode extends CustomElement {
 			...this.params.data,
 			inputField: this.updatedCardInputField({
 				name: (e.target as HTMLInputElement).value,
+			}),
+		});
+	};
+
+	handleInputTypeClick = (
+		e: Event,
+		definition: IdentifiableConstructor<
+			CardInputFieldDefinition<any, any>,
+			Metadata
+		>
+	) => {
+		e.stopPropagation();
+		this.templateEditor.setData(this.params.id, {
+			...this.params.data,
+			inputField: this.updatedCardInputField({
+				inputTypeId: definition.metadata.id,
 			}),
 		});
 	};
@@ -111,10 +123,10 @@ export default class InputNode extends CustomElement {
 					(definition) => html`
 						<sl-option
 							value=${definition.metadata.id}
-							@click=${() => this.onChangeInputType(definition.metadata.id)}
+							@click=${(e: Event) => this.handleInputTypeClick(e, definition)}
 						>
-							${definition.metadata.name}</sl-option
-						>
+							${definition.metadata.name}
+						</sl-option>
 					`
 				)}
 			</sl-select>
@@ -125,6 +137,11 @@ export default class InputNode extends CustomElement {
 		sl-option::part(base) {
 			background-color: var(--bg-color);
 			color: var(--fg-color);
+		}
+		:host {
+			display: flex;
+			flex-direction: column;
+			gap: var(--sl-spacing-small);
 		}
 	`;
 }
