@@ -11,7 +11,11 @@ import { TemplateNode } from "../../../core/data/models/flashcards/template/grap
 import {
 	CardInputField,
 	FilledOutCardInputField,
+	newCard,
 } from "../../../core/data/models/flashcards/card/Card";
+import { PouchCardService } from "../../../core/services/storage/pouch/docs/multi/PouchCardService";
+import { PouchDeckService } from "../../../core/services/storage/pouch/docs/multi/PouchDeckService";
+import { produce } from "immer";
 
 @customElement("card-creator")
 export default class CardCreator extends CustomElement {
@@ -22,6 +26,8 @@ export default class CardCreator extends CustomElement {
 	}
 
 	private readonly templateService = container.resolve(PouchTemplateService);
+	private readonly cardService = container.resolve(PouchCardService);
+	private readonly deckService = container.resolve(PouchDeckService);
 
 	private readonly properties: CardCreatorProps;
 
@@ -55,7 +61,6 @@ export default class CardCreator extends CustomElement {
 
 	private getSelectedTemplateInputNodes = (): TemplateNode[] | undefined => {
 		const selectedTemplate = this.getSelectedTemplate();
-		console.log("sel temp", selectedTemplate);
 		if (selectedTemplate === undefined) return undefined;
 		return selectedTemplate.graph.nodes.filter(
 			(node) => node.data.definitionId === "input-node"
@@ -66,7 +71,6 @@ export default class CardCreator extends CustomElement {
 		| FilledOutCardInputField[]
 		| undefined => {
 		const selectedTemplateInputNodes = this.getSelectedTemplateInputNodes();
-		console.log(selectedTemplateInputNodes);
 		if (selectedTemplateInputNodes === undefined) return undefined;
 		return selectedTemplateInputNodes.map((node) => ({
 			...node.data.data.inputField,
@@ -79,7 +83,6 @@ export default class CardCreator extends CustomElement {
 		async () => {
 			const templates = await this.templateService.getAll();
 			this.templates = templates;
-			console.log(this.properties.templateId, this.selectedTemplateId);
 			if (
 				this.properties.templateId === undefined &&
 				this.selectedTemplateId === undefined
@@ -92,16 +95,54 @@ export default class CardCreator extends CustomElement {
 		() => []
 	);
 
+	private close = () => {
+		this.dispatchEvent(new CustomEvent("close"));
+	};
+
+	private handleSave = () => {
+		if (this.selectedTemplateId === undefined) {
+			console.error("No template selected");
+			return;
+		}
+
+		const card = newCard(
+			this.selectedTemplateId,
+			this.filledOutCardInputFields
+		);
+
+		this.cardService
+			.set(card)
+			.then(() => this.deckService.addCard(this.properties.deckId, card.id))
+			.then(() => this.close())
+			.catch((e) => {
+				console.error(e);
+			});
+	};
+
+	private handleCancel = () => {
+		this.close();
+	};
+
 	private handleCardInputFieldsChanged = (
 		e: CustomEvent<FilledOutCardInputField[]>
 	) => {
-		this.filledOutCardInputFields = e.detail;
+		this.filledOutCardInputFields = produce(
+			this.filledOutCardInputFields,
+			(draft) => {
+				draft = e.detail;
+			}
+		);
+		this.requestUpdate();
 	};
 
 	render() {
 		return html`
 			<sl-card>
-				<card-editor-header slot="header">
+				<card-editor-header
+					slot="header"
+					@save=${this.handleSave}
+					@cancel=${this.handleCancel}
+				>
 					<template-select
 						slot="center-action"
 						.templates=${this.templates}
@@ -143,5 +184,9 @@ export class CardCreatorModalDefinition extends ModalDefinition<CardCreatorProps
 	public onLoad = (properties: CardCreatorProps, container: HTMLElement) => {
 		const settingsModal = new CardCreator(properties);
 		container.appendChild(settingsModal);
+
+		settingsModal.addEventListener("close", () => {
+			this.close();
+		});
 	};
 }

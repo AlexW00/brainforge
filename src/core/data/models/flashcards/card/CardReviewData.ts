@@ -14,3 +14,8 @@ export enum CardReviewAnswer {
 	Good = "good",
 	Easy = "easy",
 }
+
+export const newCardReviewData = (): CardReviewData => ({
+	reviews: [],
+	dueOn: new Date(),
+});

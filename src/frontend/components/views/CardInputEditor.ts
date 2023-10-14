@@ -25,6 +25,7 @@ export default class CardInputEditor extends CustomElement {
 				return filledOutCardInputField;
 			}
 		);
+		console.log("changed", e.detail);
 		e.stopPropagation();
 
 		this.dispatchEvent(
@@ -35,7 +36,7 @@ export default class CardInputEditor extends CustomElement {
 	};
 
 	render() {
-		console.log(this.filledOutCardInputFields);
+		console.log("render input fields", this.filledOutCardInputFields);
 		return html`
 			${map(
 				this.filledOutCardInputFields,

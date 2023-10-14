@@ -57,10 +57,25 @@ export class CardRenderService {
 		if (!node) throw new Error(`Node with id ${nodeId} not found`);
 
 		if (node.data.definitionId === "input-node") {
-			const inputData =
-				card.inputData[node.id + "-" + node.data.data.inputTypeId];
+			console.log("input node", node);
+			const { id, name, inputTypeId } = node.data?.data?.inputField ?? {};
 
-			return inputData;
+			if (id === undefined) throw new Error("Input node id not found");
+			if (name === undefined) throw new Error("Input node name not found");
+			if (inputTypeId === undefined)
+				throw new Error("Input node input type id not found");
+
+			const inputData = card.inputData;
+
+			if (inputData === undefined) throw new Error("Input data not found");
+
+			const inputField = inputData.find(
+				(inputField) =>
+					inputField.id === id && inputField.inputTypeId === inputTypeId
+			);
+
+			console.log("input field", inputField, inputData);
+			return inputField?.value;
 		}
 
 		// Evaluate all input handles

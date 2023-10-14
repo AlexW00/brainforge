@@ -21,7 +21,7 @@ export class TextCardInputField extends CardInputFieldDefinition<
 		input.placeholder = properties.placeholder ?? "";
 		input.value = properties.value ?? "";
 		input.addEventListener("sl-change", () => {
-			this.emit("valueChanged", input.value);
+			this.onChange(input.value);
 		});
 		container.appendChild(input);
 	};

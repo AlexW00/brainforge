@@ -7,4 +7,11 @@ type EventMap<V> = {
 export abstract class CardInputFieldDefinition<
 	P extends ViewProperties,
 	V
-> extends ViewDefinition<P, EventMap<V>> {}
+> extends ViewDefinition<P, EventMap<V>> {
+	onChange = (value: V) => {
+		this.emit("valueChanged", {
+			id: this.id,
+			value,
+		});
+	};
+}

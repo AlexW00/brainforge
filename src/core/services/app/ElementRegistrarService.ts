@@ -41,7 +41,9 @@ export class ElementRegistrarService {
 	}
 
 	public getCardInputFieldDefinitions() {
-		return this.sessionZustand.state.getCardInputFieldDefinitions();
+		return this.sessionZustand.state
+			.getCardInputFieldDefinitions()
+			.map((definition) => definition);
 	}
 
 	public getTemplateNode(id: string) {

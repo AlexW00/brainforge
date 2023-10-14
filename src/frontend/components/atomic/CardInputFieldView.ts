@@ -23,14 +23,17 @@ export default class CardInputFieldView extends CustomElement {
 		| CardInputFieldDefinition<any, any>
 		| undefined = undefined;
 
-	private onValueChanged = (value: any) => {
+	private onValueChanged = (e: CustomEvent<any>) => {
+		if (e.detail.id !== this.filledOutCardInputField.id) {
+			console.error("Input field id mismatch");
+			console.error(e.detail, "and", this.filledOutCardInputField);
+			return;
+		}
 		this.dispatchEvent(
 			new CustomEvent("valueChanged", {
 				detail: {
-					value: {
-						...this.filledOutCardInputField,
-						value,
-					},
+					...this.filledOutCardInputField,
+					value: e.detail,
 				},
 				bubbles: true,
 				composed: true,

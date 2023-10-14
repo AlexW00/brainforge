@@ -8,7 +8,7 @@ export type BooleanCardInputFieldProperties = {
 
 export class BooleanCardInputField extends CardInputFieldDefinition<
 	BooleanCardInputFieldProperties,
-	string
+	boolean
 > {
 	public id = "boolean";
 	public name = "Boolean";
@@ -20,7 +20,7 @@ export class BooleanCardInputField extends CardInputFieldDefinition<
 		// switchEl.label = properties.label;
 		switchEl.checked = properties.value ?? properties.default ?? false;
 		switchEl.addEventListener("sl-change", () => {
-			this.emit("valueChanged", switchEl.checked);
+			this.onChange(switchEl.checked);
 		});
 		container.appendChild(switchEl);
 	};
