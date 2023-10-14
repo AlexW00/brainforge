@@ -7,6 +7,7 @@ import { Task } from "@lit-labs/task";
 import { container } from "tsyringe";
 import { PouchTemplateService } from "../../../core/services/storage/pouch/docs/multi/PouchTemplateService";
 import { when } from "lit/directives/when.js";
+import { TemplateNode } from "../../../core/data/models/flashcards/template/graph/TemplateNode";
 
 @customElement("card-creator")
 export default class CardCreator extends CustomElement {
@@ -33,6 +34,33 @@ export default class CardCreator extends CustomElement {
 			return true;
 		}
 		return false;
+	};
+
+	private getSelectedTemplate = (): Template | undefined => {
+		if (this.selectedTemplateId === undefined) return undefined;
+		return this.templates.find(
+			(template) => template.id === this.selectedTemplateId
+		);
+	};
+
+	private getSelectedTemplateInputNodes = (): TemplateNode[] | undefined => {
+		const selectedTemplate = this.getSelectedTemplate();
+		if (selectedTemplate === undefined) return undefined;
+		return selectedTemplate.graph.nodes.filter(
+			(node) => node.data.definitionId === "input-node"
+		);
+	};
+
+	private getSelectedTemplateCardInputFieldDefinitions = ():
+		| [string, string][]
+		| undefined => {
+		const selectedTemplateInputNodes = this.getSelectedTemplateInputNodes();
+		if (selectedTemplateInputNodes === undefined) return undefined;
+		return selectedTemplateInputNodes.map((node) => {
+			const inputTypeId = node.data.data.inputTypeId;
+			const inputName = node.data.data.name;
+			return [inputTypeId, inputName];
+		});
 	};
 
 	private loadTemplatesTask = new Task(
@@ -65,8 +93,13 @@ export default class CardCreator extends CustomElement {
 				}}
 			></template-select>
 			${when(
-				this.selectedTemplateId !== undefined,
-				() => html`inputs`,
+				this.getSelectedTemplateCardInputFieldDefinitions() !== undefined,
+				() => html`
+					<card-input-editor
+						.cardInputFieldsIdsNames=${this.getSelectedTemplateCardInputFieldDefinitions() ??
+						[]}
+					></card-input-editor>
+				`,
 				() => html``
 			)}
 		`;

@@ -35,15 +35,27 @@ export default class InputNode extends CustomElement {
 		this.classList.add("container");
 	}
 
-	onChangeInput = (id: string) => {
+	onChangeInputType = (id: string) => {
 		this.templateEditor.setData(this.params.id, {
 			...this.params.data,
 			inputTypeId: id,
 		});
 	};
 
+	onChangeName = (e: Event) => {
+		this.templateEditor.setData(this.params.id, {
+			...this.params.data,
+			name: (e.target as HTMLInputElement).value,
+		});
+	};
+
 	render() {
 		return html`
+			<sl-input
+				value=${this.params.data.name ?? ""}
+				placeholder="Name"
+				@sl-change=${this.onChangeName}
+			></sl-input>
 			<sl-select
 				placeholder="Input Type"
 				value=${ifDefined(this.params.data.inputTypeId)}
@@ -53,7 +65,7 @@ export default class InputNode extends CustomElement {
 					(definition: CardInputFieldDefinition<any, any>) => html`
 						<sl-option
 							value=${definition.id}
-							@click=${() => this.onChangeInput(definition.id)}
+							@click=${() => this.onChangeInputType(definition.id)}
 						>
 							${definition.name}</sl-option
 						>
