@@ -33,7 +33,7 @@ export class UiEventHandler {
 	private onRibbonItemClicked(data: { ribbonItemId: string }) {
 		if (data.ribbonItemId === TEMPLATES_RIBBON_ITEM.id) {
 			console.log("Navigating to templates");
-			this.router.navigateTo("template-overview", {});
+			this.router.navigateTo("template-overview-page", {});
 		} else if (data.ribbonItemId === SETTINGS_RIBBON_ITEM.id) {
 			const props: SettingsModalProperties = {
 				initialCategoryId: "general",

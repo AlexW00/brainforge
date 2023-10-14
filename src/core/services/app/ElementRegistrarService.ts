@@ -82,6 +82,12 @@ export class ElementRegistrarService {
 	}
 
 	public getPageDefinitionById(id: string) {
+		console.log(
+			"looking for ",
+			id,
+			" in ",
+			this.sessionZustand.state.pageDefinitions
+		);
 		return this.sessionZustand.state.pageDefinitions.find(
 			(definition) => definition.metadata.id === id
 		);

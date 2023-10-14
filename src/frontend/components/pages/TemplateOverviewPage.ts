@@ -49,7 +49,7 @@ export default class TemplateOverviewPage extends CustomElement {
 
 	onClickTemplate = (template: Template) => {
 		console.log("Clicked template", template);
-		this.router.navigateTo("template-editor", {
+		this.router.navigateTo("template-editor-page", {
 			templateId: template.id,
 		});
 	};
@@ -90,7 +90,7 @@ type TemplatePageProperties = {
 };
 
 const TEMPLATE_PAGE_METADATA: Metadata = {
-	id: "template-page",
+	id: "template-overview-page",
 	name: "Templates",
 	description: "A page that displays all templates",
 };
