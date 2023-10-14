@@ -1,3 +1,4 @@
+import { Identifiable } from "../../../../types/general/Identifiable";
 import { CardReviewData } from "./CardReviewData";
 
 export enum CardStatus {
@@ -27,5 +28,14 @@ export interface CardMetaData {
 }
 
 export interface CardInputData {
-	[key: string]: any;
+	[inputFieldId: string]: any;
+}
+
+export interface CardInputField extends Identifiable {
+	name: string;
+	inputTypeId: string;
+}
+
+export interface FilledOutCardInputField extends CardInputField {
+	value: any;
 }

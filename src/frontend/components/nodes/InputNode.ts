@@ -15,6 +15,8 @@ import { css, html } from "lit";
 import { CardInputFieldDefinition } from "../../../core/types/views/CardInputField";
 import { map } from "lit/directives/map.js";
 import { ifDefined } from "lit/directives/if-defined.js";
+import { CardInputField } from "../../../core/data/models/flashcards/card/Card";
+import { useNodeId } from "../../react/hooks/context/useNodeId";
 
 @customElement("input-node")
 export default class InputNode extends CustomElement {
@@ -35,30 +37,69 @@ export default class InputNode extends CustomElement {
 		this.classList.add("container");
 	}
 
+	defaultCardInputFieldName = (): string => {
+		return "New Input";
+	};
+
+	defaultCardInputFieldInputTypeId = (): string => {
+		return this.cardInputFieldDefinitions[0].id;
+	};
+
+	defaultCardInputField = (): CardInputField => {
+		return {
+			id: this.params.id,
+			name: this.defaultCardInputFieldName(),
+			inputTypeId: this.defaultCardInputFieldInputTypeId(),
+		};
+	};
+
+	updatedCardInputField = (props: {
+		cardInputField?: CardInputField;
+		id?: string;
+		name?: string;
+		inputTypeId?: string;
+	}): CardInputField => {
+		const cardInputField = props.cardInputField ?? this.defaultCardInputField();
+
+		return {
+			id: props.id ?? cardInputField.id,
+			name: props.name ?? cardInputField.name,
+			inputTypeId: props.inputTypeId ?? cardInputField.inputTypeId,
+		};
+	};
+
 	onChangeInputType = (id: string) => {
 		this.templateEditor.setData(this.params.id, {
 			...this.params.data,
-			inputTypeId: id,
+			inputField: this.updatedCardInputField({
+				inputTypeId: id,
+			}),
 		});
 	};
 
 	onChangeName = (e: Event) => {
 		this.templateEditor.setData(this.params.id, {
 			...this.params.data,
-			name: (e.target as HTMLInputElement).value,
+			inputField: this.updatedCardInputField({
+				name: (e.target as HTMLInputElement).value,
+			}),
 		});
 	};
 
 	render() {
 		return html`
 			<sl-input
-				value=${this.params.data.name ?? ""}
+				value=${this.params.data.inputField?.name ??
+				this.defaultCardInputField().name}
 				placeholder="Name"
 				@sl-change=${this.onChangeName}
 			></sl-input>
 			<sl-select
 				placeholder="Input Type"
-				value=${ifDefined(this.params.data.inputTypeId)}
+				value=${ifDefined(
+					this.params.data.inputField?.inputTypeId ??
+						this.defaultCardInputField().inputTypeId
+				)}
 			>
 				${map(
 					this.cardInputFieldDefinitions,

@@ -8,6 +8,10 @@ import { container } from "tsyringe";
 import { PouchTemplateService } from "../../../core/services/storage/pouch/docs/multi/PouchTemplateService";
 import { when } from "lit/directives/when.js";
 import { TemplateNode } from "../../../core/data/models/flashcards/template/graph/TemplateNode";
+import {
+	CardInputField,
+	FilledOutCardInputField,
+} from "../../../core/data/models/flashcards/card/Card";
 
 @customElement("card-creator")
 export default class CardCreator extends CustomElement {
@@ -27,10 +31,16 @@ export default class CardCreator extends CustomElement {
 	@state()
 	selectedTemplateId?: string;
 
+	@state()
+	filledOutCardInputFields: FilledOutCardInputField[] = [];
+
 	private selectTemplate = (templateId?: string): boolean => {
 		if (templateId === undefined) return false;
 		if (this.templates.find((template) => template.id === templateId)) {
 			this.selectedTemplateId = templateId;
+			this.filledOutCardInputFields =
+				this.getSelectedTemplateInputFields() ?? [];
+
 			return true;
 		}
 		return false;
@@ -45,22 +55,23 @@ export default class CardCreator extends CustomElement {
 
 	private getSelectedTemplateInputNodes = (): TemplateNode[] | undefined => {
 		const selectedTemplate = this.getSelectedTemplate();
+		console.log("sel temp", selectedTemplate);
 		if (selectedTemplate === undefined) return undefined;
 		return selectedTemplate.graph.nodes.filter(
 			(node) => node.data.definitionId === "input-node"
 		);
 	};
 
-	private getSelectedTemplateCardInputFieldDefinitions = ():
-		| [string, string][]
+	private getSelectedTemplateInputFields = ():
+		| FilledOutCardInputField[]
 		| undefined => {
 		const selectedTemplateInputNodes = this.getSelectedTemplateInputNodes();
+		console.log(selectedTemplateInputNodes);
 		if (selectedTemplateInputNodes === undefined) return undefined;
-		return selectedTemplateInputNodes.map((node) => {
-			const inputTypeId = node.data.data.inputTypeId;
-			const inputName = node.data.data.name;
-			return [inputTypeId, inputName];
-		});
+		return selectedTemplateInputNodes.map((node) => ({
+			...node.data.data.inputField,
+			value: undefined,
+		}));
 	};
 
 	private loadTemplatesTask = new Task(
@@ -81,6 +92,12 @@ export default class CardCreator extends CustomElement {
 		() => []
 	);
 
+	private handleCardInputFieldsChanged = (
+		e: CustomEvent<FilledOutCardInputField[]>
+	) => {
+		this.filledOutCardInputFields = e.detail;
+	};
+
 	render() {
 		return html`
 			<template-select
@@ -92,16 +109,10 @@ export default class CardCreator extends CustomElement {
 					this.selectTemplate(templateId);
 				}}
 			></template-select>
-			${when(
-				this.getSelectedTemplateCardInputFieldDefinitions() !== undefined,
-				() => html`
-					<card-input-editor
-						.cardInputFieldsIdsNames=${this.getSelectedTemplateCardInputFieldDefinitions() ??
-						[]}
-					></card-input-editor>
-				`,
-				() => html``
-			)}
+			<card-input-editor
+				.filledOutCardInputFields=${this.filledOutCardInputFields}
+				@cardInputFieldsChanged=${this.handleCardInputFieldsChanged}
+			></card-input-editor>
 		`;
 	}
 }

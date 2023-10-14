@@ -11,14 +11,14 @@ import _7 from "./views/AppRibbon";
 import _8 from "./roots/Load";
 import _9 from "./roots/Error";
 import _10 from "./roots/App";
-import _11 from "./pages/TemplateOverviewPage";
-import _12 from "./pages/TemplateEditorPage";
-import _13 from "./pages/DeckPage";
-import _14 from "./nodes/OutputNode";
-import _15 from "./nodes/InputNode";
-import _16 from "./panels/Panel";
-import _17 from "./panels/PagePanel";
-import _18 from "./panels/DeckTreePanel";
+import _11 from "./panels/Panel";
+import _12 from "./panels/PagePanel";
+import _13 from "./panels/DeckTreePanel";
+import _14 from "./pages/TemplateOverviewPage";
+import _15 from "./pages/TemplateEditorPage";
+import _16 from "./pages/DeckPage";
+import _17 from "./nodes/OutputNode";
+import _18 from "./nodes/InputNode";
 import _19 from "./modals/SettingsModal";
 import _20 from "./modals/DebugModal";
 import _21 from "./modals/CardCreatorModal";
@@ -31,8 +31,9 @@ import _27 from "./atomic/RibbonItem";
 import _28 from "./atomic/ModalContent";
 import _29 from "./atomic/FlashcardThumbnail";
 import _30 from "./atomic/DimmedBackground";
+import _31 from "./atomic/CardInputFieldView";
 
-export { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30 };
+export { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31 };
 
 declare global {
     interface HTMLElementTagNameMap {
@@ -47,14 +48,14 @@ declare global {
         'load-root': _8;
         'error-root': _9;
         'app-root': _10;
-        'template-overview-page': _11;
-        'template-editor-page': _12;
-        'deck-page': _13;
-        'output-node': _14;
-        'input-node': _15;
-        'panel-element': _16;
-        'page-panel': _17;
-        'deck-tree-panel': _18;
+        'panel-element': _11;
+        'page-panel': _12;
+        'deck-tree-panel': _13;
+        'template-overview-page': _14;
+        'template-editor-page': _15;
+        'deck-page': _16;
+        'output-node': _17;
+        'input-node': _18;
         'settings-modal': _19;
         'debug-modal': _20;
         'card-creator': _21;
@@ -67,5 +68,6 @@ declare global {
         'modal-content': _28;
         'flashcard-thumbnail': _29;
         'dimmed-background': _30;
+        'card-input-field-view': _31;
     }
 }
