@@ -37,7 +37,12 @@ export default class PagePanel extends Panel {
 		}
 		this.page?.onUnload();
 
-		this.page = this.elementRegistrar.getPageDefinitionById(pageId);
+		const Page = this.elementRegistrar.getPageDefinitionById(pageId);
+		if (!Page) {
+			console.error("Page not found");
+			return;
+		}
+		this.page = new Page.constructor();
 		this.page?.on("infoChanged", this.onInfoChanged);
 		this.info = this.page?.defaultInfo;
 	}

@@ -132,16 +132,17 @@ export class CardRenderService {
 			throw new Error(`Output handle ${name} of node ${nodeId} not found`);
 		}
 
-		const nodeDefintion = this.elementRegistrarService.getTemplateNode(
+		const NodeDefinition = this.elementRegistrarService.getTemplateNode(
 			node.data.definitionId
 		);
-		if (!nodeDefintion) {
+		if (!NodeDefinition) {
 			throw new Error(
 				`Node definition ${node.data.definitionId} of node ${nodeId} not found`
 			);
 		}
 
-		const value = await nodeDefintion.getOutputValue(
+		const nodeDefinition = new NodeDefinition.constructor();
+		const value = await nodeDefinition.getOutputValue(
 			name,
 			{ ...node.data, id: nodeId, doCache: true },
 			inputValues

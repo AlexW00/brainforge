@@ -27,7 +27,8 @@ export const NodeComponent: FunctionComponent<TemplateNode> = (
 	const templateEditorService = useTemplateEditorService();
 	const elementRegistrarService = container.resolve(ElementRegistrarService);
 
-	const definition = elementRegistrarService.getTemplateNode(definitionId);
+	const Definition = elementRegistrarService.getTemplateNode(definitionId);
+	const definition = Definition ? new Definition.constructor() : undefined;
 
 	const contentRef = useRef(null);
 
@@ -51,7 +52,7 @@ export const NodeComponent: FunctionComponent<TemplateNode> = (
 		if (!contentRef.current) return;
 		const content = contentRef.current;
 
-		if (!definition) {
+		if (!Definition) {
 			console.error("Definition not found!");
 			return;
 		}
@@ -62,14 +63,14 @@ export const NodeComponent: FunctionComponent<TemplateNode> = (
 		if (!contentRef.current) return;
 		const content = contentRef.current;
 
-		if (!definition) {
+		if (!Definition) {
 			console.error("Definition not found!");
 			return;
 		}
 		definition?.onUpdate(contentProps);
 	}, [contentProps]);
 
-	if (!definition) return <>Definition not found!</>;
+	if (!Definition) return <>Definition not found!</>;
 
 	const handleDoCacheSwitchChange = (isChecked: boolean) => {
 		templateEditorService.setDoCache(props.id, isChecked);

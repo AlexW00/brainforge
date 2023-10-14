@@ -9,6 +9,8 @@ import { Task } from "@lit-labs/task";
 import { produce } from "immer";
 import { ModalService } from "../../../core/services/app/ModalService";
 import { CardCreatorProps } from "../modals/CardCreatorModal";
+import { Metadata } from "../../../core/types/general/Metadata";
+import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
 
 @customElement("deck-page")
 export default class DeckPage extends CustomElement {
@@ -73,10 +75,16 @@ type DeckPageProperties = {
 	deckId: string;
 };
 
+const DECK_PAGE_DEFINITION_METADATA: Metadata = {
+	id: "deck-page",
+	name: "Deck",
+	description: "A page that displays a deck",
+};
+
 export class DeckPageDefinition extends PageDefinition<DeckPageProperties> {
-	id = "deck-page";
-	name = "Deck";
-	defaultInfo = "Deck";
+	id = DECK_PAGE_DEFINITION_METADATA.id;
+	name = DECK_PAGE_DEFINITION_METADATA.name;
+	defaultInfo: "Deck";
 
 	private deckPage: DeckPage;
 	private readonly modalService = container.resolve(ModalService);
@@ -109,3 +117,11 @@ export class DeckPageDefinition extends PageDefinition<DeckPageProperties> {
 		];
 	}
 }
+
+export const DeckPageDefinitionBundle: IdentifiableConstructor<
+	DeckPageDefinition,
+	Metadata
+> = {
+	constructor: DeckPageDefinition,
+	metadata: DECK_PAGE_DEFINITION_METADATA,
+};

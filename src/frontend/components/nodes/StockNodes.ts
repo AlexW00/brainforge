@@ -1,10 +1,15 @@
 import { TemplateNodeDefinition } from "../../../core/data/models/extensions/plugins/templates/TemplateNodeDefinition";
-import { InputNodeDefinition } from "./InputNode";
-import { OutputNodeDefinition } from "./OutputNode";
-import { TestNodeDefinition } from "./TestNode";
+import { TemplateNodeMetadata } from "../../../core/data/models/extensions/plugins/templates/TemplateNodeMetadata";
+import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
+import { InputNodeDefinition, InputNodeDefinitionBundle } from "./InputNode";
+import { OutputNodeDefinition, OutputNodeDefinitionBundle } from "./OutputNode";
+import { TestNodeDefinition, TestNodeDefinitionBundle } from "./TestNode";
 
-export const STOCK_NODES: TemplateNodeDefinition[] = [
-	new TestNodeDefinition(),
-	new OutputNodeDefinition(),
-	new InputNodeDefinition(),
+export const STOCK_NODES: IdentifiableConstructor<
+	TemplateNodeDefinition,
+	TemplateNodeMetadata
+>[] = [
+	TestNodeDefinitionBundle,
+	OutputNodeDefinitionBundle,
+	InputNodeDefinitionBundle,
 ];

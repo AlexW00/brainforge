@@ -14,6 +14,8 @@ import { map } from "lit/directives/map.js";
 import { when } from "lit/directives/when.js";
 import { TemplateEditorService } from "../../../core/services/app/TemplateEditorService";
 import { container } from "tsyringe";
+import { TemplateNodeMetadata } from "../../../core/data/models/extensions/plugins/templates/TemplateNodeMetadata";
+import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
 
 @customElement("output-node")
 export default class OutputNode extends CustomElement {
@@ -107,13 +109,15 @@ export default class OutputNode extends CustomElement {
 	`;
 }
 
+export const OUTPUT_NODE_DEFINITION_METADATA: TemplateNodeMetadata = {
+	id: "output-node",
+	name: "Output",
+	description: "Output of a template.",
+	category: "hidden",
+};
+
 export class OutputNodeDefinition extends TemplateNodeDefinition {
-	metadata = {
-		id: "output-node",
-		name: "Output",
-		description: "Output of a template.",
-		category: "hidden",
-	};
+	metadata = OUTPUT_NODE_DEFINITION_METADATA;
 
 	private content: OutputNode | undefined;
 
@@ -173,3 +177,11 @@ export class OutputNodeDefinition extends TemplateNodeDefinition {
 		return htmlString;
 	};
 }
+
+export const OutputNodeDefinitionBundle: IdentifiableConstructor<
+	TemplateNodeDefinition,
+	TemplateNodeMetadata
+> = {
+	constructor: OutputNodeDefinition,
+	metadata: OUTPUT_NODE_DEFINITION_METADATA,
+};

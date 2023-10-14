@@ -1,10 +1,17 @@
+import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
 import { PageDefinition } from "../../../core/types/views/PageDefinition";
-import { DeckPageDefinition } from "./DeckPage";
-import { TemplateEditorPageDefinition } from "./TemplateEditorPage";
-import { TemplateOverviewPageDefinition } from "./TemplateOverviewPage";
+import { DeckPageDefinition, DeckPageDefinitionBundle } from "./DeckPage";
+import {
+	TemplateEditorPageDefinition,
+	TemplateEditorPageDefinitionBundle,
+} from "./TemplateEditorPage";
+import {
+	TemplateOverviewPageDefinition,
+	TemplateOverviewPageDefintionBundle,
+} from "./TemplateOverviewPage";
 
-export const STOCK_PAGES: PageDefinition<any>[] = [
-	new DeckPageDefinition(),
-	new TemplateOverviewPageDefinition(),
-	new TemplateEditorPageDefinition(),
+export const STOCK_PAGES: IdentifiableConstructor<any, any>[] = [
+	DeckPageDefinitionBundle,
+	TemplateOverviewPageDefintionBundle,
+	TemplateEditorPageDefinitionBundle,
 ];

@@ -9,9 +9,6 @@ export abstract class CardInputFieldDefinition<
 	V
 > extends ViewDefinition<P, EventMap<V>> {
 	onChange = (value: V) => {
-		this.emit("valueChanged", {
-			id: this.id,
-			value,
-		});
+		this.emit("valueChanged", value);
 	};
 }

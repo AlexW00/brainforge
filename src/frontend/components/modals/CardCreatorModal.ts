@@ -16,6 +16,8 @@ import {
 import { PouchCardService } from "../../../core/services/storage/pouch/docs/multi/PouchCardService";
 import { PouchDeckService } from "../../../core/services/storage/pouch/docs/multi/PouchDeckService";
 import { produce } from "immer";
+import { Metadata } from "../../../core/types/general/Metadata";
+import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
 
 @customElement("card-creator")
 export default class CardCreator extends CustomElement {
@@ -126,13 +128,8 @@ export default class CardCreator extends CustomElement {
 	private handleCardInputFieldsChanged = (
 		e: CustomEvent<FilledOutCardInputField[]>
 	) => {
-		this.filledOutCardInputFields = produce(
-			this.filledOutCardInputFields,
-			(draft) => {
-				draft = e.detail;
-			}
-		);
-		this.requestUpdate();
+		const newFields = e.detail ?? [];
+		this.filledOutCardInputFields = [...newFields];
 	};
 
 	render() {
@@ -177,9 +174,17 @@ export type CardCreatorProps = {
 	templateId?: string;
 };
 
+export const CARD_CREATOR_MODAL_METADATA: Metadata = {
+	id: "card-creator",
+	name: "Card Creator",
+	description: "A modal that allows the user to create a card",
+};
+
 export class CardCreatorModalDefinition extends ModalDefinition<CardCreatorProps> {
-	public id = "card-creator";
-	public name = "Card Creator";
+	id = CARD_CREATOR_MODAL_METADATA.id;
+	name = CARD_CREATOR_MODAL_METADATA.name;
+	description = CARD_CREATOR_MODAL_METADATA.description;
+
 	doShowBackground = false;
 	public onLoad = (properties: CardCreatorProps, container: HTMLElement) => {
 		const settingsModal = new CardCreator(properties);
@@ -190,3 +195,11 @@ export class CardCreatorModalDefinition extends ModalDefinition<CardCreatorProps
 		});
 	};
 }
+
+export const CardCreatorModalDefintitionBundle: IdentifiableConstructor<
+	ModalDefinition<CardCreatorProps>,
+	Metadata
+> = {
+	constructor: CardCreatorModalDefinition,
+	metadata: CARD_CREATOR_MODAL_METADATA,
+};

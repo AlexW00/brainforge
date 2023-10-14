@@ -2,6 +2,8 @@ import { customElement, property } from "lit/decorators.js";
 import { ModalDefinition } from "../../../core/types/views/ModalDefinition";
 import { CustomElement } from "../atomic/CustomElement";
 import { html } from "lit";
+import { Metadata } from "../../../core/types/general/Metadata";
+import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
 
 @customElement("settings-modal")
 export default class SettingsModal extends CustomElement {
@@ -26,9 +28,17 @@ export type SettingsModalProperties = {
 	initialCategoryId?: string;
 };
 
+export const SETTINGS_MODAL_METADATA: Metadata = {
+	id: "settings",
+	name: "Settings",
+	description: "Modal to change settings",
+};
+
 export class SettingsModalDefinition extends ModalDefinition<SettingsModalProperties> {
-	public id = "settings";
-	public name = "Settings";
+	id = SETTINGS_MODAL_METADATA.id;
+	name = SETTINGS_MODAL_METADATA.name;
+	description = SETTINGS_MODAL_METADATA.description;
+
 	public onLoad = (
 		properties: SettingsModalProperties,
 		container: HTMLElement
@@ -37,3 +47,11 @@ export class SettingsModalDefinition extends ModalDefinition<SettingsModalProper
 		container.appendChild(settingsModal);
 	};
 }
+
+export const SettingsModalDefinitionBundle: IdentifiableConstructor<
+	ModalDefinition<SettingsModalProperties>,
+	Metadata
+> = {
+	constructor: SettingsModalDefinition,
+	metadata: SETTINGS_MODAL_METADATA,
+};

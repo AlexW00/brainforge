@@ -4,6 +4,8 @@ import { CustomElement } from "../atomic/CustomElement";
 import { css, html } from "lit";
 import { PouchDebugService } from "../../../core/services/storage/pouch/docs/PouchDebugService";
 import { container } from "tsyringe";
+import { Metadata } from "../../../core/types/general/Metadata";
+import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
 
 @customElement("debug-modal")
 export default class DebugModal extends CustomElement {
@@ -70,9 +72,17 @@ export type DebugModalProperties = {
 	initialCategoryId?: string;
 };
 
+export const DEBUG_MODAL_DEFINITION_METADATA: Metadata = {
+	id: "debug",
+	name: "Debug",
+	description: "A modal that allows to debug the application",
+};
+
 export class DebugModalDefinition extends ModalDefinition<DebugModalProperties> {
-	public id = "debug";
-	public name = "Debug";
+	id = DEBUG_MODAL_DEFINITION_METADATA.id;
+	name = DEBUG_MODAL_DEFINITION_METADATA.name;
+	description = DEBUG_MODAL_DEFINITION_METADATA.description;
+
 	public onLoad = (
 		_properties: DebugModalProperties,
 		container: HTMLElement
@@ -81,3 +91,11 @@ export class DebugModalDefinition extends ModalDefinition<DebugModalProperties> 
 		container.appendChild(settingsModal);
 	};
 }
+
+export const DebugModalDefinitionBundle: IdentifiableConstructor<
+	ModalDefinition<DebugModalProperties>,
+	Metadata
+> = {
+	constructor: DebugModalDefinition,
+	metadata: DEBUG_MODAL_DEFINITION_METADATA,
+};

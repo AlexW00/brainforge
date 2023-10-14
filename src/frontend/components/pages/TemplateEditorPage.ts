@@ -9,6 +9,8 @@ import type { Template } from "../../../core/data/models/flashcards/template/Tem
 import { choose } from "lit/directives/choose.js";
 import { when } from "lit/directives/when.js";
 import { TemplateEditorService } from "../../../core/services/app/TemplateEditorService";
+import { Metadata } from "../../../core/types/general/Metadata";
+import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
 
 @customElement("template-editor-page")
 export default class TemplateEditorPage extends CustomElement {
@@ -105,9 +107,17 @@ type TemplateEditorPageProperties = {
 	templateId: string;
 };
 
+export const TEMPLATE_EDITOR_PAGE_METADATA: Metadata = {
+	id: "template-editor-page",
+	name: "Template Editor",
+	description: "A page that displays a template editor",
+};
+
 export class TemplateEditorPageDefinition extends PageDefinition<TemplateEditorPageProperties> {
-	id = "template-editor";
-	name = "Template Editor";
+	id = TEMPLATE_EDITOR_PAGE_METADATA.id;
+	name = TEMPLATE_EDITOR_PAGE_METADATA.name;
+	description = TEMPLATE_EDITOR_PAGE_METADATA.description;
+
 	defaultInfo = "Template";
 
 	private page: TemplateEditorPage;
@@ -151,3 +161,11 @@ export class TemplateEditorPageDefinition extends PageDefinition<TemplateEditorP
 		];
 	}
 }
+
+export const TemplateEditorPageDefinitionBundle: IdentifiableConstructor<
+	TemplateEditorPageDefinition,
+	Metadata
+> = {
+	constructor: TemplateEditorPageDefinition,
+	metadata: TEMPLATE_EDITOR_PAGE_METADATA,
+};

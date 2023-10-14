@@ -24,11 +24,7 @@ export default class CardInputFieldView extends CustomElement {
 		| undefined = undefined;
 
 	private onValueChanged = (e: CustomEvent<any>) => {
-		if (e.detail.id !== this.filledOutCardInputField.id) {
-			console.error("Input field id mismatch");
-			console.error(e.detail, "and", this.filledOutCardInputField);
-			return;
-		}
+		console.log("value changed", e.detail);
 		this.dispatchEvent(
 			new CustomEvent("valueChanged", {
 				detail: {
@@ -42,14 +38,16 @@ export default class CardInputFieldView extends CustomElement {
 	};
 
 	firstUpdated() {
-		this.cardInputFieldDefinition =
+		const CardInputFieldDefinition =
 			this.elementRegistrar.getCardInputFieldDefinitionById(
 				this.filledOutCardInputField.inputTypeId
 			);
-		if (!this.cardInputFieldDefinition) {
+		if (!CardInputFieldDefinition) {
 			console.error("Input element definition not found");
 			return;
 		}
+
+		this.cardInputFieldDefinition = new CardInputFieldDefinition.constructor();
 
 		const container = this.shadowRoot?.querySelector("#container");
 		if (!container) {

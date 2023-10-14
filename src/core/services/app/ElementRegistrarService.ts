@@ -8,6 +8,13 @@ import {
 	ContextMenuEntry,
 } from "../../types/views/ContextMenuItem";
 import { Position } from "../../types/general/Position";
+import {
+	Constructor,
+	IdentifiableConstructor,
+} from "../../types/general/Constructor";
+import { CardInputFieldDefinition } from "../../types/views/CardInputField";
+import { Metadata } from "../../types/general/Metadata";
+import { TemplateNodeMetadata } from "../../data/models/extensions/plugins/templates/TemplateNodeMetadata";
 
 @singleton()
 export class ElementRegistrarService {
@@ -16,19 +23,33 @@ export class ElementRegistrarService {
 		private readonly sessionZustand: SessionZustandService
 	) {}
 
-	public registerModalDefinition(definition: ModalDefinition<any>) {
+	public registerModalDefinition(
+		definition: IdentifiableConstructor<ModalDefinition<any>, Metadata>
+	) {
 		this.sessionZustand.state.addModalDefinitions([definition]);
 	}
 
-	public registerPageDefinition(definition: PageDefinition<any>) {
+	public registerPageDefinition(
+		definition: IdentifiableConstructor<PageDefinition<any>, Metadata>
+	) {
 		this.sessionZustand.state.addPageDefinitions([definition]);
 	}
 
-	public registerCardInputFieldDefinition(definition: any) {
+	public registerCardInputFieldDefinition(
+		definition: IdentifiableConstructor<
+			CardInputFieldDefinition<any, any>,
+			Metadata
+		>
+	) {
 		this.sessionZustand.state.addCardInputFieldDefinitions([definition]);
 	}
 
-	public registerTemplateNode(templateNode: any) {
+	public registerTemplateNode(
+		templateNode: IdentifiableConstructor<
+			TemplateNodeDefinition,
+			TemplateNodeMetadata
+		>
+	) {
 		this.sessionZustand.state.setTemplateNodeDefinition(templateNode);
 	}
 
@@ -56,13 +77,13 @@ export class ElementRegistrarService {
 
 	public getModalDefinitionById(id: string) {
 		return this.sessionZustand.state.modalDefinitions.find(
-			(definition) => definition.id === id
+			(definition) => definition.metadata.id === id
 		);
 	}
 
 	public getPageDefinitionById(id: string) {
 		return this.sessionZustand.state.pageDefinitions.find(
-			(definition) => definition.id === id
+			(definition) => definition.metadata.id === id
 		);
 	}
 
@@ -71,7 +92,13 @@ export class ElementRegistrarService {
 	}
 
 	getTemplateNodesAsContextMenu(
-		onClickItem: (position: Position, node: TemplateNodeDefinition) => void
+		onClickItem: (
+			position: Position,
+			node: IdentifiableConstructor<
+				TemplateNodeDefinition,
+				TemplateNodeMetadata
+			>
+		) => void
 	): ContextMenu {
 		const nodes = this.getTemplateNodes();
 		const categories = nodes

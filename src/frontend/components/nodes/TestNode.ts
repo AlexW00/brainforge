@@ -1,4 +1,5 @@
 import { TemplateNodeDefinition } from "../../../core/data/models/extensions/plugins/templates/TemplateNodeDefinition";
+import { TemplateNodeMetadata } from "../../../core/data/models/extensions/plugins/templates/TemplateNodeMetadata";
 import { TemplateNodeParams } from "../../../core/data/models/extensions/plugins/templates/TemplateNodeParams";
 import {
 	NodeHandles,
@@ -7,14 +8,17 @@ import {
 	NodeOutputHandle,
 } from "../../../core/data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
 import { AnyHandle } from "../../../core/static/nodeHandles/base/AnyHandle";
+import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
+
+const TEST_NODE_METADATA: TemplateNodeMetadata = {
+	id: "test-node",
+	name: "Test Node",
+	description: "A test node.",
+	category: "test",
+};
 
 export class TestNodeDefinition extends TemplateNodeDefinition {
-	metadata = {
-		id: "test-node",
-		name: "Test Node",
-		description: "A test node.",
-		category: "test",
-	};
+	metadata = TEST_NODE_METADATA;
 
 	onLoad = (parent: HTMLElement, params: TemplateNodeParams) => {
 		// check if params.inputHandles is an empty object
@@ -54,3 +58,11 @@ export class TestNodeDefinition extends TemplateNodeDefinition {
 		return inputs[0].value + "-TEST";
 	};
 }
+
+export const TestNodeDefinitionBundle: IdentifiableConstructor<
+	TemplateNodeDefinition,
+	TemplateNodeMetadata
+> = {
+	constructor: TestNodeDefinition,
+	metadata: TEST_NODE_METADATA,
+};

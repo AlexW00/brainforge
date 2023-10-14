@@ -12,7 +12,6 @@ import { TemplateNode } from "../../../data/models/flashcards/template/graph/Tem
 import { NodeData } from "../../../data/models/flashcards/template/graph/nodeData/NodeData";
 import {
 	NodeHandles,
-	NodeOutputHandleValue,
 	NodeOutputHandleValueFunction,
 } from "../../../data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
 import NodeHandleType from "../../../data/models/flashcards/template/graph/nodeData/io/handles/NodeHandleType";
@@ -28,24 +27,54 @@ import {
 } from "reactflow";
 import { TemplateNodeDefinition } from "../../../data/models/extensions/plugins/templates/TemplateNodeDefinition";
 import { CardInputFieldDefinition } from "../../../types/views/CardInputField";
+import {
+	Constructor,
+	IdentifiableConstructor,
+} from "../../../types/general/Constructor";
+import { Metadata } from "../../../types/general/Metadata";
+import { TemplateNodeMetadata } from "../../../data/models/extensions/plugins/templates/TemplateNodeMetadata";
 
 export interface SessionZustandActions {
 	setRibbonItems: (items: RibbonItem[]) => void;
 	setSelectedDeckIds: (deckIds: string[]) => void;
-	addModalDefinitions: (definitions: ModalDefinition<any>[]) => void;
-	addPageDefinitions: (definitions: PageDefinition<any>[]) => void;
+	addModalDefinitions: (
+		definitions: IdentifiableConstructor<ModalDefinition<any>, Metadata>[]
+	) => void;
+	addPageDefinitions: (
+		definitions: IdentifiableConstructor<PageDefinition<any>, Metadata>[]
+	) => void;
 
 	addCardInputFieldDefinitions: (
-		definitions: CardInputFieldDefinition<any, any>[]
+		definitions: IdentifiableConstructor<
+			CardInputFieldDefinition<any, any>,
+			Metadata
+		>[]
 	) => void;
 	getCardInputFieldDefinition: (
 		id: string
-	) => CardInputFieldDefinition<any, any> | undefined;
-	getCardInputFieldDefinitions: () => CardInputFieldDefinition<any, any>[];
+	) =>
+		| IdentifiableConstructor<CardInputFieldDefinition<any, any>, Metadata>
+		| undefined;
+	getCardInputFieldDefinitions: () => IdentifiableConstructor<
+		CardInputFieldDefinition<any, any>,
+		Metadata
+	>[];
 
-	setTemplateNodeDefinition: (definition: TemplateNodeDefinition) => void;
-	getTemplateNodeDefinition: (id: string) => TemplateNodeDefinition | undefined;
-	getTemplateNodeDefinitions: () => TemplateNodeDefinition[];
+	setTemplateNodeDefinition: (
+		definition: IdentifiableConstructor<
+			TemplateNodeDefinition,
+			TemplateNodeMetadata
+		>
+	) => void;
+	getTemplateNodeDefinition: (
+		id: string
+	) =>
+		| IdentifiableConstructor<TemplateNodeDefinition, TemplateNodeMetadata>
+		| undefined;
+	getTemplateNodeDefinitions: () => IdentifiableConstructor<
+		TemplateNodeDefinition,
+		TemplateNodeMetadata
+	>[];
 
 	pushNavigationStep: (step: NavigationStep) => void;
 	undoNavigationStep: () => void;
@@ -59,22 +88,33 @@ export interface SessionZustandActions {
 }
 
 type TemplateNodeDefintionMap = {
-	[id: string]: TemplateNodeDefinition;
+	[id: string]: IdentifiableConstructor<
+		TemplateNodeDefinition,
+		TemplateNodeMetadata
+	>;
 };
 type CardInputFieldDefinitionMap = {
-	[id: string]: CardInputFieldDefinition<any, any>;
+	[id: string]: IdentifiableConstructor<
+		CardInputFieldDefinition<any, any>,
+		Metadata
+	>;
 };
 
 export interface SessionZustandState extends SessionZustandActions {
 	ribbonItems: RibbonItem[];
 	selectedDeckIds: string[];
-	modalDefinitions: ModalDefinition<any>[];
-	pageDefinitions: PageDefinition<any>[];
+
+	// defs
+	modalDefinitions: IdentifiableConstructor<ModalDefinition<any>, Metadata>[];
+	pageDefinitions: IdentifiableConstructor<PageDefinition<any>, Metadata>[];
 	cardInputFieldDefinitions: CardInputFieldDefinitionMap;
 	templateNodeDefinitions: TemplateNodeDefintionMap;
+
+	// nav
 	navigationUndoStack: NavigationStep[];
 	navigationRedoStack: NavigationStep[];
 
+	// editor
 	editorTemplate: Template | undefined;
 
 	getEdges: () => TemplateEdge[];
@@ -94,11 +134,6 @@ export interface SessionZustandState extends SessionZustandActions {
 	) => void;
 
 	setNodes: (nodes: TemplateNode[]) => void;
-	setOutputValue: (
-		nodeId: string,
-		outputId: string,
-		value: NodeOutputHandleValue
-	) => void;
 	pushNode: (node: TemplateNode) => void;
 
 	onNodesChange: (nodeChanges: NodeChange[]) => void;
@@ -137,22 +172,28 @@ export class SessionZustandService extends Observable<EventMap> {
 					state.selectedDeckIds = deckIds;
 				}),
 
-			addModalDefinitions: (definitions: ModalDefinition<any>[]) =>
+			addModalDefinitions: (
+				definitions: IdentifiableConstructor<ModalDefinition<any>, Metadata>[]
+			) =>
 				set((state) => {
 					const newDefinitions = definitions.filter(
 						(definition) =>
 							!state.modalDefinitions.some(
-								(existingDefinition) => existingDefinition.id === definition.id
+								(existingDefinition) =>
+									existingDefinition.metadata.id === definition.metadata.id
 							)
 					);
 					state.modalDefinitions.push(...newDefinitions);
 				}),
-			addPageDefinitions: (definitions: PageDefinition<any>[]) =>
+			addPageDefinitions: (
+				definitions: IdentifiableConstructor<PageDefinition<any>, Metadata>[]
+			) =>
 				set((state) => {
 					const newDefinitions = definitions.filter(
 						(definition) =>
 							!state.pageDefinitions.some(
-								(existingDefinition) => existingDefinition.id === definition.id
+								(existingDefinition) =>
+									existingDefinition.metadata.id === definition.metadata.id
 							)
 					);
 					state.pageDefinitions.push(...newDefinitions);
@@ -178,7 +219,12 @@ export class SessionZustandService extends Observable<EventMap> {
 					}
 				}),
 
-			setTemplateNodeDefinition: (definition: TemplateNodeDefinition) => {
+			setTemplateNodeDefinition: (
+				definition: IdentifiableConstructor<
+					TemplateNodeDefinition,
+					TemplateNodeMetadata
+				>
+			) => {
 				set((state) => {
 					const existingDefinition =
 						state.templateNodeDefinitions[definition.metadata.id];
@@ -314,26 +360,6 @@ export class SessionZustandService extends Observable<EventMap> {
 					state.editorTemplate?.graph.nodes.push(...nodes);
 				}),
 
-			setOutputValue: (
-				nodeId: string,
-				outputId: string,
-				data: NodeOutputHandleValue
-			) =>
-				set((state) => {
-					const node = state.editorTemplate?.graph.nodes.find(
-						(node) => node.id === nodeId
-					);
-					if (!node) return;
-
-					if (node.data.io === undefined)
-						node.data.io = {
-							inputs: {},
-							outputs: {},
-						};
-
-					node.data.io.outputs[outputId].value = data;
-				}),
-
 			pushNode: (node: TemplateNode) =>
 				set((state) => {
 					state.editorTemplate?.graph.nodes.push(node);
@@ -386,19 +412,23 @@ export class SessionZustandService extends Observable<EventMap> {
 				});
 			},
 			addCardInputFieldDefinitions: (
-				definitions: CardInputFieldDefinition<any, any>[]
+				definitions: IdentifiableConstructor<
+					CardInputFieldDefinition<any, any>,
+					Metadata
+				>[]
 			) =>
 				set((state) => {
 					definitions.forEach((definition) => {
 						const existingDefinition =
-							state.cardInputFieldDefinitions[definition.id];
+							state.cardInputFieldDefinitions[definition.metadata.id];
 						if (existingDefinition !== undefined) {
 							console.warn(
-								`Card input field definition with id ${definition.id} already exists.`
+								`Card input field definition with id ${definition.metadata.id} already exists.`
 							);
 							return;
 						}
-						state.cardInputFieldDefinitions[definition.id] = definition;
+						state.cardInputFieldDefinitions[definition.metadata.id] =
+							definition;
 					});
 				}),
 			getCardInputFieldDefinition: (id: string) => {

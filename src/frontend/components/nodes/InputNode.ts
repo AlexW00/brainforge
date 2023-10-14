@@ -17,6 +17,9 @@ import { map } from "lit/directives/map.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { CardInputField } from "../../../core/data/models/flashcards/card/Card";
 import { useNodeId } from "../../react/hooks/context/useNodeId";
+import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
+import { Metadata } from "../../../core/types/general/Metadata";
+import { TemplateNodeMetadata } from "../../../core/data/models/extensions/plugins/templates/TemplateNodeMetadata";
 
 @customElement("input-node")
 export default class InputNode extends CustomElement {
@@ -26,8 +29,10 @@ export default class InputNode extends CustomElement {
 	);
 
 	@state()
-	private cardInputFieldDefinitions: CardInputFieldDefinition<any, any>[] =
-		this.elementRegistrar.getCardInputFieldDefinitions();
+	private cardInputFieldDefinitions: IdentifiableConstructor<
+		CardInputFieldDefinition<any, any>,
+		Metadata
+	>[] = this.elementRegistrar.getCardInputFieldDefinitions();
 
 	@property({ type: Object })
 	params: TemplateNodeParams;
@@ -42,7 +47,7 @@ export default class InputNode extends CustomElement {
 	};
 
 	defaultCardInputFieldInputTypeId = (): string => {
-		return this.cardInputFieldDefinitions[0].id;
+		return this.cardInputFieldDefinitions[0].metadata.id;
 	};
 
 	defaultCardInputField = (): CardInputField => {
@@ -103,12 +108,12 @@ export default class InputNode extends CustomElement {
 			>
 				${map(
 					this.cardInputFieldDefinitions,
-					(definition: CardInputFieldDefinition<any, any>) => html`
+					(definition) => html`
 						<sl-option
-							value=${definition.id}
-							@click=${() => this.onChangeInputType(definition.id)}
+							value=${definition.metadata.id}
+							@click=${() => this.onChangeInputType(definition.metadata.id)}
 						>
-							${definition.name}</sl-option
+							${definition.metadata.name}</sl-option
 						>
 					`
 				)}
@@ -124,13 +129,15 @@ export default class InputNode extends CustomElement {
 	`;
 }
 
+export const INPUT_NODE_DEFINITION_METADATA: TemplateNodeMetadata = {
+	id: "input-node",
+	name: "Input Node",
+	description: "An input field node.",
+	category: "Stock",
+};
+
 export class InputNodeDefinition extends TemplateNodeDefinition {
-	metadata = {
-		id: "input-node",
-		name: "Input Node",
-		description: "An input field node.",
-		category: "Stock",
-	};
+	metadata = INPUT_NODE_DEFINITION_METADATA;
 
 	private view: InputNode;
 
@@ -165,3 +172,11 @@ export class InputNodeDefinition extends TemplateNodeDefinition {
 		throw new Error("BRO dont call this shit");
 	};
 }
+
+export const InputNodeDefinitionBundle: IdentifiableConstructor<
+	InputNodeDefinition,
+	TemplateNodeMetadata
+> = {
+	constructor: InputNodeDefinition,
+	metadata: INPUT_NODE_DEFINITION_METADATA,
+};

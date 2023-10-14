@@ -11,10 +11,11 @@ export class ModalService {
 	) {}
 
 	openModal(modalId: string, properties?: ViewProperties) {
-		const definition = this.elements.getModalDefinitionById(modalId);
-		if (!definition) {
+		const Definition = this.elements.getModalDefinitionById(modalId);
+		if (!Definition) {
 			throw new Error(`Modal ${modalId} not found, did you register it?`);
 		}
+		const definition = new Definition.constructor();
 
 		const baseModal = new BaseModal(definition, properties);
 		document.body.appendChild(baseModal);

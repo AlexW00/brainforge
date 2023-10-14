@@ -9,6 +9,8 @@ import { Template } from "../../../core/data/models/flashcards/template/Template
 import { map } from "lit/directives/map.js";
 import { produce } from "immer";
 import { RouterService } from "../../../core/services/app/RouterService";
+import { Metadata } from "../../../core/types/general/Metadata";
+import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
 
 @customElement("template-overview-page")
 export default class TemplateOverviewPage extends CustomElement {
@@ -87,9 +89,17 @@ type TemplatePageProperties = {
 	openTemplateId?: string;
 };
 
+const TEMPLATE_PAGE_METADATA: Metadata = {
+	id: "template-page",
+	name: "Templates",
+	description: "A page that displays all templates",
+};
+
 export class TemplateOverviewPageDefinition extends PageDefinition<TemplatePageProperties> {
-	id = "template-overview";
-	name = "Templates";
+	id = TEMPLATE_PAGE_METADATA.id;
+	name = TEMPLATE_PAGE_METADATA.name;
+	description = TEMPLATE_PAGE_METADATA.description;
+
 	defaultInfo = "Templates";
 
 	private templatePage: TemplateOverviewPage;
@@ -120,3 +130,11 @@ export class TemplateOverviewPageDefinition extends PageDefinition<TemplatePageP
 		];
 	}
 }
+
+export const TemplateOverviewPageDefintionBundle: IdentifiableConstructor<
+	TemplateOverviewPageDefinition,
+	Metadata
+> = {
+	constructor: TemplateOverviewPageDefinition,
+	metadata: TEMPLATE_PAGE_METADATA,
+};

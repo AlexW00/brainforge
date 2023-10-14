@@ -1,6 +1,6 @@
 import { customElement, property, state } from "lit/decorators.js";
 import { CardInputFieldDefinition } from "../../../core/types/views/CardInputField";
-import { css, html } from "lit";
+import { PropertyValueMap, css, html } from "lit";
 import { CustomElement } from "../atomic/CustomElement";
 import {
 	CardInputData,
@@ -20,12 +20,15 @@ export default class CardInputEditor extends CustomElement {
 		const newFilledOutCardInputFields = this.filledOutCardInputFields.map(
 			(filledOutCardInputField) => {
 				if (filledOutCardInputField.id === e.detail.id) {
-					return e.detail;
+					return {
+						...filledOutCardInputField,
+						value: e.detail.value,
+					};
 				}
 				return filledOutCardInputField;
 			}
 		);
-		console.log("changed", e.detail);
+		console.log("changed", e.detail, newFilledOutCardInputFields);
 		e.stopPropagation();
 
 		this.dispatchEvent(

@@ -1,8 +1,19 @@
+import { IdentifiableConstructor } from "../../types/general/Constructor";
+import { Metadata } from "../../types/general/Metadata";
 import { CardInputFieldDefinition } from "../../types/views/CardInputField";
-import { BooleanCardInputField } from "./BooleanCardInputField";
-import { TextCardInputField } from "./TextCardInputField";
+import {
+	BooleanCardInputField,
+	BooleanCardInputFieldDefinitionBundle,
+} from "./BooleanCardInputField";
+import {
+	TextCardInputField,
+	TextCardInputFieldDefinitionBundle,
+} from "./TextCardInputField";
 
-export const STOCK_CARD_INPUT_FIELDS: CardInputFieldDefinition<any, any>[] = [
-	new TextCardInputField(),
-	new BooleanCardInputField(),
+export const STOCK_CARD_INPUT_FIELDS: IdentifiableConstructor<
+	CardInputFieldDefinition<any, any>,
+	Metadata
+>[] = [
+	TextCardInputFieldDefinitionBundle,
+	BooleanCardInputFieldDefinitionBundle,
 ];
