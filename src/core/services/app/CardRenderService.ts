@@ -1,11 +1,11 @@
 import { inject, singleton } from "tsyringe";
 import { Card, CardRenderCache } from "../../data/models/flashcards/card/Card";
+import { Template } from "../../data/models/flashcards/template/Template";
+import { NodeInputHandleWithValue } from "../../data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
 import { PouchCardService } from "../storage/pouch/docs/multi/PouchCardService";
 import { PouchTemplateService } from "../storage/pouch/docs/multi/PouchTemplateService";
-import { Template } from "../../data/models/flashcards/template/Template";
-import { LoggerService } from "./LoggerService";
 import { ElementRegistrarService } from "./ElementRegistrarService";
-import { NodeInputHandleWithValue } from "../../data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
+import { LoggerService } from "./LoggerService";
 
 // TODOS:
 // check that edge.source and edge.target = nodeId
@@ -38,7 +38,7 @@ export class CardRenderService {
 		card: Card
 	): Promise<any> {
 		// Check if the value is already in the cache and return it if it is
-		console.log("evaluate output", name, nodeId);
+
 		const existingOutputValue = newRenderCache[nodeId]?.find(
 			(handle) => handle.outputName === name
 		);
@@ -198,7 +198,13 @@ export class CardRenderService {
 		);
 		if (!outputNode) throw new Error("Output node not found");
 
-		this.evaluateOutput("out", outputNode.id, template, newRenderCache, card);
+		await this.evaluateOutput(
+			"out",
+			outputNode.id,
+			template,
+			newRenderCache,
+			card
+		);
 		return newRenderCache;
 	}
 

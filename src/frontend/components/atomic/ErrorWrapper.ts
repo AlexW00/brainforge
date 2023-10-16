@@ -18,7 +18,7 @@ export default class ErrorWrapper extends CustomElement {
 				${this.message}
 			</div>
 			<div id="retry-button">
-				<sl-button variant="default" @click=${this.reload}>
+				<sl-button variant="danger" @click=${this.reload}>
 					<sl-icon
 						slot="suffix"
 						library="ph-regular"

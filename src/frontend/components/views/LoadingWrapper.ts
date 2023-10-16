@@ -1,5 +1,5 @@
 import { TaskStatus } from "@lit-labs/task";
-import { html } from "lit";
+import { css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { choose } from "lit/directives/choose.js";
 import { CustomElement } from "../atomic/CustomElement";
@@ -22,34 +22,31 @@ export default class LoadingWrapper extends CustomElement {
 	};
 
 	private renderInitial = () => {
-		console.log("STATUS INITIAL");
 		if (!this.hasSlot("initial")) return html`Initial...`;
 		return html`<slot name="initial"></slot>`;
 	};
 
 	private renderPending = () => {
-		console.log("STATUS PENDING");
 		if (!this.hasSlot("loading"))
 			return html` <text-loading-skeleton></text-loading-skeleton> `;
 		return html`<slot name="loading"></slot>`;
 	};
 
 	private renderComplete = () => {
-		console.log("STATUS COMPLETE");
 		if (!this.hasSlot("completed")) return html`Completed!`;
 		return html`<slot name="completed"></slot>`;
 	};
 
 	private renderError = () => {
-		console.log("STATUS ERROR");
 		const errorMessage = this.errorMessage ?? "An error occurred";
 		if (!this.hasSlot("error"))
 			return html`<error-wrapper
+				id="error"
 				.message=${errorMessage as any}
 				@reload=${() => this.dispatchEvent(new CustomEvent("reload"))}
 			></error-wrapper>`;
 
-		return html`<slot name="error"></slot>`;
+		return html`<slot name="error" id="error"></slot>`;
 	};
 
 	render() {
@@ -64,4 +61,10 @@ export default class LoadingWrapper extends CustomElement {
 			])}
 		`;
 	}
+
+	static styles = css`
+		#error {
+			color: var(--sl-color-danger-500);
+		}
+	`;
 }

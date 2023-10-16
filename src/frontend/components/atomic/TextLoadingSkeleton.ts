@@ -17,6 +17,7 @@ export default class TextLoadingSkeleton extends CustomElement {
 			${map(
 				Array(this.numberOfLines).fill(0),
 				(_v, i) => html`<sl-skeleton
+					effect="sheen"
 					style="width: ${this.getLength()}%"
 				></sl-skeleton>`
 			)}
