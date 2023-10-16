@@ -1,6 +1,6 @@
+import { css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { CustomElement } from "../atomic/CustomElement";
-import { PropertyValueMap, css, html } from "lit";
 
 @customElement("flashcard-grid")
 export default class FlashcardGrid extends CustomElement {
@@ -20,6 +20,10 @@ export default class FlashcardGrid extends CustomElement {
 						html`<flashcard-thumbnail
 							key=${cardId}
 							cardId=${cardId}
+							@click=${() =>
+								this.dispatchEvent(
+									new CustomEvent("click-card", { detail: cardId })
+								)}
 						></flashcard-thumbnail>`
 				)}
 			</div>

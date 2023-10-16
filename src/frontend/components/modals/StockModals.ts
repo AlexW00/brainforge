@@ -1,19 +1,15 @@
 import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
 import { Metadata } from "../../../core/types/general/Metadata";
 import { ModalDefinition } from "../../../core/types/views/ModalDefinition";
-import {
-	CardCreatorModalDefinition,
-	CardCreatorModalDefintitionBundle,
-} from "./CardCreatorModal";
-import { DebugModalDefinition, DebugModalDefinitionBundle } from "./DebugModal";
-import {
-	SettingsModalDefinition,
-	SettingsModalDefinitionBundle,
-} from "./SettingsModal";
+import { CardCreatorModalDefintitionBundle } from "./CardCreatorModal";
+import { CardViewerModalDefinitionBundle } from "./CardViewerModal";
+import { DebugModalDefinitionBundle } from "./DebugModal";
+import { SettingsModalDefinitionBundle } from "./SettingsModal";
 
 const PROD_MODALS: IdentifiableConstructor<ModalDefinition<any>, Metadata>[] = [
 	SettingsModalDefinitionBundle,
 	CardCreatorModalDefintitionBundle,
+	CardViewerModalDefinitionBundle,
 ];
 
 const DEBUG_MODALS: IdentifiableConstructor<ModalDefinition<any>, Metadata>[] =

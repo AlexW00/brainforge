@@ -13,6 +13,9 @@ export abstract class ModalDefinition<
 	protected doAllowMultipleInstances: boolean = false;
 	doShowBackground: boolean = true;
 
+	maxWidth: string = "70%";
+	maxHeight: string = "70%";
+
 	protected close() {
 		this.emit("close", undefined);
 	}

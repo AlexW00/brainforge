@@ -1,20 +1,20 @@
-import { customElement, property, state } from "lit/decorators.js";
-import { CustomElement } from "../atomic/CustomElement";
-import { PageDefinition } from "../../../core/types/views/PageDefinition";
-import { css, html } from "lit";
-import type { Deck } from "../../../core/data/models/flashcards/Deck";
-import { container } from "tsyringe";
-import { PouchDeckService } from "../../../core/services/storage/pouch/docs/multi/PouchDeckService";
 import { Task } from "@lit-labs/task";
-import { produce } from "immer";
+import { css, html } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { container } from "tsyringe";
+import type { Deck } from "../../../core/data/models/flashcards/Deck";
 import { ModalService } from "../../../core/services/app/ModalService";
-import { CardCreatorProps } from "../modals/CardCreatorModal";
-import { Metadata } from "../../../core/types/general/Metadata";
+import { PouchDeckService } from "../../../core/services/storage/pouch/docs/multi/PouchDeckService";
 import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
+import { Metadata } from "../../../core/types/general/Metadata";
+import { PageDefinition } from "../../../core/types/views/PageDefinition";
+import { CustomElement } from "../atomic/CustomElement";
+import { CardCreatorProps } from "../modals/CardCreatorModal";
 
 @customElement("deck-page")
 export default class DeckPage extends CustomElement {
 	private readonly deckService = container.resolve(PouchDeckService);
+	private readonly modalService = container.resolve(ModalService);
 
 	@property({ type: Object })
 	properties!: DeckPageProperties;
@@ -55,9 +55,17 @@ export default class DeckPage extends CustomElement {
 		return ids;
 	}
 
+	private handleClickCard = (e: CustomEvent<string>) => {
+		const cardId = e.detail;
+		this.modalService.openModal("card-viewer", { cardId });
+	};
+
 	render() {
 		return html`
-			<flashcard-grid .cardIds=${this.getCardIds()}></flashcard-grid>
+			<flashcard-grid
+				.cardIds=${this.getCardIds()}
+				@click-card=${this.handleClickCard}
+			></flashcard-grid>
 		`;
 	}
 
