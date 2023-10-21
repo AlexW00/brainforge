@@ -2,6 +2,7 @@ import { inject, singleton } from "tsyringe";
 import { Card, CardRenderCache } from "../../data/models/flashcards/card/Card";
 import { Template } from "../../data/models/flashcards/template/Template";
 import { NodeInputHandleWithValue } from "../../data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
+import { newDateString } from "../../types/general/DateString";
 import { PouchCardService } from "../storage/pouch/docs/multi/PouchCardService";
 import { PouchTemplateService } from "../storage/pouch/docs/multi/PouchTemplateService";
 import { ElementRegistrarService } from "./ElementRegistrarService";
@@ -151,7 +152,11 @@ export class CardRenderService {
 
 		// Cache the value
 		if (!newRenderCache[nodeId]) newRenderCache[nodeId] = [];
-		newRenderCache[nodeId].push({ outputName: name, value, ts: new Date() });
+		newRenderCache[nodeId].push({
+			outputName: name,
+			value,
+			ts: newDateString(),
+		});
 
 		console.log("new render cache", newRenderCache);
 		return value;

@@ -1,5 +1,10 @@
+import { css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
+import { map } from "lit/directives/map.js";
+import { when } from "lit/directives/when.js";
+import { container } from "tsyringe";
 import { TemplateNodeDefinition } from "../../../core/data/models/extensions/plugins/templates/TemplateNodeDefinition";
+import { TemplateNodeMetadata } from "../../../core/data/models/extensions/plugins/templates/TemplateNodeMetadata";
 import type { TemplateNodeParams } from "../../../core/data/models/extensions/plugins/templates/TemplateNodeParams";
 import type {
 	NodeHandles,
@@ -7,15 +12,11 @@ import type {
 	NodeInputHandleWithValue,
 	NodeOutputHandle,
 } from "../../../core/data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
-import { AnyHandle } from "../../../core/static/nodeHandles/base/AnyHandle";
-import { CustomElement } from "../atomic/CustomElement";
-import { TemplateResult, css, html } from "lit";
-import { map } from "lit/directives/map.js";
-import { when } from "lit/directives/when.js";
 import { TemplateEditorService } from "../../../core/services/app/TemplateEditorService";
-import { container } from "tsyringe";
-import { TemplateNodeMetadata } from "../../../core/data/models/extensions/plugins/templates/TemplateNodeMetadata";
+import { FOLDING_HTML_COMMENT } from "../../../core/static/constants";
+import { AnyHandle } from "../../../core/static/nodeHandles/base/AnyHandle";
 import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
+import { CustomElement } from "../atomic/CustomElement";
 
 @customElement("output-node")
 export default class OutputNode extends CustomElement {
@@ -169,7 +170,14 @@ export class OutputNodeDefinition extends TemplateNodeDefinition {
 					(input: NodeInputHandleWithValue, index) => `<div class="card-side">
 					${input.value}
 				</div>
-				${index !== inputs.length - 1 ? `<sl-divider></sl-divider>` : ""}
+				${
+					index !== inputs.length - 1
+						? `
+						${FOLDING_HTML_COMMENT}
+						<sl-divider></sl-divider>
+						`
+						: ""
+				}
 				`
 				)
 				.join("")}

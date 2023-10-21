@@ -45,15 +45,28 @@ export default class ReviewStackView extends CustomElement {
 			this.preRenderedCards = this.getTopCards(3).map((card) => {
 				const cardElement = new FlashcardContent();
 				cardElement.cardId = card.id;
+				cardElement.foldingLevel = 1;
 				return cardElement;
 			});
 			this.requestUpdate();
 		}
 	}
 
+	private handleExpand = (e: CustomEvent<number>) => {
+		const numFoldingsToExpand = e.detail;
+		const shownCard = this.preRenderedCards[0];
+		if (shownCard === undefined) return;
+
+		const currentFoldLevel = shownCard.foldingLevel;
+		shownCard.foldingLevel = currentFoldLevel + numFoldingsToExpand;
+		e.stopPropagation();
+	};
+
 	render() {
 		if (this.cards.length === 0) return html`<div>No cards</div>`;
-		return html` ${this.getPreRenderedCard(0)} `;
+		return html`<div @expand=${this.handleExpand}>
+			${this.getPreRenderedCard(0)}
+		</div>`;
 	}
 
 	static styles = css`

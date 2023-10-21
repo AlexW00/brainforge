@@ -127,7 +127,6 @@ export default class ReviewPage extends CustomElement {
 					></review-stack-view>
 					<spacer-component></spacer-component>
 					<review-action-bar
-						inactive=${this.reviewStack.length === 0}
 						@review=${(e: CustomEvent<CardReviewAnswer>) => {
 							this.reviewCard(e.detail);
 						}}
