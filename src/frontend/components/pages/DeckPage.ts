@@ -4,6 +4,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { container } from "tsyringe";
 import type { Deck } from "../../../core/data/models/flashcards/Deck";
 import { ModalService } from "../../../core/services/app/ModalService";
+import { RouterService } from "../../../core/services/app/RouterService";
 import { PouchDeckService } from "../../../core/services/storage/pouch/docs/multi/PouchDeckService";
 import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
 import { Metadata } from "../../../core/types/general/Metadata";
@@ -96,6 +97,7 @@ export class DeckPageDefinition extends PageDefinition<DeckPageProperties> {
 
 	private deckPage: DeckPage;
 	private readonly modalService = container.resolve(ModalService);
+	private readonly routerService = container.resolve(RouterService);
 
 	onLoad = (properties: DeckPageProperties, container: HTMLElement) => {
 		this.deckPage = new DeckPage();
@@ -111,6 +113,26 @@ export class DeckPageDefinition extends PageDefinition<DeckPageProperties> {
 
 	getActions() {
 		return [
+			{
+				id: "due-today",
+				title: "Due today",
+				onClick: () => {
+					this.routerService.navigateTo("review-page", {
+						deckId: this.deckPage.properties.deckId,
+						doReviewDueCards: true,
+					});
+				},
+			},
+			{
+				id: "new-cards",
+				title: "New cards",
+				onClick: () => {
+					this.routerService.navigateTo("review-page", {
+						deckId: this.deckPage.properties.deckId,
+						doReviewNewCards: true,
+					});
+				},
+			},
 			{
 				id: "add-card",
 				title: "Add card",

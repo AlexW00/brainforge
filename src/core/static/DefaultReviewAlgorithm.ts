@@ -5,17 +5,12 @@ import { ReviewAlgorithm } from "../types/ReviewAlgorithm";
 export class DefaultReviewAlgorithm extends ReviewAlgorithm {
 	calculateNextDueDate(card: Card, answer: CardReviewAnswer): Date {
 		if (answer === CardReviewAnswer.Again) return this.onAgain(card);
-		if (answer === CardReviewAnswer.Hard) return this.onHard(card);
 		if (answer === CardReviewAnswer.Good) return this.onGood(card);
 		return this.onEasy(card);
 	}
 
 	onAgain(_card: Card): Date {
 		return new Date(); // Review immediately
-	}
-
-	onHard(_card: Card): Date {
-		return this.addDays(new Date(), 1); // Review in 1 day
 	}
 
 	onGood(_card: Card): Date {

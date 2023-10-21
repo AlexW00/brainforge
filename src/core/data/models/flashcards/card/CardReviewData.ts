@@ -10,7 +10,6 @@ export interface CardReviewResult {
 
 export enum CardReviewAnswer {
 	Again = "again",
-	Hard = "hard",
 	Good = "good",
 	Easy = "easy",
 }

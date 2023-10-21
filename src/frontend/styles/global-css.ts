@@ -26,4 +26,7 @@ export const globalCss = css`
 	.no-select {
 		user-select: none;
 	}
+	.hidden {
+		display: none;
+	}
 `;

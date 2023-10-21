@@ -8,15 +8,22 @@ import { DefaultReviewAlgorithm } from "../../static/DefaultReviewAlgorithm";
 import { PouchCardService } from "../storage/pouch/docs/multi/PouchCardService";
 import { PouchDeckService } from "../storage/pouch/docs/multi/PouchDeckService";
 import { ReviewAlgorithm } from "../../types/ReviewAlgorithm";
+import { Observable } from "../../types/events/Observable";
+
+type EventMap = {
+	cardReviewed: Card;
+};
 
 @singleton()
-export class ReviewService {
+export class ReviewService extends Observable<EventMap> {
 	private reviewAlgorithm: ReviewAlgorithm = new DefaultReviewAlgorithm();
 
 	constructor(
 		@inject(PouchCardService) private readonly cardService: PouchCardService,
 		@inject(PouchDeckService) private readonly deckService: PouchDeckService
-	) {}
+	) {
+		super();
+	}
 
 	/**
 	 * Returns the review algorithm currently in use.
@@ -50,6 +57,7 @@ export class ReviewService {
 			};
 
 		await this.cardService.addReview(cardId, reviewResult, nextDueDate);
+		this.emit("cardReviewed", card);
 	}
 
 	/**
