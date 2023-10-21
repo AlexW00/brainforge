@@ -3,10 +3,13 @@ import {
 	Card,
 	CardStatus,
 } from "../../../../../data/models/flashcards/card/Card";
-import { CardReviewResult } from "../../../../../data/models/flashcards/card/CardReviewData";
+import {
+	CardReviewAnswer,
+	CardReviewResult,
+} from "../../../../../data/models/flashcards/card/CardReviewData";
+import { DateString } from "../../../../../types/general/DateString";
 import { DbService } from "../../DbService";
 import { PouchMultiDocService } from "./PouchMultiDocService";
-import { DateString } from "../../../../../types/general/DateString";
 
 @singleton()
 export class PouchCardService extends PouchMultiDocService<Card> {
@@ -32,6 +35,11 @@ export class PouchCardService extends PouchMultiDocService<Card> {
 
 		card.reviewData.reviews.push(reviewResult);
 		card.reviewData.dueOn = nextDueDate;
+		if (card.status === CardStatus.New) {
+			if (reviewResult.answer !== CardReviewAnswer.Again) {
+				card.status = CardStatus.Learning;
+			}
+		}
 
 		await this.set(card);
 	}

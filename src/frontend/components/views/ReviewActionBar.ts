@@ -43,5 +43,9 @@ export default class ReviewActionBar extends CustomElement {
 			justify-content: center;
 			gap: 3rem;
 		}
+		:host([inactive]) {
+			opacity: 0.5;
+			pointer-events: none;
+		}
 	`;
 }

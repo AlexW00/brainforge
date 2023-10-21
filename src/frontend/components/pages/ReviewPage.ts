@@ -2,7 +2,10 @@ import { Task } from "@lit-labs/task";
 import { css, html } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { container } from "tsyringe";
-import { Card } from "../../../core/data/models/flashcards/card/Card";
+import {
+	Card,
+	CardStatus,
+} from "../../../core/data/models/flashcards/card/Card";
 import { CardReviewAnswer } from "../../../core/data/models/flashcards/card/CardReviewData";
 import { ModalService } from "../../../core/services/app/ModalService";
 import { ReviewService } from "../../../core/services/app/ReviewService";
@@ -61,8 +64,14 @@ export default class ReviewPage extends CustomElement {
 		console.log("new review stack", this.reviewStack);
 	};
 
-	private onCardReviewed = (e: CustomEvent<Card>) => {
-		const card = e.detail;
+	private onCardReviewed = (
+		e: CustomEvent<{
+			card: Card;
+			answer: CardReviewAnswer;
+		}>
+	) => {
+		const card = e.detail.card;
+		const answer = e.detail.answer;
 		const nextDueDate = card.reviewData.dueOn;
 
 		if (nextDueDate === undefined) {
@@ -72,7 +81,11 @@ export default class ReviewPage extends CustomElement {
 		}
 
 		const isDueToday = parseDateString(nextDueDate).getTime() <= Date.now();
-		if (isDueToday) {
+
+		const isUpgradedNowLearningCard =
+			card.status === CardStatus.New && answer !== CardReviewAnswer.Again;
+
+		if (isDueToday && !isUpgradedNowLearningCard) {
 			this.moveCardToBottomOfStack(card.id);
 		} else {
 			this.removeCardFromStack(card.id);
@@ -114,6 +127,7 @@ export default class ReviewPage extends CustomElement {
 					></review-stack-view>
 					<spacer-component></spacer-component>
 					<review-action-bar
+						inactive=${this.reviewStack.length === 0}
 						@review=${(e: CustomEvent<CardReviewAnswer>) => {
 							this.reviewCard(e.detail);
 						}}

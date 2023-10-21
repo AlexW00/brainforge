@@ -5,13 +5,17 @@ import {
 	CardReviewResult,
 } from "../../data/models/flashcards/card/CardReviewData";
 import { DefaultReviewAlgorithm } from "../../static/DefaultReviewAlgorithm";
-import { PouchCardService } from "../storage/pouch/docs/multi/PouchCardService";
-import { PouchDeckService } from "../storage/pouch/docs/multi/PouchDeckService";
 import { ReviewAlgorithm } from "../../types/ReviewAlgorithm";
 import { Observable } from "../../types/events/Observable";
+import { newDateString, parseDateString } from "../../types/general/DateString";
+import { PouchCardService } from "../storage/pouch/docs/multi/PouchCardService";
+import { PouchDeckService } from "../storage/pouch/docs/multi/PouchDeckService";
 
 type EventMap = {
-	cardReviewed: Card;
+	cardReviewed: {
+		card: Card;
+		answer: CardReviewAnswer;
+	};
 };
 
 @singleton()
@@ -50,14 +54,20 @@ export class ReviewService extends Observable<EventMap> {
 		const card = await this.cardService.get(cardId);
 		if (card === undefined) throw new Error(`Card with id ${cardId} not found`);
 
-		const nextDueDate = this.reviewAlgorithm.calculateNextDueDate(card, answer),
+		const nextDueDate =
+				card.status === CardStatus.New
+					? newDateString()
+					: this.reviewAlgorithm.calculateNextDueDate(card, answer),
 			reviewResult: CardReviewResult = {
 				answer,
-				date: new Date(),
+				date: newDateString(),
 			};
 
 		await this.cardService.addReview(cardId, reviewResult, nextDueDate);
-		this.emit("cardReviewed", card);
+		this.emit("cardReviewed", {
+			card,
+			answer,
+		});
 	}
 
 	/**
@@ -74,14 +84,16 @@ export class ReviewService extends Observable<EventMap> {
 			const cards = await this.cardService.getMany(cardIds);
 			return cards.filter(
 				(card) =>
-					card.reviewData.dueOn <= today && card.status === CardStatus.Learning
+					parseDateString(card.reviewData.dueOn) <= today &&
+					card.status === CardStatus.Learning
 			);
 		}
 
 		// get all cards
 		return await this.cardService.findAll(
 			(card) =>
-				card.reviewData.dueOn <= today && card.status === CardStatus.Learning
+				parseDateString(card.reviewData.dueOn) <= today &&
+				card.status === CardStatus.Learning
 		);
 	}
 
@@ -112,6 +124,6 @@ export class ReviewService extends Observable<EventMap> {
 		const card = await this.cardService.get(cardId);
 		if (card === undefined) throw new Error(`Card with id ${cardId} not found`);
 
-		return card.reviewData.dueOn <= new Date();
+		return parseDateString(card.reviewData.dueOn) <= new Date();
 	}
 }
