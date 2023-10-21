@@ -7,6 +7,7 @@ import { CardReviewAnswer } from "../../../core/data/models/flashcards/card/Card
 import { ModalService } from "../../../core/services/app/ModalService";
 import { ReviewService } from "../../../core/services/app/ReviewService";
 import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
+import { parseDateString } from "../../../core/types/general/DateString";
 import { Metadata } from "../../../core/types/general/Metadata";
 import { PageDefinition } from "../../../core/types/views/PageDefinition";
 import { CustomElement } from "../atomic/CustomElement";
@@ -56,21 +57,22 @@ export default class ReviewPage extends CustomElement {
 			(card) => card.id !== cardId
 		);
 		newReviewStack.push(card);
-		console.log("SETTING REVIEW STACK (move card)", cardId);
 		this.reviewStack = [...newReviewStack];
+		console.log("new review stack", this.reviewStack);
 	};
 
 	private onCardReviewed = (e: CustomEvent<Card>) => {
 		const card = e.detail;
-
-		console.log("Card reviewed", card);
 		const nextDueDate = card.reviewData.dueOn;
-		const isDueToday = nextDueDate?.getDate() === new Date().getDate();
 
 		if (nextDueDate === undefined) {
 			console.warn("Card has no due date");
 			this.removeCardFromStack(card.id);
-		} else if (isDueToday) {
+			return;
+		}
+
+		const isDueToday = parseDateString(nextDueDate).getTime() <= Date.now();
+		if (isDueToday) {
 			this.moveCardToBottomOfStack(card.id);
 		} else {
 			this.removeCardFromStack(card.id);

@@ -1,14 +1,15 @@
-import { css, html } from "lit";
+import { PropertyValueMap, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { ifDefined } from "lit/directives/if-defined.js";
-import { map } from "lit/directives/map.js";
 import { Card } from "../../../core/data/models/flashcards/card/Card";
 import { CustomElement } from "../atomic/CustomElement";
+import FlashcardContent from "../atomic/FlashcardContent";
 
 @customElement("review-stack-view")
 export default class ReviewStackView extends CustomElement {
 	@property({ type: Array })
 	cards: Card[] = [];
+
+	private preRenderedCards: FlashcardContent[] = [];
 
 	onkeydown = (e: KeyboardEvent) => {
 		if (e.code === "Space") {
@@ -23,25 +24,36 @@ export default class ReviewStackView extends CustomElement {
 	}
 
 	private getTopCards(n: number) {
-		return this.cards.slice(0, n);
+		const cards = this.cards.slice(0, n);
+		return cards;
+	}
+
+	private getPreRenderedCard = (n: number) => {
+		if (this.preRenderedCards[n] === undefined) {
+			console.error("Card not found in pre-rendered cards");
+			return html``;
+		}
+
+		return html` <sl-card> ${this.preRenderedCards[n]} </sl-card> `;
+	};
+
+	// listen to property changes
+	protected updated(
+		_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>
+	): void {
+		if (_changedProperties.has("cards")) {
+			this.preRenderedCards = this.getTopCards(3).map((card) => {
+				const cardElement = new FlashcardContent();
+				cardElement.cardId = card.id;
+				return cardElement;
+			});
+			this.requestUpdate();
+		}
 	}
 
 	render() {
 		if (this.cards.length === 0) return html`<div>No cards</div>`;
-		return html`
-			${map(
-				this.getTopCards(3),
-				(card, index) =>
-					html`
-						<sl-card class="${ifDefined(index !== 0 ? "hidden" : "active")}">
-							<flashcard-content
-								id="${index}"
-								cardId=${card.id}
-							></flashcard-content>
-						</sl-card>
-					`
-			)}
-		`;
+		return html` ${this.getPreRenderedCard(0)} `;
 	}
 
 	static styles = css`

@@ -1,11 +1,13 @@
+import { DateString, newDateString } from "../../../../types/general/DateString";
+
 export interface CardReviewData {
 	reviews: CardReviewResult[];
-	dueOn: Date;
+	dueOn: DateString;
 }
 
 export interface CardReviewResult {
 	answer: CardReviewAnswer;
-	date: Date;
+	date: DateString;
 }
 
 export enum CardReviewAnswer {
@@ -16,5 +18,5 @@ export enum CardReviewAnswer {
 
 export const newCardReviewData = (): CardReviewData => ({
 	reviews: [],
-	dueOn: new Date(),
+	dueOn: newDateString(),
 });

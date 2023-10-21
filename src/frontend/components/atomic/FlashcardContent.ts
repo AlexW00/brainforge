@@ -1,5 +1,5 @@
 import { Task } from "@lit-labs/task";
-import { html } from "lit";
+import { PropertyValueMap, html } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { container } from "tsyringe";

@@ -1,6 +1,10 @@
+import { v4 as uuidv4 } from "uuid";
+import {
+	DateString,
+	newDateString,
+} from "../../../../types/general/DateString";
 import { Identifiable } from "../../../../types/general/Identifiable";
 import { CardReviewData, newCardReviewData } from "./CardReviewData";
-import { v4 as uuidv4 } from "uuid";
 
 export enum CardStatus {
 	New = "new",
@@ -29,17 +33,17 @@ export const newCard = (
 	status: CardStatus.New,
 	reviewData: newCardReviewData(),
 	metadata: {
-		creationTimestamp: new Date(),
+		creationTimestamp: newDateString(),
 	},
 	inputData,
 });
 
 export interface CardRenderCache {
-	[nodeId: string]: { outputName: string; value: any; ts: Date }[];
+	[nodeId: string]: { outputName: string; value: any; ts: DateString }[];
 }
 
 export interface CardMetaData {
-	creationTimestamp: Date;
+	creationTimestamp: DateString;
 }
 
 export type CardInputData = FilledOutCardInputField[];

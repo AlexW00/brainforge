@@ -6,6 +6,7 @@ import {
 import { CardReviewResult } from "../../../../../data/models/flashcards/card/CardReviewData";
 import { DbService } from "../../DbService";
 import { PouchMultiDocService } from "./PouchMultiDocService";
+import { DateString } from "../../../../../types/general/DateString";
 
 @singleton()
 export class PouchCardService extends PouchMultiDocService<Card> {
@@ -24,7 +25,7 @@ export class PouchCardService extends PouchMultiDocService<Card> {
 	async addReview(
 		cardId: string,
 		reviewResult: CardReviewResult,
-		nextDueDate: Date
+		nextDueDate: DateString
 	) {
 		const card = await this.get(cardId);
 		if (card === undefined) throw new Error(`Card with id ${cardId} not found`);
