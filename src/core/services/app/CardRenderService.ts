@@ -277,10 +277,12 @@ export class CardRenderService {
 		);
 
 		for (const node of nodesToEvaluate) {
-			const hasCache = oldRenderCache[node.id] !== undefined;
+			const nodeCache = oldRenderCache[node.id];
+			const hasCache = nodeCache !== undefined;
 			const doReRunOnRender = node.data.doReRunOnRender;
 
-			const cacheTs = oldRenderCache[node.id][0].ts;
+			const firstCache = nodeCache?.[0];
+			const cacheTs = !!firstCache ? firstCache.ts : 0;
 			const nodeLastEditTs = node.data.lastEditTs;
 
 			if (
