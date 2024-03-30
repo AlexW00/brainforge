@@ -1,6 +1,7 @@
 import { inject, singleton } from "tsyringe";
 import { Card, CardRenderCache } from "../../data/models/flashcards/card/Card";
 import { Template } from "../../data/models/flashcards/template/Template";
+import { TemplateNode } from "../../data/models/flashcards/template/graph/TemplateNode";
 import { NodeInputHandleWithValue } from "../../data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
 import { newDateString } from "../../types/general/DateString";
 import { PouchCardService } from "../storage/pouch/docs/multi/PouchCardService";
@@ -25,22 +26,56 @@ export class CardRenderService {
 	) {}
 
 	/**
+	 * Returns (recursively) all input dependencies of a node (including the node itself
+	 * @param nodeId The ID of the node.
+	 * @param template The template of the card.
+	 */
+	private async getNodeInputDependencies(
+		nodeId: string,
+		template: Template
+	): Promise<TemplateNode[]> {
+		const node = template.graph.nodes.find((node) => node.id === nodeId);
+		if (!node) throw new Error(`Node with id ${nodeId} not found`);
+
+		const dependencies: TemplateNode[] = [node];
+
+		const inputEdges = template.graph.edges.filter(
+			(edge) => edge.target === nodeId
+		);
+		for (const edge of inputEdges) {
+			const sourceNode = template.graph.nodes.find(
+				(node) => node.id === edge.source
+			);
+			if (!sourceNode)
+				throw new Error(`Source node of edge ${edge.id} not found`);
+
+			const sourceNodeDependencies = await this.getNodeInputDependencies(
+				sourceNode.id,
+				template
+			);
+			dependencies.push(...sourceNodeDependencies);
+		}
+
+		return dependencies;
+	}
+
+	/**
 	 * Recursively calculates the calue of a node output handle.
 	 * @param name The name of the output handle.
 	 * @param nodeId The ID of the node.
 	 * @param template The template of the card.
-	 * @param newRenderCache The new render cache of the card.
+	 * @param renderCache The new render cache of the card.
 	 */
 	private async evaluateOutput(
 		name: string,
 		nodeId: string,
 		template: Template,
-		newRenderCache: CardRenderCache,
+		renderCache: CardRenderCache,
 		card: Card
 	): Promise<any> {
 		// Check if the value is already in the cache and return it if it is
 
-		const existingOutputValue = newRenderCache[nodeId]?.find(
+		const existingOutputValue = renderCache[nodeId]?.find(
 			(handle) => handle.outputName === name
 		);
 		if (existingOutputValue) {
@@ -76,6 +111,12 @@ export class CardRenderService {
 			);
 
 			console.log("input field", inputField, inputData);
+			if (!renderCache[nodeId]) renderCache[nodeId] = [];
+			renderCache[nodeId].push({
+				outputName: name,
+				value: inputField?.value,
+				ts: newDateString(),
+			});
 			return inputField?.value;
 		}
 
@@ -113,7 +154,7 @@ export class CardRenderService {
 					sourceHandleName,
 					sourceNodeId,
 					template,
-					newRenderCache,
+					renderCache,
 					card
 				);
 
@@ -151,14 +192,14 @@ export class CardRenderService {
 		console.log("getOutputValue value", value, node.data.definitionId);
 
 		// Cache the value
-		if (!newRenderCache[nodeId]) newRenderCache[nodeId] = [];
-		newRenderCache[nodeId].push({
+		if (!renderCache[nodeId]) renderCache[nodeId] = [];
+		renderCache[nodeId].push({
 			outputName: name,
 			value,
 			ts: newDateString(),
 		});
 
-		console.log("new render cache", newRenderCache);
+		console.log("pushed to new render cache", renderCache, nodeId);
 		return value;
 	}
 
@@ -174,34 +215,54 @@ export class CardRenderService {
 		template: Template
 	): Promise<CardRenderCache | false> {
 		const oldRenderCache = card.renderCache ?? {};
+		this.loggerService.info("start: old render cache", oldRenderCache);
 		// generate a new render cache by cloning all old values that belong
 		// to nodes with property doCache = true
 		const newRenderCache: CardRenderCache = {};
 		let cacheDidNotChange = true;
-		template.graph.nodes.forEach((node) => {
+		const outputNode = template.graph.nodes.find(
+			(node) => node.data.definitionId === "output-node"
+		);
+		if (!outputNode) throw new Error("Output node not found");
+		const nodesToEvaluate = await this.getNodeInputDependencies(
+			outputNode.id,
+			template
+		);
+
+		nodesToEvaluate.forEach((node) => {
 			if (oldRenderCache[node.id] !== undefined && !node.data.doReRunOnRender) {
 				const ts = oldRenderCache[node.id][0].ts;
 				const templateNodeTs = template.graph.nodes.find(
 					(n) => n.id === node.id
 				)?.data.lastEditTs;
 
-				if (templateNodeTs && ts > templateNodeTs) {
+				if (!templateNodeTs || ts > templateNodeTs) {
 					newRenderCache[node.id] = oldRenderCache[node.id];
-					this.loggerService.debug(`Re using old cache for node ${node.id}`);
+					this.loggerService.info(`Re using old cache for node ${node.id}`);
 				} else {
+					this.loggerService.info(
+						"invalidating cache for node since TS outdated",
+						templateNodeTs,
+						ts
+					);
 					cacheDidNotChange = false;
 				}
-			} else cacheDidNotChange = false;
+			} else {
+				this.loggerService.info(
+					"invalidating cache for node since no old cache or doReRunOnRender = true",
+					node,
+					oldRenderCache[node.id],
+					node.data.doReRunOnRender
+				);
+				cacheDidNotChange = false;
+			}
 		});
 		if (cacheDidNotChange) return false;
 
+		console.log("old render cache", oldRenderCache, cacheDidNotChange);
+
 		// evaluate all nodes starting from the output node
 		// also provide the new cache so that calculated values can be skipped
-
-		const outputNode = template.graph.nodes.find(
-			(node) => node.data.definitionId === "output-node"
-		);
-		if (!outputNode) throw new Error("Output node not found");
 
 		await this.evaluateOutput(
 			"out",
@@ -226,8 +287,8 @@ export class CardRenderService {
 		if (template === undefined)
 			throw new Error(`Template with id ${card.templateId} not found`);
 
-		const renderCache = await this.generateRenderCache(card, template);
-		console.log("render cache", renderCache);
+		const newRenderCache = await this.generateRenderCache(card, template);
+		console.log("new render cache", newRenderCache);
 
 		const outputNodeId = template.graph.nodes.find(
 			(node) => node.data.definitionId === "output-node"
@@ -235,12 +296,20 @@ export class CardRenderService {
 		if (!outputNodeId) throw new Error("Output node not found");
 
 		// keep old cache if no new cache was generated and return old HTML
-		if (renderCache === false)
+		if (newRenderCache === false) {
+			this.loggerService.info(
+				"keeping old cache, newrendercache false",
+				card.renderCache!
+			);
 			return this.getCardHtml(outputNodeId, card.renderCache!);
+		}
 
 		// update card with new cache and return new HTML
-		await this.cardService.updateFields(cardId, { renderCache });
-		return this.getCardHtml(outputNodeId, renderCache);
+		this.loggerService.info("updating card with new cache", newRenderCache);
+		await this.cardService.updateFields(cardId, {
+			renderCache: newRenderCache,
+		});
+		return this.getCardHtml(outputNodeId, newRenderCache);
 	}
 
 	/**
