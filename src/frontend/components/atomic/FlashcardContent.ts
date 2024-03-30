@@ -143,6 +143,7 @@ export default class FlashcardContent extends CustomElement {
 	};
 
 	render() {
+		if (this.renderCardTask.error) console.error(this.renderCardTask.error);
 		return html`
 			<loading-wrapper .status=${this.loadCardTask.status}>
 				<div class="content" slot="completed">

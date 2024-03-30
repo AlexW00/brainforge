@@ -35,7 +35,6 @@ export default class DeckPage extends CustomElement {
 	);
 
 	onDeckChanged = (e: CustomEvent<Deck>) => {
-		console.log("Deck changed", e.detail);
 		if (e.detail.id !== this.properties.deckId) return;
 		this.deck = e.detail;
 		this.requestUpdate();

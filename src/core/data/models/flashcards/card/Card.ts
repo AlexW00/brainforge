@@ -39,7 +39,12 @@ export const newCard = (
 });
 
 export interface CardRenderCache {
-	[nodeId: string]: { outputName: string; value: any; ts: DateString }[];
+	[nodeId: string]: {
+		outputName: string;
+		value: any;
+		ts: DateString;
+		dependencies: string[];
+	}[];
 }
 
 export interface CardMetaData {

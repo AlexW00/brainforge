@@ -4,6 +4,7 @@ import { Template } from "../../data/models/flashcards/template/Template";
 import { TemplateNode } from "../../data/models/flashcards/template/graph/TemplateNode";
 import { NodeInputHandleWithValue } from "../../data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
 import { newDateString } from "../../types/general/DateString";
+import { arraysContainSameElements } from "../../util/arraysContainSameElements";
 import { PouchCardService } from "../storage/pouch/docs/multi/PouchCardService";
 import { PouchTemplateService } from "../storage/pouch/docs/multi/PouchTemplateService";
 import { ElementRegistrarService } from "./ElementRegistrarService";
@@ -60,6 +61,40 @@ export class CardRenderService {
 	}
 
 	/**
+	 * Returns all nodes that depend on a node's output (including the node itself).
+	 * @param nodeId
+	 * @param template
+	 */
+	private async getNodeOutputDependants(
+		nodeId: string,
+		template: Template
+	): Promise<TemplateNode[]> {
+		const node = template.graph.nodes.find((node) => node.id === nodeId);
+		if (!node) throw new Error(`Node with id ${nodeId} not found`);
+
+		const dependants: TemplateNode[] = [node];
+
+		const outputEdges = template.graph.edges.filter(
+			(edge) => edge.source === nodeId
+		);
+		for (const edge of outputEdges) {
+			const targetNode = template.graph.nodes.find(
+				(node) => node.id === edge.target
+			);
+			if (!targetNode)
+				throw new Error(`Target node of edge ${edge.id} not found`);
+
+			const targetNodeDependants = await this.getNodeOutputDependants(
+				targetNode.id,
+				template
+			);
+			dependants.push(...targetNodeDependants);
+		}
+
+		return dependants;
+	}
+
+	/**
 	 * Recursively calculates the calue of a node output handle.
 	 * @param name The name of the output handle.
 	 * @param nodeId The ID of the node.
@@ -85,7 +120,7 @@ export class CardRenderService {
 
 			return existingOutputValue.value;
 		}
-		this.loggerService.debug(`Calculating output ${name} of node ${nodeId}...`);
+		this.loggerService.log(`Calculating output ${name} of node ${nodeId}...`);
 
 		// Otherwise calculate the value
 		// Find the node in the template
@@ -112,10 +147,16 @@ export class CardRenderService {
 
 			this.loggerService.debug("input field", inputField, inputData);
 			if (!renderCache[nodeId]) renderCache[nodeId] = [];
+			const dependencies = await this.getNodeInputDependencies(
+				nodeId,
+				template
+			);
+
 			renderCache[nodeId].push({
 				outputName: name,
 				value: inputField?.value,
 				ts: newDateString(),
+				dependencies: dependencies.map((node) => node.id),
 			});
 			return inputField?.value;
 		}
@@ -197,10 +238,12 @@ export class CardRenderService {
 
 		// Cache the value
 		if (!renderCache[nodeId]) renderCache[nodeId] = [];
+		const dependencies = await this.getNodeInputDependencies(nodeId, template);
 		renderCache[nodeId].push({
 			outputName: name,
 			value,
 			ts: newDateString(),
+			dependencies: dependencies.map((node) => node.id),
 		});
 
 		this.loggerService.debug("pushed to new render cache", renderCache, nodeId);
@@ -232,9 +275,14 @@ export class CardRenderService {
 			outputNode.id,
 			template
 		);
+		console.log("nodes to evaluate", nodesToEvaluate.length);
 
 		nodesToEvaluate.forEach((node) => {
-			if (oldRenderCache[node.id] !== undefined && !node.data.doReRunOnRender) {
+			const hasCache = oldRenderCache[node.id] !== undefined;
+			const doReRunOnRender = node.data.doReRunOnRender;
+
+			// console.log("node", node.id, hasCache, doReRunOnRender);
+			if (hasCache && !doReRunOnRender) {
 				const ts = oldRenderCache[node.id][0].ts;
 				const templateNodeTs = template.graph.nodes.find(
 					(n) => n.id === node.id
@@ -252,7 +300,7 @@ export class CardRenderService {
 					cacheDidNotChange = false;
 				}
 			} else {
-				this.loggerService.debug(
+				this.loggerService.info(
 					"invalidating cache for node since no old cache or doReRunOnRender = true",
 					node,
 					oldRenderCache[node.id],
@@ -261,6 +309,44 @@ export class CardRenderService {
 				cacheDidNotChange = false;
 			}
 		});
+
+		// now, clear re-uesed cache values, which depend on nodes that have no cache anymore
+		for (const node of nodesToEvaluate) {
+			if (newRenderCache[node.id] === undefined) continue;
+			const nodeRenderCache = newRenderCache[node.id];
+
+			const dependencies = await this.getNodeInputDependencies(
+				node.id,
+				template
+			);
+
+			// invalidate, if one of the dependencies has no cache...
+			let doInvalidate = dependencies.some(
+				(dependency) => newRenderCache[dependency.id] === undefined
+			);
+
+			if (!doInvalidate) {
+				// or if the dependencies have changed
+				const cachedDepenendcies = nodeRenderCache[0].dependencies ?? [];
+				doInvalidate = !arraysContainSameElements(
+					dependencies.map((d) => d.id),
+					cachedDepenendcies
+				);
+			}
+
+			if (doInvalidate) {
+				const dependants = await this.getNodeOutputDependants(
+					node.id,
+					template
+				);
+				dependants.forEach((dependant) => {
+					delete newRenderCache[dependant.id];
+				});
+				delete newRenderCache[node.id];
+				cacheDidNotChange = false;
+			}
+		}
+
 		if (cacheDidNotChange) return false;
 
 		this.loggerService.debug(
@@ -271,7 +357,6 @@ export class CardRenderService {
 
 		// evaluate all nodes starting from the output node
 		// also provide the new cache so that calculated values can be skipped
-
 		await this.evaluateOutput(
 			"out",
 			outputNode.id,
