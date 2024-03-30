@@ -26,6 +26,7 @@ export default class DeckPage extends CustomElement {
 	private getDeckTask = new Task(
 		this,
 		async ([deckId]) => {
+			console.log("Getting deck", deckId);
 			const deck = await this.deckService.get(deckId);
 			if (deck === undefined) throw new Error("Deck not found");
 			this.deck = deck;
@@ -34,6 +35,7 @@ export default class DeckPage extends CustomElement {
 	);
 
 	onDeckChanged = (e: CustomEvent<Deck>) => {
+		console.log("Deck changed", e.detail);
 		if (e.detail.id !== this.properties.deckId) return;
 		this.deck = e.detail;
 		this.requestUpdate();
@@ -53,6 +55,7 @@ export default class DeckPage extends CustomElement {
 
 	private getCardIds() {
 		const ids = this.deck?.cardsIds || [];
+		console.log("Deck Card IDs", ids);
 		return ids;
 	}
 
@@ -108,6 +111,7 @@ export class DeckPageDefinition extends PageDefinition<DeckPageProperties> {
 
 	onUnload = () => {};
 	onUpdate = (properties: DeckPageProperties) => {
+		console.log("Updating deck page", properties);
 		this.deckPage.properties = properties;
 	};
 

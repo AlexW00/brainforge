@@ -1,15 +1,19 @@
+import { css, html } from "lit";
 import { customElement } from "lit/decorators.js";
+import { container } from "tsyringe";
+import { PouchDebugService } from "../../../core/services/storage/pouch/docs/PouchDebugService";
+import { PouchCardService } from "../../../core/services/storage/pouch/docs/multi/PouchCardService";
+import { PouchDeckService } from "../../../core/services/storage/pouch/docs/multi/PouchDeckService";
+import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
+import { Metadata } from "../../../core/types/general/Metadata";
 import { ModalDefinition } from "../../../core/types/views/ModalDefinition";
 import { CustomElement } from "../atomic/CustomElement";
-import { css, html } from "lit";
-import { PouchDebugService } from "../../../core/services/storage/pouch/docs/PouchDebugService";
-import { container } from "tsyringe";
-import { Metadata } from "../../../core/types/general/Metadata";
-import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
 
 @customElement("debug-modal")
 export default class DebugModal extends CustomElement {
 	private readonly debug = container.resolve(PouchDebugService);
+	private readonly deckService = container.resolve(PouchDeckService);
+	private readonly cardService = container.resolve(PouchCardService);
 
 	resetDB = () => {
 		this.debug.clearDb().then(() => {
@@ -41,6 +45,20 @@ export default class DebugModal extends CustomElement {
 		});
 	};
 
+	printAllCardsPerDeck = async () => {
+		console.log("Printing all cards per deck");
+		const decks = await this.deckService.getAll();
+		for (const deck of decks) {
+			console.log(`Deck ${deck.name}:`, deck.cardsIds.length);
+			const cardsIds = await this.deckService.getCardIds(deck.id);
+			const cards = await this.cardService.getMany(cardsIds);
+			console.log(`Deck ${deck.name}:`);
+			for (const card of cards) {
+				console.log(card);
+			}
+		}
+	};
+
 	render() {
 		return html`
 			<div>Debug</div>
@@ -56,6 +74,7 @@ export default class DebugModal extends CustomElement {
 			<button @click=${this.addRandomCardToRandomDeck}>
 				Add random card to random deck
 			</button>
+			<button @click=${this.printAllCardsPerDeck}>print cards</button>
 		`;
 	}
 

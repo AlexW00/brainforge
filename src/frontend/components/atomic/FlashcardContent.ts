@@ -42,7 +42,7 @@ export default class FlashcardContent extends CustomElement {
 
 	renderCardTask = new Task(this, {
 		task: async () => {
-			console.log("load card  status", this.loadCardTask.status);
+			console.log("load card status", this.loadCardTask.status);
 			if (this.card === undefined) return;
 			this.cardHtml = await this.cardRendererService.renderCard(this.card.id);
 			return this.cardHtml;
@@ -55,7 +55,7 @@ export default class FlashcardContent extends CustomElement {
 		this.loadCardTask
 			.run()
 			.then(() => this.renderCardTask.run())
-			.catch((e) => console.error(e));
+			.catch((e) => console.error("ERROR", e));
 	}
 
 	onCardChanged = (e: CustomEvent<Card>) => {
@@ -112,9 +112,13 @@ export default class FlashcardContent extends CustomElement {
 		if (e.key === " ") this.handleSpacePress();
 	};
 
+	updated(changedProperties: Map<string | number | symbol, unknown>) {
+		super.updated(changedProperties);
+		if (changedProperties.has("cardId")) this.onCardIdChanged();
+	}
+
 	connectedCallback() {
 		super.connectedCallback();
-		this.onCardIdChanged();
 		this.cardService.on("change", this.onCardChanged);
 		addEventListener("keydown", this.handleKeyDown);
 	}

@@ -1,11 +1,11 @@
-import { inject, singleton } from "tsyringe";
-import { PouchService } from "../PouchService";
 import { faker } from "@faker-js/faker";
+import { inject, singleton } from "tsyringe";
 import { Deck } from "../../../../data/models/flashcards/Deck";
-import { PouchTemplateService } from "./multi/PouchTemplateService";
-import { TemplateNode } from "../../../../data/models/flashcards/template/graph/TemplateNode";
-import { Template } from "../../../../data/models/flashcards/template/Template";
 import { Card, CardStatus } from "../../../../data/models/flashcards/card/Card";
+import { Template } from "../../../../data/models/flashcards/template/Template";
+import { TemplateNode } from "../../../../data/models/flashcards/template/graph/TemplateNode";
+import { PouchService } from "../PouchService";
+import { PouchTemplateService } from "./multi/PouchTemplateService";
 
 @singleton()
 export class PouchDebugService {
@@ -91,10 +91,10 @@ export class PouchDebugService {
 			status: CardStatus.New,
 			reviewData: {
 				reviews: [],
-				dueOn: new Date(),
+				dueOn: new Date().toDateString(),
 			},
 			metadata: {
-				creationTimestamp: new Date(),
+				creationTimestamp: new Date().toDateString(),
 			},
 			inputData: [],
 		};
