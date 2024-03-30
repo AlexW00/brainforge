@@ -1,4 +1,4 @@
-import { TaskStatus } from "@lit-labs/task";
+import { TaskStatus } from "@lit/task";
 
 export const ViewStatus = TaskStatus;
 export type ViewStatus = TaskStatus;

@@ -1,16 +1,15 @@
-import { customElement, property, state } from "lit/decorators.js";
-import { CustomElement } from "../atomic/CustomElement";
-import { PageDefinition } from "../../../core/types/views/PageDefinition";
+import { Task } from "@lit/task";
 import { css, html } from "lit";
-import { container } from "tsyringe";
-import { Task } from "@lit-labs/task";
-import { PouchTemplateService } from "../../../core/services/storage/pouch/docs/multi/PouchTemplateService";
-import { Template } from "../../../core/data/models/flashcards/template/Template";
+import { customElement, property, state } from "lit/decorators.js";
 import { map } from "lit/directives/map.js";
-import { produce } from "immer";
+import { container } from "tsyringe";
+import { Template } from "../../../core/data/models/flashcards/template/Template";
 import { RouterService } from "../../../core/services/app/RouterService";
-import { Metadata } from "../../../core/types/general/Metadata";
+import { PouchTemplateService } from "../../../core/services/storage/pouch/docs/multi/PouchTemplateService";
 import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
+import { Metadata } from "../../../core/types/general/Metadata";
+import { PageDefinition } from "../../../core/types/views/PageDefinition";
+import { CustomElement } from "../atomic/CustomElement";
 
 @customElement("template-overview-page")
 export default class TemplateOverviewPage extends CustomElement {

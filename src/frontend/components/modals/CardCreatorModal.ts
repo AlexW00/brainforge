@@ -1,23 +1,20 @@
-import { customElement, property, state } from "lit/decorators.js";
-import { ModalDefinition } from "../../../core/types/views/ModalDefinition";
-import { CustomElement } from "../atomic/CustomElement";
+import { Task } from "@lit/task";
 import { css, html } from "lit";
-import { Template } from "../../../core/data/models/flashcards/template/Template";
-import { Task } from "@lit-labs/task";
+import { customElement, state } from "lit/decorators.js";
 import { container } from "tsyringe";
-import { PouchTemplateService } from "../../../core/services/storage/pouch/docs/multi/PouchTemplateService";
-import { when } from "lit/directives/when.js";
-import { TemplateNode } from "../../../core/data/models/flashcards/template/graph/TemplateNode";
 import {
-	CardInputField,
 	FilledOutCardInputField,
 	newCard,
 } from "../../../core/data/models/flashcards/card/Card";
+import { Template } from "../../../core/data/models/flashcards/template/Template";
+import { TemplateNode } from "../../../core/data/models/flashcards/template/graph/TemplateNode";
 import { PouchCardService } from "../../../core/services/storage/pouch/docs/multi/PouchCardService";
 import { PouchDeckService } from "../../../core/services/storage/pouch/docs/multi/PouchDeckService";
-import { produce } from "immer";
-import { Metadata } from "../../../core/types/general/Metadata";
+import { PouchTemplateService } from "../../../core/services/storage/pouch/docs/multi/PouchTemplateService";
 import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
+import { Metadata } from "../../../core/types/general/Metadata";
+import { ModalDefinition } from "../../../core/types/views/ModalDefinition";
+import { CustomElement } from "../atomic/CustomElement";
 
 @customElement("card-creator")
 export default class CardCreator extends CustomElement {

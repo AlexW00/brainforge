@@ -1,12 +1,12 @@
 import { inject, singleton } from "tsyringe";
-import { UiEventBus } from "../events/UiEventBus";
+import { SettingsModalProperties } from "../../../frontend/components/modals/SettingsModal";
 import {
 	SETTINGS_RIBBON_ITEM,
 	TEMPLATES_RIBBON_ITEM,
 } from "../../static/ui/StockAppRibbonItems";
-import { RouterService } from "./RouterService";
+import { UiEventBus } from "../events/UiEventBus";
 import { ModalService } from "./ModalService";
-import { SettingsModalProperties } from "../../../frontend/components/modals/SettingsModal";
+import { RouterService } from "./RouterService";
 
 /**
  * Service to handle UI events.
@@ -27,6 +27,8 @@ export class UiEventHandler {
 			if (e.key === "!") {
 				this.modal.openModal("debug", {});
 			}
+
+			console.log("Key pressed ui event", e.key);
 		});
 	}
 

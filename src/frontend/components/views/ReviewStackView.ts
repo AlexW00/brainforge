@@ -11,13 +11,6 @@ export default class ReviewStackView extends CustomElement {
 
 	private preRenderedCards: FlashcardContent[] = [];
 
-	onkeydown = (e: KeyboardEvent) => {
-		if (e.code === "Space") {
-			console.warn("TODO: Show answer");
-			this.dispatchEvent(new CustomEvent("expandLimitReached"));
-		}
-	};
-
 	constructor() {
 		super();
 		this.classList.add("container");
@@ -49,17 +42,17 @@ export default class ReviewStackView extends CustomElement {
 				return cardElement;
 			});
 			this.requestUpdate();
+			this.dispatchEvent(new CustomEvent("reviewStackUpdated"));
 		}
 	}
 
-	private handleExpand = (e: CustomEvent<number>) => {
-		const numFoldingsToExpand = e.detail;
+	private handleExpand = (e: CustomEvent<any>) => {
+		const numFoldingsToExpand = e.detail.numFoldingsToExpand;
 		const shownCard = this.preRenderedCards[0];
 		if (shownCard === undefined) return;
 
 		const currentFoldLevel = shownCard.foldingLevel;
 		shownCard.foldingLevel = currentFoldLevel + numFoldingsToExpand;
-		e.stopPropagation();
 	};
 
 	render() {

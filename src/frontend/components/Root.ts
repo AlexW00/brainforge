@@ -1,10 +1,10 @@
-import { CustomElement } from "./atomic/CustomElement";
-import { css, html } from "lit";
+import { Task, TaskStatus } from "@lit/task";
+import { html } from "lit";
+import { customElement } from "lit/decorators.js";
+import { choose } from "lit/directives/choose.js";
 import { container } from "tsyringe";
 import { MasterService } from "../../core/services/MasterService";
-import { Task, TaskStatus } from "@lit-labs/task";
-import { choose } from "lit/directives/choose.js";
-import { customElement } from "lit/decorators.js";
+import { CustomElement } from "./atomic/CustomElement";
 
 @customElement("root-component")
 export default class RootComponent extends CustomElement {

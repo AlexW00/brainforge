@@ -1,4 +1,4 @@
-import { TaskStatus } from "@lit-labs/task";
+import { TaskStatus } from "@lit/task";
 import { css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { choose } from "lit/directives/choose.js";

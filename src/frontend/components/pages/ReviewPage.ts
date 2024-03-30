@@ -1,6 +1,7 @@
-import { Task } from "@lit-labs/task";
+import { Task, TaskStatus } from "@lit/task";
 import { css, html } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+import { when } from "lit/directives/when.js";
 import { container } from "tsyringe";
 import {
 	Card,
@@ -24,6 +25,9 @@ export default class ReviewPage extends CustomElement {
 
 	@state()
 	private reviewStack: Card[] = [];
+
+	@state()
+	private isExpandLimitReached = false;
 
 	private loadReviewStack = new Task(this, {
 		task: async () => {
@@ -102,35 +106,83 @@ export default class ReviewPage extends CustomElement {
 		this.reviewService.reviewCard(cardId, answer);
 	};
 
+	private handleExpand = (e: CustomEvent) => {
+		const numFoldingsToExpand = e.detail.numFoldingsToExpand;
+		const maxFoldings = e.detail.maxFoldings;
+		const foldingLevel = e.detail.foldingLevel;
+		if (foldingLevel + numFoldingsToExpand >= maxFoldings) {
+			this.isExpandLimitReached = true;
+		} else {
+			this.isExpandLimitReached = false;
+		}
+	};
+
+	private handleReviewStackUpdated = () => {
+		this.isExpandLimitReached = false;
+	};
+
+	private handleKeyboardReview = (e: KeyboardEvent) => {
+		console.log(
+			"Key pressed",
+			e.key,
+			this.reviewStack.length,
+			this.isExpandLimitReached
+		);
+		if (this.reviewStack.length === 0) return;
+		if (!this.isExpandLimitReached) return;
+
+		if (e.key === "1") {
+			this.reviewCard(CardReviewAnswer.Again);
+		} else if (e.key === "2" || e.key === " ") {
+			this.reviewCard(CardReviewAnswer.Good);
+		} else if (e.key === "3") {
+			this.reviewCard(CardReviewAnswer.Easy);
+		}
+	};
+
+	private handleKeyDown = (e: KeyboardEvent) => {
+		this.handleKeyboardReview(e);
+	};
+
 	connectedCallback() {
 		super.connectedCallback();
 		this.loadReviewStack.run();
 		this.reviewService.on("cardReviewed", this.onCardReviewed);
+		addEventListener("keydown", this.handleKeyDown);
 	}
 
 	disconnectedCallback() {
 		super.disconnectedCallback();
 		this.reviewService.off("cardReviewed", this.onCardReviewed);
+		removeEventListener("keydown", this.handleKeyDown);
 	}
 
 	render() {
-		console.log("rendering review page", this.reviewStack);
+		this.focus();
 		return html`
 			<loading-wrapper .status=${this.loadReviewStack.status}>
 				<sl-spinner style="font-size: 3rem;" slot="loading"></sl-spinner>
 				<div class="content" slot="completed">
 					<review-stack-view
 						.cards=${this.reviewStack}
-						@expandLimitReached=${() => {
-							this.reviewCard(CardReviewAnswer.Good);
-						}}
+						@expand=${this.handleExpand}
+						@reviewStackUpdated=${this.handleReviewStackUpdated}
 					></review-stack-view>
+					<!-- if review stack empty -->
 					<spacer-component></spacer-component>
-					<review-action-bar
-						@review=${(e: CustomEvent<CardReviewAnswer>) => {
-							this.reviewCard(e.detail);
-						}}
-					></review-action-bar>
+					${when(
+						this.loadReviewStack.status !== TaskStatus.COMPLETE ||
+							this.reviewStack.length === 0 ||
+							!this.isExpandLimitReached,
+						() => html``,
+						() => html`
+							<review-action-bar
+								@review=${(e: CustomEvent<CardReviewAnswer>) => {
+									this.reviewCard(e.detail);
+								}}
+							></review-action-bar>
+						`
+					)}
 				</div>
 			</loading-wrapper>
 		`;

@@ -1,15 +1,15 @@
-import { customElement, state } from "lit/decorators.js";
-import { TemplateResult, css, html } from "lit";
-import Panel from "./Panel";
-import { Deck, NestedDeck } from "../../../core/data/models/flashcards/Deck";
-import { PouchDeckService } from "../../../core/services/storage/pouch/docs/multi/PouchDeckService";
-import { container } from "tsyringe";
-import { produce } from "immer";
-import { Task } from "@lit-labs/task";
-import { map } from "lit/directives/map.js";
-import { RouterService } from "../../../core/services/app/RouterService";
-import { SessionZustandService } from "../../../core/services/storage/zustand/SessionZustandService";
+import { Task } from "@lit/task";
 import { SlTreeItem } from "@shoelace-style/shoelace";
+import { produce } from "immer";
+import { TemplateResult, css, html } from "lit";
+import { customElement, state } from "lit/decorators.js";
+import { map } from "lit/directives/map.js";
+import { container } from "tsyringe";
+import { Deck, NestedDeck } from "../../../core/data/models/flashcards/Deck";
+import { RouterService } from "../../../core/services/app/RouterService";
+import { PouchDeckService } from "../../../core/services/storage/pouch/docs/multi/PouchDeckService";
+import { SessionZustandService } from "../../../core/services/storage/zustand/SessionZustandService";
+import Panel from "./Panel";
 
 @customElement("deck-tree-panel")
 export default class DeckTreePanel extends Panel {

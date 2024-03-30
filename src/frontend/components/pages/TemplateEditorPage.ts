@@ -1,16 +1,16 @@
-import { customElement, property, state } from "lit/decorators.js";
-import { CustomElement } from "../atomic/CustomElement";
-import { PageDefinition } from "../../../core/types/views/PageDefinition";
+import { Task, TaskStatus } from "@lit/task";
 import { css, html } from "lit";
-import { container } from "tsyringe";
-import { Task, TaskStatus } from "@lit-labs/task";
-import { PouchTemplateService } from "../../../core/services/storage/pouch/docs/multi/PouchTemplateService";
-import type { Template } from "../../../core/data/models/flashcards/template/Template";
+import { customElement, property, state } from "lit/decorators.js";
 import { choose } from "lit/directives/choose.js";
 import { when } from "lit/directives/when.js";
+import { container } from "tsyringe";
+import type { Template } from "../../../core/data/models/flashcards/template/Template";
 import { TemplateEditorService } from "../../../core/services/app/TemplateEditorService";
-import { Metadata } from "../../../core/types/general/Metadata";
+import { PouchTemplateService } from "../../../core/services/storage/pouch/docs/multi/PouchTemplateService";
 import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
+import { Metadata } from "../../../core/types/general/Metadata";
+import { PageDefinition } from "../../../core/types/views/PageDefinition";
+import { CustomElement } from "../atomic/CustomElement";
 
 @customElement("template-editor-page")
 export default class TemplateEditorPage extends CustomElement {

@@ -1,4 +1,4 @@
-import { Task } from "@lit-labs/task";
+import { Task } from "@lit/task";
 import { html } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
@@ -80,7 +80,11 @@ export default class FlashcardContent extends CustomElement {
 	private onExpand = (numFoldingsToExpand: number) => {
 		this.dispatchEvent(
 			new CustomEvent("expand", {
-				detail: numFoldingsToExpand,
+				detail: {
+					numFoldingsToExpand,
+					maxFoldings: this.getNumFoldings(),
+					foldingLevel: this.foldingLevel,
+				},
 				bubbles: true,
 				composed: true,
 			})
@@ -104,19 +108,21 @@ export default class FlashcardContent extends CustomElement {
 		this.onTryExpand();
 	};
 
-	onkeydown = (e: KeyboardEvent) => {
-		if (e.code === "Space") this.handleSpacePress();
+	private handleKeyDown = (e: KeyboardEvent) => {
+		if (e.key === " ") this.handleSpacePress();
 	};
 
 	connectedCallback() {
 		super.connectedCallback();
 		this.onCardIdChanged();
 		this.cardService.on("change", this.onCardChanged);
+		addEventListener("keydown", this.handleKeyDown);
 	}
 
 	disconnectedCallback() {
 		super.disconnectedCallback();
 		this.cardService.off("change", this.onCardChanged);
+		removeEventListener("keydown", this.handleKeyDown);
 	}
 
 	renderContent = (foldingLevel: number) => {

@@ -55,6 +55,7 @@ export class TestNodeDefinition extends TemplateNodeDefinition {
 		params: TemplateNodeParams,
 		inputs: NodeInputHandleWithValue[]
 	) => {
+		await new Promise((resolve) => setTimeout(resolve, 1000));
 		return inputs[0].value + "-TEST";
 	};
 }
