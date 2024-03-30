@@ -260,13 +260,13 @@ export class CardRenderService {
 	private async generateRenderCache(
 		card: Card,
 		template: Template
-	): Promise<CardRenderCache | false> {
+	): Promise<{ cache: CardRenderCache; isNew: boolean }> {
 		const oldRenderCache = card.renderCache ?? {};
 		this.loggerService.debug("start: old render cache", oldRenderCache);
 		// generate a new render cache by cloning all old values that belong
 		// to nodes with property doCache = true
 		const newRenderCache: CardRenderCache = {};
-		let cacheDidNotChange = true;
+		let cacheHasChanged = false;
 		const outputNode = template.graph.nodes.find(
 			(node) => node.data.definitionId === "output-node"
 		);
@@ -275,42 +275,28 @@ export class CardRenderService {
 			outputNode.id,
 			template
 		);
-		console.log("nodes to evaluate", nodesToEvaluate.length);
 
-		nodesToEvaluate.forEach((node) => {
+		for (const node of nodesToEvaluate) {
 			const hasCache = oldRenderCache[node.id] !== undefined;
 			const doReRunOnRender = node.data.doReRunOnRender;
 
-			// console.log("node", node.id, hasCache, doReRunOnRender);
-			if (hasCache && !doReRunOnRender) {
-				const ts = oldRenderCache[node.id][0].ts;
-				const templateNodeTs = template.graph.nodes.find(
-					(n) => n.id === node.id
-				)?.data.lastEditTs;
+			const cacheTs = oldRenderCache[node.id][0].ts;
+			const nodeLastEditTs = node.data.lastEditTs;
 
-				if (!templateNodeTs || ts > templateNodeTs) {
-					newRenderCache[node.id] = oldRenderCache[node.id];
-					this.loggerService.debug(`Re using old cache for node ${node.id}`);
-				} else {
-					this.loggerService.debug(
-						"invalidating cache for node since TS outdated",
-						templateNodeTs,
-						ts
-					);
-					cacheDidNotChange = false;
-				}
+			if (
+				hasCache && // has existing cache
+				!doReRunOnRender && // does not require re-run on render
+				(!nodeLastEditTs || cacheTs > nodeLastEditTs) // and has not been edited since the last render
+			) {
+				// then re use the cache
+				newRenderCache[node.id] = oldRenderCache[node.id];
 			} else {
-				this.loggerService.info(
-					"invalidating cache for node since no old cache or doReRunOnRender = true",
-					node,
-					oldRenderCache[node.id],
-					node.data.doReRunOnRender
-				);
-				cacheDidNotChange = false;
+				// otherwise, invalidate the cache
+				cacheHasChanged = true;
 			}
-		});
+		}
 
-		// now, clear re-uesed cache values, which depend on nodes that have no cache anymore
+		// now, clear re-uesed cache values, which depend on invalidated nodes
 		for (const node of nodesToEvaluate) {
 			if (newRenderCache[node.id] === undefined) continue;
 			const nodeRenderCache = newRenderCache[node.id];
@@ -321,20 +307,20 @@ export class CardRenderService {
 			);
 
 			// invalidate, if one of the dependencies has no cache...
-			let doInvalidate = dependencies.some(
+			let doInvalidateNodeCache = dependencies.some(
 				(dependency) => newRenderCache[dependency.id] === undefined
 			);
 
-			if (!doInvalidate) {
+			if (!doInvalidateNodeCache) {
 				// or if the dependencies have changed
 				const cachedDepenendcies = nodeRenderCache[0].dependencies ?? [];
-				doInvalidate = !arraysContainSameElements(
+				doInvalidateNodeCache = !arraysContainSameElements(
 					dependencies.map((d) => d.id),
 					cachedDepenendcies
 				);
 			}
 
-			if (doInvalidate) {
+			if (doInvalidateNodeCache) {
 				const dependants = await this.getNodeOutputDependants(
 					node.id,
 					template
@@ -343,17 +329,15 @@ export class CardRenderService {
 					delete newRenderCache[dependant.id];
 				});
 				delete newRenderCache[node.id];
-				cacheDidNotChange = false;
+				cacheHasChanged = true;
 			}
 		}
 
-		if (cacheDidNotChange) return false;
-
-		this.loggerService.debug(
-			"old render cache",
-			oldRenderCache,
-			cacheDidNotChange
-		);
+		if (!cacheHasChanged)
+			return {
+				cache: oldRenderCache,
+				isNew: false,
+			}; // nothing has changed, return false
 
 		// evaluate all nodes starting from the output node
 		// also provide the new cache so that calculated values can be skipped
@@ -364,7 +348,10 @@ export class CardRenderService {
 			newRenderCache,
 			card
 		);
-		return newRenderCache;
+		return {
+			cache: newRenderCache,
+			isNew: true,
+		};
 	}
 
 	/**
@@ -380,29 +367,20 @@ export class CardRenderService {
 		if (template === undefined)
 			throw new Error(`Template with id ${card.templateId} not found`);
 
-		const newRenderCache = await this.generateRenderCache(card, template);
-		this.loggerService.debug("new render cache", newRenderCache);
+		const renderCacheResult = await this.generateRenderCache(card, template);
 
 		const outputNodeId = template.graph.nodes.find(
 			(node) => node.data.definitionId === "output-node"
 		)?.id;
 		if (!outputNodeId) throw new Error("Output node not found");
 
-		// keep old cache if no new cache was generated and return old HTML
-		if (newRenderCache === false) {
-			this.loggerService.debug(
-				"keeping old cache, newrendercache false",
-				card.renderCache!
-			);
-			return this.getCardHtml(outputNodeId, card.renderCache!);
+		if (renderCacheResult.isNew) {
+			await this.cardService.updateFields(cardId, {
+				renderCache: renderCacheResult.cache,
+			});
 		}
 
-		// update card with new cache and return new HTML
-		this.loggerService.debug("updating card with new cache", newRenderCache);
-		await this.cardService.updateFields(cardId, {
-			renderCache: newRenderCache,
-		});
-		return this.getCardHtml(outputNodeId, newRenderCache);
+		return this.getCardHtml(outputNodeId, renderCacheResult.cache);
 	}
 
 	/**
