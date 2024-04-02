@@ -3,7 +3,6 @@ import { Card, CardRenderCache } from "../../data/models/flashcards/card/Card";
 import { Template } from "../../data/models/flashcards/template/Template";
 import { TemplateNode } from "../../data/models/flashcards/template/graph/TemplateNode";
 import { NodeInputHandleWithValue } from "../../data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
-import { newDateString } from "../../types/general/DateString";
 import { arraysContainSameElements } from "../../util/arraysContainSameElements";
 import { PouchCardService } from "../storage/pouch/docs/multi/PouchCardService";
 import { PouchTemplateService } from "../storage/pouch/docs/multi/PouchTemplateService";
@@ -155,7 +154,7 @@ export class CardRenderService {
 			renderCache[nodeId].push({
 				outputName: name,
 				value: inputField?.value,
-				ts: newDateString(),
+				ts: Date.now().toString(),
 				dependencies: dependencies.map((node) => node.id),
 			});
 			return inputField?.value;
@@ -242,7 +241,7 @@ export class CardRenderService {
 		renderCache[nodeId].push({
 			outputName: name,
 			value,
-			ts: newDateString(),
+			ts: Date.now().toString(),
 			dependencies: dependencies.map((node) => node.id),
 		});
 
@@ -282,8 +281,9 @@ export class CardRenderService {
 			const doReRunOnRender = node.data.doReRunOnRender;
 
 			const firstCache = nodeCache?.[0];
-			const cacheTs = !!firstCache ? firstCache.ts : 0;
-			const nodeLastEditTs = node.data.lastEditTs;
+			const cacheTs = firstCache !== undefined ? firstCache.ts : 0;
+			const nodeLastEditTs = node.data.data.lastEditTs;
+			console.log("cache ts", cacheTs, nodeLastEditTs);
 
 			if (
 				hasCache && // has existing cache

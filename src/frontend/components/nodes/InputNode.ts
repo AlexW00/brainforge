@@ -1,25 +1,24 @@
+import { css, html } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { map } from "lit/directives/map.js";
+import { container } from "tsyringe";
 import { TemplateNodeDefinition } from "../../../core/data/models/extensions/plugins/templates/TemplateNodeDefinition";
+import { TemplateNodeMetadata } from "../../../core/data/models/extensions/plugins/templates/TemplateNodeMetadata";
 import type { TemplateNodeParams } from "../../../core/data/models/extensions/plugins/templates/TemplateNodeParams";
+import { CardInputField } from "../../../core/data/models/flashcards/card/Card";
 import {
 	NodeHandles,
 	NodeInputHandleWithValue,
 	NodeOutputHandle,
 } from "../../../core/data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
-import { AnyHandle } from "../../../core/static/nodeHandles/base/AnyHandle";
-import { CustomElement } from "../atomic/CustomElement";
-import { container } from "tsyringe";
-import { TemplateEditorService } from "../../../core/services/app/TemplateEditorService";
 import { ElementRegistrarService } from "../../../core/services/app/ElementRegistrarService";
-import { css, html } from "lit";
-import { CardInputFieldDefinition } from "../../../core/types/views/CardInputField";
-import { map } from "lit/directives/map.js";
-import { ifDefined } from "lit/directives/if-defined.js";
-import { CardInputField } from "../../../core/data/models/flashcards/card/Card";
-import { useNodeId } from "../../react/hooks/context/useNodeId";
+import { TemplateEditorService } from "../../../core/services/app/TemplateEditorService";
+import { AnyHandle } from "../../../core/static/nodeHandles/base/AnyHandle";
 import { IdentifiableConstructor } from "../../../core/types/general/Constructor";
 import { Metadata } from "../../../core/types/general/Metadata";
-import { TemplateNodeMetadata } from "../../../core/data/models/extensions/plugins/templates/TemplateNodeMetadata";
+import { CardInputFieldDefinition } from "../../../core/types/views/CardInputField";
+import { CustomElement } from "../atomic/CustomElement";
 
 @customElement("input-node")
 export default class InputNode extends CustomElement {
@@ -87,18 +86,17 @@ export default class InputNode extends CustomElement {
 		});
 	};
 
-	handleInputTypeClick = (
-		e: Event,
-		definition: IdentifiableConstructor<
-			CardInputFieldDefinition<any, any>,
-			Metadata
-		>
-	) => {
-		e.stopPropagation();
+	handleInputTypeChange = (e: InputEvent) => {
+		const inputTypeId = (e.target as HTMLSelectElement).value;
+		const definition = this.cardInputFieldDefinitions.find(
+			(definition) => definition.metadata.id === inputTypeId
+		);
+		if (!definition) return;
+
 		this.templateEditor.setData(this.params.id, {
 			...this.params.data,
 			inputField: this.updatedCardInputField({
-				inputTypeId: definition.metadata.id,
+				inputTypeId,
 			}),
 		});
 	};
@@ -117,14 +115,12 @@ export default class InputNode extends CustomElement {
 					this.params.data.inputField?.inputTypeId ??
 						this.defaultCardInputField().inputTypeId
 				)}
+				@sl-input=${this.handleInputTypeChange}
 			>
 				${map(
 					this.cardInputFieldDefinitions,
 					(definition) => html`
-						<sl-option
-							value=${definition.metadata.id}
-							@click=${(e: Event) => this.handleInputTypeClick(e, definition)}
-						>
+						<sl-option value=${definition.metadata.id}>
 							${definition.metadata.name}
 						</sl-option>
 					`

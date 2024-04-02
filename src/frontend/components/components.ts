@@ -22,13 +22,13 @@ import _18 from "./pages/TemplateOverviewPage";
 import _19 from "./pages/TemplateEditorPage";
 import _20 from "./pages/ReviewPage";
 import _21 from "./pages/DeckPage";
-import _22 from "./modals/SettingsModal";
-import _23 from "./modals/DebugModal";
-import _24 from "./modals/CardViewerModal";
-import _25 from "./modals/CardCreatorModal";
-import _26 from "./modals/BaseModal";
-import _27 from "./nodes/OutputNode";
-import _28 from "./nodes/InputNode";
+import _22 from "./nodes/OutputNode";
+import _23 from "./nodes/InputNode";
+import _24 from "./modals/SettingsModal";
+import _25 from "./modals/DebugModal";
+import _26 from "./modals/CardViewerModal";
+import _27 from "./modals/CardCreatorModal";
+import _28 from "./modals/BaseModal";
 import _29 from "./atomic/TextLoadingSkeleton";
 import _30 from "./atomic/TextButton";
 import _31 from "./atomic/TemplateThumbnail";
@@ -42,8 +42,9 @@ import _38 from "./atomic/FlashcardCard";
 import _39 from "./atomic/ErrorWrapper";
 import _40 from "./atomic/DimmedBackground";
 import _41 from "./atomic/CardInputFieldView";
+import _42 from "./nodes/openai/Element";
 
-export { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36, _37, _38, _39, _40, _41 };
+export { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36, _37, _38, _39, _40, _41, _42 };
 
 declare global {
     interface HTMLElementTagNameMap {
@@ -69,13 +70,13 @@ declare global {
         'template-editor-page': _19;
         'review-page': _20;
         'deck-page': _21;
-        'settings-modal': _22;
-        'debug-modal': _23;
-        'card-viewer-modal': _24;
-        'card-creator': _25;
-        'base-modal': _26;
-        'output-node': _27;
-        'input-node': _28;
+        'output-node': _22;
+        'input-node': _23;
+        'settings-modal': _24;
+        'debug-modal': _25;
+        'card-viewer-modal': _26;
+        'card-creator': _27;
+        'base-modal': _28;
         'text-loading-skeleton': _29;
         'text-button': _30;
         'template-thumbnail': _31;
@@ -89,5 +90,6 @@ declare global {
         'error-wrapper': _39;
         'dimmed-background': _40;
         'card-input-field-view': _41;
+        'openai-node': _42;
     }
 }

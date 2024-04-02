@@ -1,18 +1,18 @@
 import React, { useCallback, useMemo, useRef } from "react";
 import ReactFlow, {
-	Connection,
-	Controls,
 	Background,
+	Connection,
 	ConnectionLineType,
-	useOnViewportChange,
+	Controls,
 	Viewport,
+	useOnViewportChange,
 } from "reactflow";
 import { areCompatible } from "../../../../core/data/models/flashcards/template/graph/nodeData/io/handles/NodeHandleType";
+import { useZustand } from "../../hooks/context/useZustand";
 import { useGetEdges } from "../../hooks/state/getters/useGetEdges";
 import { useGetNodes } from "../../hooks/state/getters/useGetNodes";
-import { NodeComponent } from "./Node";
-import { useZustand } from "../../hooks/context/useZustand";
 import { useGetViewport } from "../../hooks/state/getters/useGetViewport";
+import { NodeComponent } from "./Node";
 
 export const Editor = () => {
 	const nodes = useGetNodes();

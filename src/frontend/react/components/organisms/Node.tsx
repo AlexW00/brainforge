@@ -1,14 +1,3 @@
-import React, {
-	FunctionComponent,
-	PropsWithChildren,
-	useMemo,
-	useRef,
-	useState,
-} from "react";
-import { NodeIdContext } from "../../contexts/NodeIdContext";
-import { HandlesComponent } from "./Handles";
-import { TemplateNode } from "../../../../core/data/models/flashcards/template/graph/TemplateNode";
-import { TemplateNodeParams } from "../../../../core/data/models/extensions/plugins/templates/TemplateNodeParams";
 import {
 	SlCard,
 	SlDropdown,
@@ -16,9 +5,20 @@ import {
 	SlMenu,
 	SlMenuItem,
 } from "@shoelace-style/shoelace/dist/react/index";
-import { useTemplateEditorService } from "../../hooks/context/useTemplateEditorService";
+import React, {
+	FunctionComponent,
+	PropsWithChildren,
+	useMemo,
+	useRef,
+	useState,
+} from "react";
 import { container } from "tsyringe";
+import { TemplateNodeParams } from "../../../../core/data/models/extensions/plugins/templates/TemplateNodeParams";
+import { TemplateNode } from "../../../../core/data/models/flashcards/template/graph/TemplateNode";
 import { ElementRegistrarService } from "../../../../core/services/app/ElementRegistrarService";
+import { NodeIdContext } from "../../contexts/NodeIdContext";
+import { useTemplateEditorService } from "../../hooks/context/useTemplateEditorService";
+import { HandlesComponent } from "./Handles";
 
 export const NodeComponent: FunctionComponent<TemplateNode> = (
 	props: PropsWithChildren<TemplateNode>,
@@ -63,8 +63,6 @@ export const NodeComponent: FunctionComponent<TemplateNode> = (
 	}, []);
 
 	React.useEffect(() => {
-		console.log("onUpdate", contentProps);
-
 		if (!definition) {
 			console.error("Definition not found!");
 			return;
@@ -90,7 +88,13 @@ export const NodeComponent: FunctionComponent<TemplateNode> = (
 			<HandlesComponent isInput={true} handles={props.data.io?.inputs} />
 			<SlCard
 				className="custom-node card-header"
-				style={{ padding: 0, height: "auto", width: "auto", display: "flex" }}
+				style={{
+					padding: 0,
+					height: "auto",
+					width: "auto",
+					display: "flex",
+					zIndex: 10,
+				}}
 			>
 				<div className="custom-node-header" slot="header">
 					<div className="title">{definition?.metadata.name}</div>
@@ -113,7 +117,7 @@ export const NodeComponent: FunctionComponent<TemplateNode> = (
 				</div>
 				<div
 					id={"content-" + props.id}
-					className="custom-node-content"
+					className="custom-node-content nodrag"
 					ref={contentRef}
 				></div>
 			</SlCard>

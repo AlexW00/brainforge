@@ -1,18 +1,18 @@
 import { inject, singleton } from "tsyringe";
-import { SessionZustandService } from "../storage/zustand/SessionZustandService";
+import { Template } from "../../data/models/flashcards/template/Template";
+import {
+	TemplateNode,
+	newTemplateNode,
+} from "../../data/models/flashcards/template/graph/TemplateNode";
 import {
 	NodeHandles,
 	NodeInputHandle,
 	NodeOutputHandle,
 } from "../../data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
-import { Template } from "../../data/models/flashcards/template/Template";
-import { PouchTemplateService } from "../storage/pouch/docs/multi/PouchTemplateService";
-import {
-	TemplateNode,
-	newTemplateNode,
-} from "../../data/models/flashcards/template/graph/TemplateNode";
 import { Position } from "../../types/general/Position";
 import { getUniqueKeyForObject } from "../../util/getUniqueKeyForObject";
+import { PouchTemplateService } from "../storage/pouch/docs/multi/PouchTemplateService";
+import { SessionZustandService } from "../storage/zustand/SessionZustandService";
 
 @singleton()
 export class TemplateEditorService {
@@ -80,7 +80,10 @@ export class TemplateEditorService {
 	};
 
 	setData(nodeId: string, data: any) {
-		this.sessionZustand.state.setNodeDataData(nodeId, data);
+		this.sessionZustand.state.setNodeDataData(nodeId, {
+			...data,
+			lastEditTs: Date.now(),
+		});
 	}
 
 	setDoCache(nodeId: string, doCache: boolean) {
