@@ -50,7 +50,7 @@ export default class OpenAiNode extends CustomElement {
 			></sl-input>
 
 			<sl-select
-				value=${ifDefined(this.params.data.model)}
+				value=${this.params.data.model ?? this.models[0]}
 				@sl-input=${this.onModelChange}
 			>
 				${this.models.map(

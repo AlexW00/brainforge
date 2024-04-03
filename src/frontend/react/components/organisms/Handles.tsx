@@ -1,6 +1,6 @@
 import React from "react";
-import { NodeHandles } from "../../../../core/data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
 import { Handle, Position, useUpdateNodeInternals } from "reactflow";
+import { NodeHandles } from "../../../../core/data/models/flashcards/template/graph/nodeData/io/handles/NodeHandle";
 import { useNodeId } from "../../hooks/context/useNodeId";
 
 export const HandlesComponent = React.memo(
@@ -15,8 +15,7 @@ export const HandlesComponent = React.memo(
 			index: number,
 			numHandles: number
 		): string => {
-			const offset = 100 / (numHandles + 1);
-			return `${offset * (index + 1)}%`;
+			return isInput ? `${0.75 + 0.5 * 1.5 + index * 1.56}rem` : "50%";
 		};
 		const updateInternals = useUpdateNodeInternals();
 		const nodeId = useNodeId();
@@ -40,7 +39,8 @@ export const HandlesComponent = React.memo(
 						type={isInput ? "target" : "source"}
 						position={isInput ? Position.Left : Position.Right}
 						style={{
-							top: handleTopOffset,
+							marginTop: isInput ? "2.75rem" : "",
+							top: calculateHandleTopOffset(index, keys.length),
 							background: type.color,
 						}}
 					/>
@@ -49,7 +49,14 @@ export const HandlesComponent = React.memo(
 		};
 
 		return (
-			<div className="handles">{handles && mapHandles(handles, isInput)}</div>
+			<div
+				className="handles"
+				style={{
+					display: "flex",
+				}}
+			>
+				{handles && mapHandles(handles, isInput)}
+			</div>
 		);
 	}
 );

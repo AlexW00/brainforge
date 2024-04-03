@@ -24,10 +24,6 @@ export class OpenAiNodeDefinition extends TemplateNodeDefinition {
 	onLoad = (parent: HTMLElement, params: TemplateNodeParams) => {
 		if (params.inputHandles === undefined) {
 			const inputHandles: NodeHandles<NodeInputHandle> = {
-				system: {
-					name: "system",
-					type: AnyHandle,
-				},
 				prompt: {
 					name: "prompt",
 					type: AnyHandle,
@@ -64,15 +60,13 @@ export class OpenAiNodeDefinition extends TemplateNodeDefinition {
 		params: TemplateNodeParams,
 		inputs: NodeInputHandleWithValue[]
 	) => {
-		const system: string =
-			inputs.find((input) => input.name === "system")?.value ?? "";
 		const prompt: string =
 			inputs.find((input) => input.name === "prompt")?.value ?? "";
 
 		const messages: ChatCompletionMessageParam[] = [
 			{
 				role: "system",
-				content: system,
+				content: "You are a helpful assistant.",
 			},
 			{
 				role: "user",

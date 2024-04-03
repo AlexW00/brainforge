@@ -1,7 +1,5 @@
 import { css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { map } from "lit/directives/map.js";
-import { when } from "lit/directives/when.js";
 import { container } from "tsyringe";
 import { TemplateNodeDefinition } from "../../../core/data/models/extensions/plugins/templates/TemplateNodeDefinition";
 import { TemplateNodeMetadata } from "../../../core/data/models/extensions/plugins/templates/TemplateNodeMetadata";
@@ -45,23 +43,6 @@ export default class OutputNode extends CustomElement {
 
 	render() {
 		return html`
-			<div class="input-items">
-				${when(this.params.inputHandles !== undefined, () =>
-					map(
-						Object.keys(this.params.inputHandles!),
-						(key: string, i: number) => html`<div class="input-item">
-							${this.params.inputHandles![key].name}
-							<sl-icon-button
-								class="remove-input-button"
-								name="trash-simple"
-								library="ph-regular"
-								label="Remove card side"
-								@click=${() => this.onClickDeleteInput(key)}
-							></sl-icon-button>
-						</div> `
-					)
-				)}
-			</div>
 			<sl-icon-button
 				id="add-input-button"
 				name="plus"
@@ -95,17 +76,6 @@ export default class OutputNode extends CustomElement {
 			flex-direction: row;
 			justify-content: space-between;
 			align-items: center;
-		}
-
-		.input-item:hover .remove-input-button {
-			opacity: 1;
-		}
-		#add-input-button {
-			margin-top: var(--sl-spacing-medium);
-			display: none;
-		}
-		:host(:hover) #add-input-button {
-			display: block;
 		}
 	`;
 }

@@ -52,18 +52,22 @@ export class TemplateEditorService {
 			.getNodes()
 			.find((n) => n.id === nodeId);
 		if (node === undefined) throw new Error("Node not found");
+
 		const inputHandles: any = { ...node.data.io?.inputs };
-		console.log("input handles", inputHandles);
+		console.log("input handles", JSON.stringify(inputHandles));
 		const key = getUniqueKeyForObject(
 			inputHandles,
 			prefix,
 			Object.keys(inputHandles).length + 1
 		);
+
+		console.log("key", key);
 		const [name, index] = key.split("-");
-		inputHandles[name] = {
+		inputHandles[key] = {
 			name: `${name}${index !== undefined ? ` ${index}` : ""}`,
 			type: "any",
 		};
+		console.log("input handles new", JSON.stringify(inputHandles));
 
 		this.sessionZustand.state.setNodeHandles(nodeId, true, inputHandles);
 	}

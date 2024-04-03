@@ -115,11 +115,42 @@ export const NodeComponent: FunctionComponent<TemplateNode> = (
 						</SlMenu>
 					</SlDropdown>
 				</div>
-				<div
-					id={"content-" + props.id}
-					className="custom-node-content nodrag"
-					ref={contentRef}
-				></div>
+				<div>
+					{props.data.io?.inputs &&
+					Object.keys(props.data.io.inputs).length > 0 ? (
+						<div
+							className="node--input-handle-labels"
+							style={{
+								display: "flex",
+								flexDirection: "column",
+								alignItems: "start",
+								justifyContent: "start",
+								gap: "5px",
+								marginBottom: "var(--sl-spacing-large)",
+							}}
+						>
+							{Object.keys(props.data.io.inputs).map((key) => (
+								<div
+									key={key}
+									style={{
+										height: "var(--sl-spacing-large)",
+										justifyContent: "center",
+										lineHeight: "var(--sl-spacing-large)",
+									}}
+								>
+									{props.data.io!.inputs[key].name}
+								</div>
+							))}
+						</div>
+					) : (
+						""
+					)}
+					<div
+						id={"content-" + props.id}
+						className="custom-node-content nodrag"
+						ref={contentRef}
+					></div>
+				</div>
 			</SlCard>
 
 			<HandlesComponent isInput={false} handles={props.data.io?.outputs} />
