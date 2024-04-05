@@ -1,20 +1,17 @@
 import { inject, singleton } from "tsyringe";
-import { SessionZustandService } from "../storage/zustand/SessionZustandService";
-import { ModalDefinition } from "../../types/views/ModalDefinition";
-import { PageDefinition } from "../../types/views/PageDefinition";
 import { TemplateNodeDefinition } from "../../data/models/extensions/plugins/templates/TemplateNodeDefinition";
+import { TemplateNodeMetadata } from "../../data/models/extensions/plugins/templates/TemplateNodeMetadata";
+import { IdentifiableConstructor } from "../../types/general/Constructor";
+import { Metadata } from "../../types/general/Metadata";
+import { Position } from "../../types/general/Position";
+import { CardInputFieldDefinition } from "../../types/views/CardInputField";
 import {
 	ContextMenu,
 	ContextMenuEntry,
 } from "../../types/views/ContextMenuItem";
-import { Position } from "../../types/general/Position";
-import {
-	Constructor,
-	IdentifiableConstructor,
-} from "../../types/general/Constructor";
-import { CardInputFieldDefinition } from "../../types/views/CardInputField";
-import { Metadata } from "../../types/general/Metadata";
-import { TemplateNodeMetadata } from "../../data/models/extensions/plugins/templates/TemplateNodeMetadata";
+import { ModalDefinition } from "../../types/views/ModalDefinition";
+import { PageDefinition } from "../../types/views/PageDefinition";
+import { SessionZustandService } from "../storage/zustand/SessionZustandService";
 
 @singleton()
 export class ElementRegistrarService {
@@ -109,7 +106,8 @@ export class ElementRegistrarService {
 		const nodes = this.getTemplateNodes();
 		const categories = nodes
 			.map((node) => node.metadata.category)
-			.filter((value, index, self) => self.indexOf(value) === index);
+			.filter((value, index, self) => self.indexOf(value) === index)
+			.filter((value) => value !== "hidden");
 
 		const entries: ContextMenuEntry[] = categories.map((category) => {
 			const categoryNodes = nodes.filter(
