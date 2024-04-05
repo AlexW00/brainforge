@@ -21,6 +21,7 @@
 		"glob": "^10.3.4",
 		"immer": "^10.0.2",
 		"lit": "^3.1.2",
+		"mustache": "^4.2.0",
 		"openai": "^4.32.1",
 		"pouchdb": "^8.0.1",
 		"prouter": "^10.0.23",
@@ -36,6 +37,7 @@
 	},
 	"devDependencies": {
 		"@faker-js/faker": "^8.1.0",
+		"@types/mustache": "^4.2.5",
 		"@types/react": "^18.2.24",
 		"@types/react-dom": "^18.2.8",
 		"@types/uuid": "^9.0.4",
