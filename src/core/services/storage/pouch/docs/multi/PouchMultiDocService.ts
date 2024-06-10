@@ -14,9 +14,7 @@ export abstract class PouchMultiDocService<
 	T extends Identifiable
 > extends Observable<EventMap<T>> {
 	protected abstract readonly prefix: string;
-
 	protected abstract readonly dbService: DbService;
-
 	private cancelChangeListener: () => void;
 
 	protected getKey(id: string): string {
