@@ -14,12 +14,16 @@ import { AnyHandle } from "../../../../core/static/nodeHandles/base/AnyHandle";
 import { StringHandle } from "../../../../core/static/nodeHandles/base/StringHandle";
 import OpenAiNode from "./Element";
 import { OPENAI_NODE_METADATA } from "./Metadata";
+import { PouchPreferencesService } from "../../../../core/services/storage/pouch/docs/single/PouchPreferencesService";
 
 export class OpenAiNodeDefinition extends TemplateNodeDefinition {
 	metadata = OPENAI_NODE_METADATA;
 
 	private content: OpenAiNode | undefined;
 	private readonly templateEditor = container.resolve(TemplateEditorService);
+	private readonly preferencesService = container.resolve(
+		PouchPreferencesService
+	);
 
 	onLoad = (parent: HTMLElement, params: TemplateNodeParams) => {
 		if (params.inputHandles === undefined) {
@@ -74,7 +78,7 @@ export class OpenAiNodeDefinition extends TemplateNodeDefinition {
 			},
 		];
 
-		const apiKey = params.data.apiKey;
+		const apiKey = (await this.preferencesService.get())?.openaiApiKey;
 		const model = params.data.model;
 
 		if (!apiKey) {

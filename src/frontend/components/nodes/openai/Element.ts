@@ -20,15 +20,6 @@ export default class OpenAiNode extends CustomElement {
 		this.classList.add("container");
 	}
 
-	onApiKeyChange = (event: InputEvent) => {
-		const apiKey = (event.target as HTMLInputElement).value;
-
-		this.templateEditor.setData(this.params.id, {
-			...this.params.data,
-			apiKey,
-		});
-	};
-
 	onModelChange = (event: InputEvent) => {
 		const model = (event.target as HTMLSelectElement).value;
 
@@ -42,13 +33,6 @@ export default class OpenAiNode extends CustomElement {
 
 	render() {
 		return html`
-			<sl-input
-				value=${ifDefined(this.params.data.apiKey)}
-				placeholder="OpenAI API Key"
-				@sl-input=${this.onApiKeyChange}
-				type="password"
-			></sl-input>
-
 			<sl-select
 				value=${this.params.data.model ?? this.models[0]}
 				@sl-input=${this.onModelChange}
