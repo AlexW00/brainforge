@@ -7,8 +7,9 @@ export default class ErrorWrapper extends CustomElement {
 	@property({ type: String })
 	message: string = "An error occurred";
 
-	reload = () => {
+	reload = (e: MouseEvent) => {
 		this.dispatchEvent(new CustomEvent("reload"));
+		e.stopPropagation();
 	};
 
 	render() {
@@ -35,16 +36,15 @@ export default class ErrorWrapper extends CustomElement {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-			gap: 1rem;
 		}
 
-		#message {
+		.message {
 			display: flex;
 			align-items: center;
-			gap: 1rem;
+			width: 100%;
 		}
 
-		#retry-button {
+		.retry-button {
 			display: flex;
 			align-items: center;
 			gap: 1rem;
