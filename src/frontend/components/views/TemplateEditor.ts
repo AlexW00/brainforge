@@ -67,6 +67,12 @@ export default class TemplateEditor extends CustomElement {
 			.react-flow__handle.connectionindicator {
 				margin-top: var(--node-header-height);
 			}
+			/* change cursor to a dot */
+			.react-flow__pane,
+			.react-flow__handle {
+				/* use dot.cur from public dir (vite) */
+				cursor: url("/dot.cur"), auto !important;
+			}
 
 			.custom-node-content {
 				min-width: 10rem;
