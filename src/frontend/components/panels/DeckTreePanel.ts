@@ -88,6 +88,9 @@ export default class DeckTreePanel extends Panel {
 		let newLastSelectedDeck;
 		if (this.selectedDeckIds.length === 0) {
 			newLastSelectedDeck = undefined;
+			this.lastSelectedDeckId = undefined;
+			// re render this
+			this.requestUpdate();
 		} else
 			newLastSelectedDeck =
 				this.selectedDeckIds[this.selectedDeckIds.length - 1];
@@ -103,6 +106,7 @@ export default class DeckTreePanel extends Panel {
 
 	private onSelectedDeckIdsChanged = () => {
 		this.selectedDeckIds = this.sessionZustand.state.selectedDeckIds;
+		console.log("Selected deck ids changed", this.selectedDeckIds);
 		this.updateLastSelectedDeckId();
 	};
 
@@ -116,7 +120,7 @@ export default class DeckTreePanel extends Panel {
 	renderNestedDeck = (deck: NestedDeck): TemplateResult => {
 		return html`<sl-tree-item
 			?open=${true}
-			?selected=${false}
+			?selected=${this.selectedDeckIds.includes(deck.id)}
 			?has-children=${deck.childDecks.length > 0}
 			id=${deck.id}
 			>${deck.name} ${deck.childDecks.map((d) => this.renderNestedDeck(d))}

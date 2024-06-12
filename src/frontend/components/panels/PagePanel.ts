@@ -6,6 +6,7 @@ import { RouterService } from "../../../core/services/app/RouterService";
 import { PageDefinition } from "../../../core/types/views/PageDefinition";
 import { ElementRegistrarService } from "../../../core/services/app/ElementRegistrarService";
 import { ifDefined } from "lit/directives/if-defined.js";
+import { DEFAULT_DECK } from "../default/defaultDeck";
 
 @customElement("page-panel")
 export default class PagePanel extends Panel {
@@ -55,6 +56,17 @@ export default class PagePanel extends Panel {
 			}
 			this.properties = newStep?.properties;
 		});
+
+		const latestStep = this.router.getLatestStep();
+		if (latestStep) {
+			this.setPageDefinition(latestStep.pageId);
+			this.properties = latestStep.properties;
+		} else {
+			this.setPageDefinition("deck-page");
+			this.properties = {
+				deckId: DEFAULT_DECK.id,
+			};
+		}
 	}
 
 	render() {

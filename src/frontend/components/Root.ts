@@ -27,16 +27,6 @@ export default class RootComponent extends CustomElement {
 				for (const card of DEFAULT_CARDS) {
 					await masterService.storage.pouch.cardService.set(card);
 				}
-
-				masterService.storage.zustand.session.state.setSelectedDeckIds([
-					DEFAULT_DECK.id,
-				]);
-				masterService.storage.zustand.session.state.pushNavigationStep({
-					pageId: "deck-page",
-					properties: {
-						deckId: DEFAULT_DECK.id,
-					},
-				});
 			}
 		},
 		() => [this.masterService]

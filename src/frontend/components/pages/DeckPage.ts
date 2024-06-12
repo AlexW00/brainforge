@@ -11,6 +11,7 @@ import { Metadata } from "../../../core/types/general/Metadata";
 import { PageDefinition } from "../../../core/types/views/PageDefinition";
 import { CustomElement } from "../atomic/CustomElement";
 import { CardCreatorProps } from "../modals/CardCreatorModal";
+import { SessionZustandService } from "../../../core/services/storage/zustand/SessionZustandService";
 
 @customElement("deck-page")
 export default class DeckPage extends CustomElement {
@@ -100,6 +101,7 @@ export class DeckPageDefinition extends PageDefinition<DeckPageProperties> {
 	private deckPage: DeckPage;
 	private readonly modalService = container.resolve(ModalService);
 	private readonly routerService = container.resolve(RouterService);
+	private readonly sessionZustand = container.resolve(SessionZustandService);
 
 	onLoad = (properties: DeckPageProperties, container: HTMLElement) => {
 		this.deckPage = new DeckPage();
@@ -108,7 +110,9 @@ export class DeckPageDefinition extends PageDefinition<DeckPageProperties> {
 		this.setInfo("Deck XY");
 	};
 
-	onUnload = () => {};
+	onUnload = () => {
+		this.sessionZustand.state.setSelectedDeckIds([]);
+	};
 	onUpdate = (properties: DeckPageProperties) => {
 		console.log("Updating deck page", properties);
 		this.deckPage.properties = properties;
