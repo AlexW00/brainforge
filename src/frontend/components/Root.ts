@@ -6,6 +6,9 @@ import { container } from "tsyringe";
 import { MasterService } from "../../core/services/MasterService";
 import { CustomElement } from "./atomic/CustomElement";
 import { Deck } from "../../core/data/models/flashcards/Deck";
+import { DEFAULT_DECK } from "./default/defaultDeck";
+import { DEFAULT_TEMPLATE } from "./default/defaultTemplate";
+import { DEFAULT_CARDS } from "./default/defaultCards";
 
 @customElement("root-component")
 export default class RootComponent extends CustomElement {
@@ -17,20 +20,21 @@ export default class RootComponent extends CustomElement {
 			await masterService.init();
 			const decks = await masterService.storage.pouch.deckService.getAll();
 			if (decks.length === 0) {
-				const defaultDeck: Deck = {
-					id: "0",
-					name: "Default",
-					cardsIds: [],
-					childDecksIds: [],
-				};
-				await masterService.storage.pouch.deckService.set(defaultDeck);
+				await masterService.storage.pouch.deckService.set(DEFAULT_DECK);
+				await masterService.storage.pouch.templateService.set(DEFAULT_TEMPLATE);
+
+				// iterate over DEFAULT_CARDS
+				for (const card of DEFAULT_CARDS) {
+					await masterService.storage.pouch.cardService.set(card);
+				}
+
 				masterService.storage.zustand.session.state.setSelectedDeckIds([
-					defaultDeck.id,
+					DEFAULT_DECK.id,
 				]);
 				masterService.storage.zustand.session.state.pushNavigationStep({
 					pageId: "deck-page",
 					properties: {
-						deckId: defaultDeck.id,
+						deckId: DEFAULT_DECK.id,
 					},
 				});
 			}

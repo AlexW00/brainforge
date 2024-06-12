@@ -79,7 +79,7 @@ export class OpenAiNodeDefinition extends TemplateNodeDefinition {
 		];
 
 		const apiKey = (await this.preferencesService.get())?.openaiApiKey;
-		const model = params.data.model;
+		const model = params.data.model ?? "gpt-4o";
 
 		if (!apiKey) {
 			throw new Error("API key is missing");

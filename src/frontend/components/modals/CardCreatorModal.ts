@@ -111,6 +111,8 @@ export default class CardCreator extends CustomElement {
 			this.filledOutCardInputFields
 		);
 
+		console.log("saving card", card);
+
 		this.cardService
 			.set(card)
 			.then(() => this.deckService.addCard(this.properties.deckId, card.id))
