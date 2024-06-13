@@ -21,7 +21,7 @@ export default class RibbonItem extends CustomElement {
 	};
 
 	render() {
-		return html`<div id="text">${this.model.title}</div>`;
+		return html`<div class="text">${this.model.title}</div>`;
 	}
 
 	// text rotated by -90deg
@@ -33,7 +33,7 @@ export default class RibbonItem extends CustomElement {
 			align-items: center;
 		}
 
-		#text {
+		.text {
 			writing-mode: vertical-lr;
 			transform: rotate(180deg);
 
@@ -43,7 +43,7 @@ export default class RibbonItem extends CustomElement {
 			font-size: var(--sl-font-size-large);
 		}
 
-		:host(:hover) #text {
+		.text:hover {
 			text-decoration: underline;
 		}
 	`;

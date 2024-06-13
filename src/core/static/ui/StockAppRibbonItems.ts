@@ -10,4 +10,9 @@ export const SETTINGS_RIBBON_ITEM: RibbonItem = {
 	title: "Settings",
 };
 
-export const stockAppRibbonItems: RibbonItem[] = [];
+export const DECK_ITEM: RibbonItem = {
+	id: "deck",
+	title: "Deck",
+};
+
+export const stockAppRibbonItems: RibbonItem[] = [DECK_ITEM];

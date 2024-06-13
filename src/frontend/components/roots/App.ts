@@ -12,13 +12,20 @@ export default class AppRoot extends CustomElement {
 		this.classList.add("container");
 	}
 
+	// render() {
+	// 	return html`
+	// 		<app-ribbon></app-ribbon>
+	// 		<sl-split-panel position="25">
+	// 			<deck-tree-panel slot="start"></deck-tree-panel>
+	// 			<page-panel slot="end"></page-panel>
+	// 		</sl-split-panel>
+	// 	`;
+	// }
+
 	render() {
 		return html`
 			<app-ribbon></app-ribbon>
-			<sl-split-panel position="25">
-				<deck-tree-panel slot="start"></deck-tree-panel>
-				<page-panel slot="end"></page-panel>
-			</sl-split-panel>
+			<page-panel></page-panel>
 		`;
 	}
 

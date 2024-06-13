@@ -2,7 +2,7 @@ import { Template } from "../../../core/data/models/flashcards/template/Template
 
 export const DEFAULT_TEMPLATE: Template = {
 	id: "b8b2df54-7709-440b-9819-a1625038f1fa",
-	name: "New template",
+	name: "Japanese - English",
 	graph: {
 		nodes: [
 			{

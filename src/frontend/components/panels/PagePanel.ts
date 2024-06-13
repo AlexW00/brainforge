@@ -92,6 +92,11 @@ export default class PagePanel extends Panel {
 			flex-direction: column;
 			flex-grow: 12;
 			background: var(--bg-color);
+
+			/* rounded left side */
+			background: var(--bg-color);
+			border-top-left-radius: var(--sl-border-radius-x-large);
+			border-bottom-left-radius: var(--sl-border-radius-x-large);
 		}
 		sl-divider {
 			--spacing: 0;

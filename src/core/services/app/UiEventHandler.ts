@@ -1,12 +1,14 @@
 import { inject, singleton } from "tsyringe";
 import { SettingsModalProperties } from "../../../frontend/components/modals/SettingsModal";
 import {
+	DECK_ITEM,
 	SETTINGS_RIBBON_ITEM,
 	TEMPLATES_RIBBON_ITEM,
 } from "../../static/ui/StockAppRibbonItems";
 import { UiEventBus } from "../events/UiEventBus";
 import { ModalService } from "./ModalService";
 import { RouterService } from "./RouterService";
+import { DEFAULT_DECK } from "../../../frontend/components/default/defaultDeck";
 
 /**
  * Service to handle UI events.
@@ -36,6 +38,11 @@ export class UiEventHandler {
 		if (data.ribbonItemId === TEMPLATES_RIBBON_ITEM.id) {
 			console.log("Navigating to templates");
 			this.router.navigateTo("template-overview-page", {});
+		} else if (data.ribbonItemId === DECK_ITEM.id) {
+			console.log("Navigating to decks");
+			this.router.navigateTo("deck-page", {
+				deckId: DEFAULT_DECK.id,
+			});
 		} else if (data.ribbonItemId === SETTINGS_RIBBON_ITEM.id) {
 			const props: SettingsModalProperties = {
 				initialCategoryId: "general",

@@ -48,13 +48,6 @@ export default class SettingsModal extends CustomElement {
 		});
 	};
 
-	private onDeeplApiKeyChange = (e: Event) => {
-		const input = e.target as HTMLInputElement;
-		this.preferencesSercice.updateFields({
-			deeplApiKey: input.value,
-		});
-	};
-
 	render() {
 		// if settings are not loaded yet, show loading spinner
 		return html`<div>
@@ -67,13 +60,6 @@ export default class SettingsModal extends CustomElement {
 							password-toggle
 							.value=${this.preferences.openaiApiKey}
 							@sl-input=${this.onOpenaiApiKeyChange}
-						></sl-input>
-						<sl-input
-							label="DeepL API Key"
-							type="password"
-							password-toggle
-							.value=${this.preferences.deeplApiKey}
-							@sl-input=${this.onDeeplApiKeyChange}
 						></sl-input>
 				  </div>`}
 		</div>`;
