@@ -1,8 +1,9 @@
-import { customElement, property } from "lit/decorators.js";
+import { customElement, property, state } from "lit/decorators.js";
 import { CustomElement } from "../atomic/CustomElement";
 import type { Template } from "../../../core/data/models/flashcards/template/Template";
 import { css, html, unsafeCSS } from "lit";
-import ReactDOM from "react-dom/client";
+import ReactDOMClient from "react-dom/client";
+import ReactDOM from "react-dom";
 import { Editor } from "../../react/components/organisms/Editor";
 import React from "react";
 import { container } from "tsyringe";
@@ -19,6 +20,9 @@ export default class TemplateEditor extends CustomElement {
 
 	@property({ type: Object })
 	template!: Template;
+
+	@state()
+	private root: ReactDOMClient.Root | null = null;
 
 	private editorService = container.resolve(TemplateEditorService);
 	private elementRegistrarService = container.resolve(ElementRegistrarService);
@@ -53,8 +57,15 @@ export default class TemplateEditor extends CustomElement {
 		this.editorService.loadTemplate(this.template);
 		const container = this.shadowRoot?.getElementById("react-container");
 		if (!container) return;
-		const root = ReactDOM.createRoot(container);
-		root.render(React.createElement(Editor));
+		this.root = ReactDOMClient.createRoot(container);
+		this.root.render(React.createElement(Editor));
+	}
+
+	disconnectedCallback() {
+		if (this.root) {
+			this.root.unmount();
+			this.root = null;
+		}
 	}
 
 	render() {

@@ -28,8 +28,10 @@ export const Editor = () => {
 	const uiEventBus = container.resolve(UiEventBus);
 
 	useEffect(() => {
+		console.log("subscribing to save-template event");
 		uiEventBus.on("save-template", onSave);
 		return () => {
+			console.log("unsubscribing from save-template event");
 			uiEventBus.off("save-template", onSave);
 		};
 	}, []);
