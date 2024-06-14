@@ -14,6 +14,7 @@ export class PouchTemplateService extends PouchMultiDocService<Template> {
 
 	createNew = async (): Promise<Template> => {
 		const template: Template = {
+			thumbnail: "",
 			id: this.dbService.generateId(),
 			name: "New template",
 			graph: {

@@ -127,6 +127,7 @@ export class PouchDebugService {
 		}
 
 		const template: Template = {
+			thumbnail: "",
 			id: faker.string.uuid(),
 			name: faker.lorem.words(2),
 			graph: {
