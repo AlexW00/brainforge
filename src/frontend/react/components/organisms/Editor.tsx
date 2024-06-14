@@ -1,10 +1,12 @@
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import ReactFlow, {
 	Background,
 	Connection,
 	ConnectionLineType,
 	Controls,
 	Viewport,
+	getRectOfNodes,
+	getTransformForBounds,
 	useOnViewportChange,
 } from "reactflow";
 import { areCompatible } from "../../../../core/data/models/flashcards/template/graph/nodeData/io/handles/NodeHandleType";
@@ -13,11 +15,24 @@ import { useGetEdges } from "../../hooks/state/getters/useGetEdges";
 import { useGetNodes } from "../../hooks/state/getters/useGetNodes";
 import { useGetViewport } from "../../hooks/state/getters/useGetViewport";
 import { NodeComponent } from "./Node";
+import { toPng } from "html-to-image";
+import { TemplateEditorService } from "../../../../core/services/app/TemplateEditorService";
+import { container } from "tsyringe";
+import { UiEventBus } from "../../../../core/services/events/UiEventBus";
 
 export const Editor = () => {
 	const nodes = useGetNodes();
 	const edges = useGetEdges();
 	const viewport = useGetViewport();
+	const templateService = container.resolve(TemplateEditorService);
+	const uiEventBus = container.resolve(UiEventBus);
+
+	useEffect(() => {
+		uiEventBus.on("save-template", onSave);
+		return () => {
+			uiEventBus.off("save-template", onSave);
+		};
+	}, []);
 
 	const zustand = useZustand();
 
@@ -79,6 +94,41 @@ export const Editor = () => {
 			);
 		}
 	};
+
+	const onSave = async () => {
+		const imageWidth = 400;
+		const imageHeight = 300;
+		const nodesBounds = getRectOfNodes(
+			templateService.getTemplate()?.graph.nodes!!
+		);
+		const transform = getTransformForBounds(
+			nodesBounds,
+			imageWidth,
+			imageHeight,
+			0.5,
+			2
+		);
+		const reactFlowEl = ref.current;
+		const viewport = reactFlowEl.querySelector(".react-flow__viewport");
+
+		const png = await toPng(
+			viewport,
+			{
+				backgroundColor: "white",
+				width: imageWidth,
+				height: imageHeight,
+				skipFonts: true,
+				style: {
+					width: imageWidth.toString(),
+					height: imageHeight.toString(),
+					transform: `translate(${transform[0]}px, ${transform[1]}px) scale(${transform[2]})`,
+				},
+			}
+		);
+		templateService.setThumbnail(png);
+		await templateService.saveTemplate();
+	}
+
 
 	return (
 		<ReactFlow

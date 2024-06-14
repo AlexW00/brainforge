@@ -43,6 +43,10 @@ export class TemplateEditorService {
 		this.templateService.set(this.sessionZustand.state.editorTemplate);
 	}
 
+	setThumbnail(thumbnail: string) {
+		this.sessionZustand.state.setEditorThumbnail(thumbnail);
+	}
+
 	addNode(nodeDefinitionId: string, position: Position) {
 		const node: TemplateNode = newTemplateNode(nodeDefinitionId, position);
 		this.sessionZustand.state.pushNode(node);

@@ -135,6 +135,7 @@ export interface SessionZustandState extends SessionZustandActions {
 
 	setNodes: (nodes: TemplateNode[]) => void;
 	pushNode: (node: TemplateNode) => void;
+	setEditorThumbnail: (thumbnail: string) => void;
 
 	onNodesChange: (nodeChanges: NodeChange[]) => void;
 	onEdgesChange: (edgeChanges: EdgeChange[]) => void;
@@ -358,6 +359,12 @@ export class SessionZustandService extends Observable<EventMap> {
 				set((state) => {
 					state.editorTemplate?.graph.nodes.splice(0);
 					state.editorTemplate?.graph.nodes.push(...nodes);
+				}),
+
+			setEditorThumbnail: (thumbnail: string) =>
+				set((state) => {
+					if (state.editorTemplate === undefined) return;
+					state.editorTemplate.thumbnail = thumbnail;
 				}),
 
 			pushNode: (node: TemplateNode) =>

@@ -9,4 +9,5 @@ export interface Template extends Identifiable {
 	graph: TemplateGraph;
 	name: string;
 	viewport: Viewport;
+	thumbnail: string;
 }

@@ -11,6 +11,9 @@ import { IdentifiableConstructor } from "../../../core/types/general/Constructor
 import { Metadata } from "../../../core/types/general/Metadata";
 import { PageDefinition } from "../../../core/types/views/PageDefinition";
 import { CustomElement } from "../atomic/CustomElement";
+import { getRectOfNodes, getTransformForBounds } from "reactflow";
+import { toPng } from "html-to-image";
+import { UiEventBus } from "../../../core/services/events/UiEventBus";
 
 @customElement("template-editor-page")
 export default class TemplateEditorPage extends CustomElement {
@@ -122,6 +125,7 @@ export class TemplateEditorPageDefinition extends PageDefinition<TemplateEditorP
 
 	private page: TemplateEditorPage;
 	private readonly editorService = container.resolve(TemplateEditorService);
+	private readonly uiEventBus = container.resolve(UiEventBus);
 
 	onLoad = (
 		properties: TemplateEditorPageProperties,
@@ -155,7 +159,9 @@ export class TemplateEditorPageDefinition extends PageDefinition<TemplateEditorP
 				title: "Save",
 				icon: "floppy-disk",
 				onClick: async () => {
-					this.editorService.saveTemplate();
+					this.uiEventBus.emit("save-template", {
+						templateId: this.page.properties.templateId,
+					});
 				},
 			},
 		];

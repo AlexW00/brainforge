@@ -11,10 +11,14 @@ export default class TemplateThumbnail extends CustomElement {
 	render() {
 		return html`
 			<sl-card class="card-footer">
-				<div id="image">Thumbnail image</div>
-				<div id="name" slot="footer" class="no-select">
-					${this.template.name}
-				</div>
+				<!-- thumbnail from png string -->
+				<img
+					id="image"
+					slot="image"
+					alt="Template Thumbnail"
+					src=${this.template.thumbnail}
+				/>
+				<div id="name" class="no-select">${this.template.name}</div>
 			</sl-card>
 		`;
 	}
@@ -23,6 +27,10 @@ export default class TemplateThumbnail extends CustomElement {
 		#image {
 			flex: 1;
 			height: 10rem;
+
+			object-fit: cover;
+			object-position: center;
+			border: 1px solid var(--sl-color-neutral-200);
 		}
 		#name {
 			height: 2rem;
@@ -38,6 +46,10 @@ export default class TemplateThumbnail extends CustomElement {
 		sl-card {
 			width: 100%;
 			height: 100%;
+		}
+
+		:host {
+			cursor: pointer;
 		}
 	`;
 }

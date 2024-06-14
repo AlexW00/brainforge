@@ -6,4 +6,5 @@ export type UiEventDataMap = {
 	"ribbon-item-clicked": RibbonItemClicked;
 	"deck-item-clicked": DeckItemClicked;
 	"page-action-clicked": PageActionClicked;
+	"save-template": { templateId: string };
 };

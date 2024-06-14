@@ -18,19 +18,19 @@ export default class ReviewActionBar extends CustomElement {
 				id="again"
 				@click=${() => this.handleReview(CardReviewAnswer.Again)}
 			>
-				Again
+				❌ Again
 			</sl-button>
 			<sl-button
 				id="good"
 				@click=${() => this.handleReview(CardReviewAnswer.Good)}
 			>
-				Good
+				✅ Good
 			</sl-button>
 			<sl-button
 				id="easy"
 				@click=${() => this.handleReview(CardReviewAnswer.Easy)}
 			>
-				Easy
+				🌟 Easy
 			</sl-button>
 		`;
 	}
