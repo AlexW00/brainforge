@@ -5,5 +5,3 @@ import { PrimaryColor, setPrimaryColor } from "./core/types/views/PrimaryColor";
 initShoelace();
 
 import("./frontend/components/components");
-
-setPrimaryColor(PrimaryColor.pink);

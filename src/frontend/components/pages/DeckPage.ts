@@ -127,19 +127,20 @@ export class DeckPageDefinition extends PageDefinition<DeckPageProperties> {
 					this.routerService.navigateTo("review-page", {
 						deckId: this.deckPage.properties.deckId,
 						doReviewDueCards: true,
-					});
-				},
-			},
-			{
-				id: "new-cards",
-				title: "New cards",
-				onClick: () => {
-					this.routerService.navigateTo("review-page", {
-						deckId: this.deckPage.properties.deckId,
 						doReviewNewCards: true,
 					});
 				},
 			},
+			// {
+			// 	id: "new-cards",
+			// 	title: "New cards",
+			// 	onClick: () => {
+			// 		this.routerService.navigateTo("review-page", {
+			// 			deckId: this.deckPage.properties.deckId,
+			// 			doReviewNewCards: true,
+			// 		});
+			// 	},
+			// },
 			{
 				id: "add-card",
 				title: "Add card",

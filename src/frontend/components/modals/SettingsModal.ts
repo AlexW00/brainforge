@@ -8,6 +8,7 @@ import { container } from "tsyringe";
 import { PouchPreferencesService } from "../../../core/services/storage/pouch/docs/single/PouchPreferencesService";
 import { Task, TaskStatus } from "@lit/task/task.js";
 import { Preferences } from "../../../core/data/models/Preferences";
+import { PrimaryColor } from "../../../core/types/views/PrimaryColor";
 
 @customElement("settings-modal")
 export default class SettingsModal extends CustomElement {
@@ -48,6 +49,14 @@ export default class SettingsModal extends CustomElement {
 		});
 	};
 
+	private onPrimaryColorChange = (e: Event) => {
+		const select = e.target as HTMLSelectElement;
+		console.log("Primary color changed to", select.value);
+		this.preferencesSercice.updateFields({
+			primaryColor: select.value as PrimaryColor,
+		});
+	};
+
 	render() {
 		// if settings are not loaded yet, show loading spinner
 		return html`<div>
@@ -61,6 +70,16 @@ export default class SettingsModal extends CustomElement {
 							.value=${this.preferences.openaiApiKey}
 							@sl-input=${this.onOpenaiApiKeyChange}
 						></sl-input>
+						<!-- select for all items of PrimaryColor enum -->
+						<sl-select
+							label="Primary Color"
+							.value=${this.preferences.primaryColor}
+							@sl-change=${this.onPrimaryColorChange}
+						>
+							${Object.values(PrimaryColor).map(
+								(color) => html`<sl-option value=${color}>${color}</sl-option>`
+							)}
+						</sl-select>
 				  </div>`}
 		</div>`;
 	}
