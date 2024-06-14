@@ -233,6 +233,4 @@ export const DEFAULT_TEMPLATE: Template = {
 		y: 363.1043054187997,
 		zoom: 0.853172325264319,
 	},
-	_id: "template:b8b2df54-7709-440b-9819-a1625038f1fa",
-	_rev: "9-c1c2038ac2d16dd75b5b13d327a792bc",
 };
