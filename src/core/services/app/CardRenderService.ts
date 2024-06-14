@@ -283,12 +283,27 @@ export class CardRenderService {
 			const firstCache = nodeCache?.[0];
 			const cacheTs = firstCache !== undefined ? firstCache.ts : 0;
 			const nodeLastEditTs = node.data.data.lastEditTs;
-			console.log("cache ts", cacheTs, nodeLastEditTs);
+			const inputId = node.data.data.inputField?.id;
+			const inputField = card.inputData.find(
+				(inputField) => inputField.id === inputId
+			);
+			const inputFieldLastEditTs = inputField?.lastEditTs ?? 0;
+
+			console.log(
+				"cacheTs",
+				cacheTs,
+				"nodeLastEditTs",
+				nodeLastEditTs,
+				"inputFieldLastEditTs",
+				inputFieldLastEditTs,
+				node.data.data
+			);
 
 			if (
 				hasCache && // has existing cache
 				!doReRunOnRender && // does not require re-run on render
-				(!nodeLastEditTs || cacheTs > nodeLastEditTs) // and has not been edited since the last render
+				cacheTs > nodeLastEditTs && // and has not been edited since the last render
+				cacheTs > inputFieldLastEditTs
 			) {
 				// then re use the cache
 				newRenderCache[node.id] = oldRenderCache[node.id];

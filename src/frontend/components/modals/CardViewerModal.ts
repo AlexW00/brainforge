@@ -4,11 +4,34 @@ import { IdentifiableConstructor } from "../../../core/types/general/Constructor
 import { Metadata } from "../../../core/types/general/Metadata";
 import { ModalDefinition } from "../../../core/types/views/ModalDefinition";
 import { CustomElement } from "../atomic/CustomElement";
+import { ModalService } from "../../../core/services/app/ModalService";
+import { container } from "tsyringe";
+import { CARD_EDITOR_MODAL_METADATA } from "./CardEditorModal";
 
 @customElement("card-viewer-modal")
 export default class CardViewerModal extends CustomElement {
 	@property({ type: Object })
 	props: CardViewerModalProperties;
+
+	private modalService = container.resolve(ModalService);
+
+	private handleKeyDown = (e: KeyboardEvent) => {
+		if (e.key === "e") {
+			this.modalService.openModal(CARD_EDITOR_MODAL_METADATA.id, {
+				cardId: this.props.cardId,
+			});
+		}
+	};
+
+	connectedCallback() {
+		super.connectedCallback();
+		document.addEventListener("keydown", this.handleKeyDown);
+	}
+
+	disconnectedCallback() {
+		super.disconnectedCallback();
+		document.removeEventListener("keydown", this.handleKeyDown);
+	}
 
 	render() {
 		return html`

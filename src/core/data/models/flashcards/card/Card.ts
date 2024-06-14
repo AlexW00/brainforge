@@ -1,8 +1,4 @@
 import { v4 as uuidv4 } from "uuid";
-import {
-	DateString,
-	newDateString,
-} from "../../../../types/general/DateString";
 import { Identifiable } from "../../../../types/general/Identifiable";
 import { CardReviewData, newCardReviewData } from "./CardReviewData";
 
@@ -33,7 +29,7 @@ export const newCard = (
 	status: CardStatus.New,
 	reviewData: newCardReviewData(),
 	metadata: {
-		creationTimestamp: newDateString(),
+		creationTimestamp: Date.now(),
 	},
 	inputData,
 });
@@ -42,13 +38,13 @@ export interface CardRenderCache {
 	[nodeId: string]: {
 		outputName: string;
 		value: any;
-		ts: DateString;
+		ts: number;
 		dependencies: string[];
 	}[];
 }
 
 export interface CardMetaData {
-	creationTimestamp: DateString;
+	creationTimestamp: number;
 }
 
 export type CardInputData = FilledOutCardInputField[];
@@ -60,4 +56,5 @@ export interface CardInputField extends Identifiable {
 
 export interface FilledOutCardInputField extends CardInputField {
 	value: any;
+	lastEditTs: number;
 }

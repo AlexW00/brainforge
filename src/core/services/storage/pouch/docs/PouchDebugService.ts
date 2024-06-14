@@ -94,7 +94,7 @@ export class PouchDebugService {
 				dueOn: new Date().toDateString(),
 			},
 			metadata: {
-				creationTimestamp: new Date().toDateString(),
+				creationTimestamp: Date.now(),
 			},
 			inputData: [],
 		};

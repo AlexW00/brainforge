@@ -8,6 +8,7 @@ import {
 	FilledOutCardInputField,
 } from "../../../core/data/models/flashcards/card/Card";
 import { map } from "lit/directives/map.js";
+import { newDateString } from "../../../core/types/general/DateString";
 
 @customElement("card-input-editor")
 export default class CardInputEditor extends CustomElement {
@@ -23,6 +24,7 @@ export default class CardInputEditor extends CustomElement {
 					return {
 						...filledOutCardInputField,
 						value: e.detail.value,
+						lastEditTs: Date.now(),
 					};
 				}
 				return filledOutCardInputField;
