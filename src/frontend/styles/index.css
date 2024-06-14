@@ -27,3 +27,8 @@ root-component {
 	flex: 1;
 	flex-grow: 1;
 }
+
+.sl-toast-stack {
+	bottom: 0;
+	top: auto;
+}

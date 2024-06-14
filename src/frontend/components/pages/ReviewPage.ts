@@ -15,6 +15,7 @@ import { parseDateString } from "../../../core/types/general/DateString";
 import { Metadata } from "../../../core/types/general/Metadata";
 import { PageDefinition } from "../../../core/types/views/PageDefinition";
 import { CustomElement } from "../atomic/CustomElement";
+import confetti from "canvas-confetti";
 
 @customElement("review-page")
 export default class ReviewPage extends CustomElement {
@@ -174,7 +175,14 @@ export default class ReviewPage extends CustomElement {
 						this.loadReviewStack.status !== TaskStatus.COMPLETE ||
 							this.reviewStack.length === 0 ||
 							!this.isExpandLimitReached,
-						() => html``,
+						() => {
+							confetti({
+								particleCount: 300,
+								spread: 600,
+								origin: { y: 0.3, x: 0.52 },
+							});
+							return html``;
+						},
 						() => html`
 							<review-action-bar
 								@review=${(e: CustomEvent<CardReviewAnswer>) => {

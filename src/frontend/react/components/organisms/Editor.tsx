@@ -19,12 +19,15 @@ import { toPng } from "html-to-image";
 import { TemplateEditorService } from "../../../../core/services/app/TemplateEditorService";
 import { container } from "tsyringe";
 import { UiEventBus } from "../../../../core/services/events/UiEventBus";
+import { ToastService } from "../../../../core/services/app/ToastService";
 
 export const Editor = () => {
 	const nodes = useGetNodes();
 	const edges = useGetEdges();
 	const viewport = useGetViewport();
-	const templateService = container.resolve(TemplateEditorService);
+
+	const templateEditorService = container.resolve(TemplateEditorService);
+	const toastService = container.resolve(ToastService);
 	const uiEventBus = container.resolve(UiEventBus);
 
 	useEffect(() => {
@@ -98,38 +101,45 @@ export const Editor = () => {
 	};
 
 	const onSave = async () => {
-		const imageWidth = 400;
-		const imageHeight = 300;
-		const nodesBounds = getRectOfNodes(
-			templateService.getTemplate()?.graph.nodes!!
-		);
-		const transform = getTransformForBounds(
-			nodesBounds,
-			imageWidth,
-			imageHeight,
-			0.5,
-			2
-		);
-		const reactFlowEl = ref.current;
-		const viewport = reactFlowEl.querySelector(".react-flow__viewport");
-
-		const png = await toPng(
-			viewport,
-			{
-				backgroundColor: "white",
-				width: imageWidth,
-				height: imageHeight,
-				skipFonts: true,
-				style: {
-					width: imageWidth.toString(),
-					height: imageHeight.toString(),
-					transform: `translate(${transform[0]}px, ${transform[1]}px) scale(${transform[2]})`,
-				},
-			}
-		);
-		templateService.setThumbnail(png);
-		await templateService.saveTemplate();
+		try {
+			const imageWidth = 400;
+			const imageHeight = 300;
+			const nodesBounds = getRectOfNodes(
+				templateEditorService.getTemplate()?.graph.nodes!!
+			);
+			const transform = getTransformForBounds(
+				nodesBounds,
+				imageWidth,
+				imageHeight,
+				0.5,
+				2
+			);
+			const reactFlowEl = ref.current;
+			const viewport = reactFlowEl.querySelector(".react-flow__viewport");
+	
+			const png = await toPng(
+				viewport,
+				{
+					backgroundColor: "white",
+					width: imageWidth,
+					height: imageHeight,
+					skipFonts: true,
+					style: {
+						width: imageWidth.toString(),
+						height: imageHeight.toString(),
+						transform: `translate(${transform[0]}px, ${transform[1]}px) scale(${transform[2]})`,
+					},
+				}
+			);
+			templateEditorService.setThumbnail(png);
+			await templateEditorService.saveTemplate();
+			toastService.notify("Template saved", "success", "check-circle");
+		} catch (error) {
+			console.error("Error saving template", error);
+			toastService.notify("Error saving template", "error", "alert-circle");
+		}
 	}
+
 
 
 	return (

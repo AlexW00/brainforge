@@ -15,6 +15,7 @@ import { IdentifiableConstructor } from "../../../core/types/general/Constructor
 import { Metadata } from "../../../core/types/general/Metadata";
 import { ModalDefinition } from "../../../core/types/views/ModalDefinition";
 import { CustomElement } from "../atomic/CustomElement";
+import { ToastService } from "../../../core/services/app/ToastService";
 
 @customElement("card-creator")
 export default class CardCreator extends CustomElement {
@@ -27,6 +28,7 @@ export default class CardCreator extends CustomElement {
 	private readonly templateService = container.resolve(PouchTemplateService);
 	private readonly cardService = container.resolve(PouchCardService);
 	private readonly deckService = container.resolve(PouchDeckService);
+	private readonly toastService = container.resolve(ToastService);
 
 	private readonly properties: CardCreatorProps;
 
@@ -116,7 +118,10 @@ export default class CardCreator extends CustomElement {
 		this.cardService
 			.set(card)
 			.then(() => this.deckService.addCard(this.properties.deckId, card.id))
-			.then(() => this.close())
+			.then(() => {
+				this.toastService.notify("Card created", "success", "check-circle");
+				this.close();
+			})
 			.catch((e) => {
 				console.error(e);
 			});
