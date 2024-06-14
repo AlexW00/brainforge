@@ -38,6 +38,27 @@ export default class PageHeader extends CustomElement {
 		else this.router.navigateForward();
 	};
 
+	private mapActionButtons() {
+		return this.actions?.map(
+			(action) => html`
+				<sl-button @click=${() => this.onClickAction(action)}>
+					${when(
+						action.icon,
+						() => html`
+							<sl-icon
+								slot="prefix"
+								library="ph-regular"
+								name=${action.icon!}
+								size="small"
+							></sl-icon>
+						`
+					)}
+					${action.title}
+				</sl-button>
+			`
+		);
+	}
+
 	render() {
 		return html`
 			<div class="left">
@@ -59,26 +80,7 @@ export default class PageHeader extends CustomElement {
 			</div>
 
 			<div id="info" class="center no-select">${this.info ?? "Empty"}</div>
-			<div id="actions" class="right">
-				${this.actions?.map(
-					(action) => html`
-						<sl-button @click=${() => this.onClickAction(action)}>
-							${when(
-								action.icon,
-								() => html`
-									<sl-icon
-										slot="prefix"
-										library="ph-regular"
-										name=${action.icon!}
-										size="small"
-									></sl-icon>
-								`
-							)}
-							${action.title}
-						</sl-button>
-					`
-				)}
-			</div>
+			<div id="actions" class="right">${this.mapActionButtons()}</div>
 		`;
 	}
 
@@ -124,6 +126,13 @@ export default class PageHeader extends CustomElement {
 		#actions,
 		#nav-buttons {
 			gap: 8px;
+		}
+
+		@media screen and (max-width: 30rem) {
+			#name,
+			#info {
+				display: none;
+			}
 		}
 	`;
 }
