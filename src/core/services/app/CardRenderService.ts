@@ -154,7 +154,7 @@ export class CardRenderService {
 			renderCache[nodeId].push({
 				outputName: name,
 				value: inputField?.value,
-				ts: Date.now().toString(),
+				ts: Date.now(),
 				dependencies: dependencies.map((node) => node.id),
 			});
 			return inputField?.value;
@@ -241,7 +241,7 @@ export class CardRenderService {
 		renderCache[nodeId].push({
 			outputName: name,
 			value,
-			ts: Date.now().toString(),
+			ts: Date.now(),
 			dependencies: dependencies.map((node) => node.id),
 		});
 
@@ -288,27 +288,34 @@ export class CardRenderService {
 				(inputField) => inputField.id === inputId
 			);
 			const inputFieldLastEditTs = inputField?.lastEditTs ?? 0;
+			const isInputField = node.data.definitionId === "input-node";
 
 			console.log(
+				"node",
+				node.id,
+				"hasCache",
+				hasCache,
+				"doReRunOnRender",
+				doReRunOnRender,
 				"cacheTs",
 				cacheTs,
 				"nodeLastEditTs",
 				nodeLastEditTs,
 				"inputFieldLastEditTs",
-				inputFieldLastEditTs,
-				node.data.data
+				inputFieldLastEditTs
 			);
 
 			if (
 				hasCache && // has existing cache
 				!doReRunOnRender && // does not require re-run on render
 				cacheTs > nodeLastEditTs && // and has not been edited since the last render
-				cacheTs > inputFieldLastEditTs
+				!(isInputField && cacheTs < inputFieldLastEditTs)
 			) {
 				// then re use the cache
 				newRenderCache[node.id] = oldRenderCache[node.id];
 			} else {
 				// otherwise, invalidate the cache
+				console.log("invalidating cache 1", node.id);
 				cacheHasChanged = true;
 			}
 		}
@@ -371,12 +378,26 @@ export class CardRenderService {
 		};
 	}
 
+	private renderPromiseMap: {
+		[cardId: string]: Promise<string>;
+	} = {};
+
+	public async renderCard(cardId: string): Promise<string> {
+		if (this.renderPromiseMap[cardId] === undefined) {
+			this.renderPromiseMap[cardId] = this._renderCard(cardId);
+			this.renderPromiseMap[cardId].then(() => {
+				delete this.renderPromiseMap[cardId];
+			});
+		}
+		return this.renderPromiseMap[cardId];
+	}
+
 	/**
 	 * Renders a card and updates its render cache.
 	 * @param cardId The ID of the card to render.
 	 * @returns The HTML of the rendered card.
 	 */
-	public async renderCard(cardId: string): Promise<string> {
+	private async _renderCard(cardId: string): Promise<string> {
 		const card = await this.cardService.get(cardId);
 		if (card === undefined) throw new Error(`Card with id ${cardId} not found`);
 
@@ -392,6 +413,7 @@ export class CardRenderService {
 		if (!outputNodeId) throw new Error("Output node not found");
 
 		if (renderCacheResult.isNew) {
+			console.log("updating fields", cardId);
 			await this.cardService.updateFields(cardId, {
 				renderCache: renderCacheResult.cache,
 			});

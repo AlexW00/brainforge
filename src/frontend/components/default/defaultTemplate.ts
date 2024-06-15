@@ -17,7 +17,9 @@ export const DEFAULT_TEMPLATE: Template = {
 				data: {
 					definitionId: "output-node",
 					doReRunOnRender: false,
-					data: {},
+					data: {
+						lastEditTs: 1718213628529,
+					},
 					io: {
 						inputs: {
 							front: {

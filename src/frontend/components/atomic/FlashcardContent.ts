@@ -61,6 +61,7 @@ export default class FlashcardContent extends CustomElement {
 	onCardChanged = (e: CustomEvent<Card>) => {
 		if (e.detail.id !== this.cardId) return;
 		this.card = e.detail;
+		this.renderCardTask.run();
 	};
 
 	private getNumFoldings = () => {
@@ -119,6 +120,7 @@ export default class FlashcardContent extends CustomElement {
 
 	connectedCallback() {
 		super.connectedCallback();
+		console.log("connected flashcard content", this.cardId);
 		this.cardService.on("change", this.onCardChanged);
 		addEventListener("keydown", this.handleKeyDown);
 	}
