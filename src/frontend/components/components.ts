@@ -15,13 +15,13 @@ import _11 from "./views/AppRibbon";
 import _12 from "./roots/Load";
 import _13 from "./roots/Error";
 import _14 from "./roots/App";
-import _15 from "./panels/Panel";
-import _16 from "./panels/PagePanel";
-import _17 from "./panels/DeckTreePanel";
-import _18 from "./pages/TemplateOverviewPage";
-import _19 from "./pages/TemplateEditorPage";
-import _20 from "./pages/ReviewPage";
-import _21 from "./pages/DeckPage";
+import _15 from "./pages/TemplateOverviewPage";
+import _16 from "./pages/TemplateEditorPage";
+import _17 from "./pages/ReviewPage";
+import _18 from "./pages/DeckPage";
+import _19 from "./panels/Panel";
+import _20 from "./panels/PagePanel";
+import _21 from "./panels/DeckTreePanel";
 import _22 from "./nodes/TextNode";
 import _23 from "./nodes/TemplateNode";
 import _24 from "./nodes/OutputNode";
@@ -45,9 +45,10 @@ import _41 from "./atomic/FlashcardCard";
 import _42 from "./atomic/ErrorWrapper";
 import _43 from "./atomic/DimmedBackground";
 import _44 from "./atomic/CardInputFieldView";
-import _45 from "./nodes/openai/Element";
+import _45 from "./nodes/translate/Element";
+import _46 from "./nodes/openai/Element";
 
-export { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36, _37, _38, _39, _40, _41, _42, _43, _44, _45 };
+export { _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36, _37, _38, _39, _40, _41, _42, _43, _44, _45, _46 };
 
 declare global {
     interface HTMLElementTagNameMap {
@@ -66,13 +67,13 @@ declare global {
         'load-root': _12;
         'error-root': _13;
         'app-root': _14;
-        'panel-element': _15;
-        'page-panel': _16;
-        'deck-tree-panel': _17;
-        'template-overview-page': _18;
-        'template-editor-page': _19;
-        'review-page': _20;
-        'deck-page': _21;
+        'template-overview-page': _15;
+        'template-editor-page': _16;
+        'review-page': _17;
+        'deck-page': _18;
+        'panel-element': _19;
+        'page-panel': _20;
+        'deck-tree-panel': _21;
         'text-node': _22;
         'templating-node': _23;
         'output-node': _24;
@@ -96,6 +97,7 @@ declare global {
         'error-wrapper': _42;
         'dimmed-background': _43;
         'card-input-field-view': _44;
-        'openai-node': _45;
+        'translate-node': _45;
+        'openai-node': _46;
     }
 }
