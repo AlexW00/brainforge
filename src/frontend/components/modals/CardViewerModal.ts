@@ -15,11 +15,15 @@ export default class CardViewerModal extends CustomElement {
 
 	private modalService = container.resolve(ModalService);
 
+	private openEditor = () => {
+		this.modalService.openModal(CARD_EDITOR_MODAL_METADATA.id, {
+			cardId: this.props.cardId,
+		});
+	};
+
 	private handleKeyDown = (e: KeyboardEvent) => {
 		if (e.key === "e") {
-			this.modalService.openModal(CARD_EDITOR_MODAL_METADATA.id, {
-				cardId: this.props.cardId,
-			});
+			this.openEditor();
 		}
 	};
 
@@ -35,7 +39,7 @@ export default class CardViewerModal extends CustomElement {
 
 	render() {
 		return html`
-			<sl-card>
+			<sl-card @click=${() => this.openEditor()}>
 				<flashcard-content cardId=${this.props.cardId}></flashcard-content>
 			</sl-card>
 		`;
