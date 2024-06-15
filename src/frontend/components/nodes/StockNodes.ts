@@ -6,6 +6,7 @@ import { OutputNodeDefinitionBundle } from "./OutputNode";
 import { TemplatingNodeDefinitionBundle } from "./TemplateNode";
 import { TextNodeDefinitionBundle } from "./TextNode";
 import { OpenAiNodeDefinitionBundle } from "./openai/DefinitionBundle";
+import { TranslateNodeDefinitionBundle } from "./translate/DefinitionBundle";
 
 export const STOCK_NODES: IdentifiableConstructor<
 	TemplateNodeDefinition,
@@ -17,4 +18,5 @@ export const STOCK_NODES: IdentifiableConstructor<
 	OpenAiNodeDefinitionBundle,
 	TemplatingNodeDefinitionBundle,
 	TextNodeDefinitionBundle,
+	TranslateNodeDefinitionBundle,
 ];

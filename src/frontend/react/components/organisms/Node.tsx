@@ -153,7 +153,9 @@ export const NodeComponent: FunctionComponent<TemplateNode> = (
 				</div>
 			</SlCard>
 
-			<HandlesComponent isInput={false} handles={props.data.io?.outputs} />
+			<HandlesComponent isInput={false} handles={
+				props.data.definitionId === "output-node" ? [] : props.data.io?.outputs
+			} />
 		</NodeIdContext.Provider>
 	);
 };

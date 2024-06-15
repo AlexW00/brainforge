@@ -14,6 +14,8 @@ export const newTemplateNode = (
 	data: {
 		definitionId,
 		doReRunOnRender: false,
-		data: {},
+		data: {
+			lastEditTs: 1718213889265,
+		},
 	},
 });

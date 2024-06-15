@@ -43,7 +43,10 @@ export default class CardInputFieldView extends CustomElement {
 				this.filledOutCardInputField.inputTypeId
 			);
 		if (!CardInputFieldDefinition) {
-			console.error("Input element definition not found");
+			console.error(
+				"Input element definition not found",
+				this.filledOutCardInputField
+			);
 			return;
 		}
 

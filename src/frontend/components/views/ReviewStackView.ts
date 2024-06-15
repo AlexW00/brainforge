@@ -3,6 +3,7 @@ import { customElement, property } from "lit/decorators.js";
 import { Card } from "../../../core/data/models/flashcards/card/Card";
 import { CustomElement } from "../atomic/CustomElement";
 import FlashcardContent from "../atomic/FlashcardContent";
+import confetti from "canvas-confetti";
 
 @customElement("review-stack-view")
 export default class ReviewStackView extends CustomElement {
@@ -56,7 +57,10 @@ export default class ReviewStackView extends CustomElement {
 	};
 
 	render() {
-		if (this.cards.length === 0) return html`<div>No cards</div>`;
+		if (this.cards.length === 0) {
+			console.log("No cards");
+			return html`<div>No cards</div>`;
+		}
 		return html`<div @expand=${this.handleExpand}>
 			${this.getPreRenderedCard(0)}
 		</div>`;

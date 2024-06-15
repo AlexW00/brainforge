@@ -90,7 +90,7 @@ export default class ReviewPage extends CustomElement {
 		const isUpgradedNowLearningCard =
 			card.status === CardStatus.New && answer !== CardReviewAnswer.Again;
 
-		if (isDueToday && !isUpgradedNowLearningCard) {
+		if (isDueToday) {
 			this.moveCardToBottomOfStack(card.id);
 		} else {
 			this.removeCardFromStack(card.id);
@@ -176,11 +176,6 @@ export default class ReviewPage extends CustomElement {
 							this.reviewStack.length === 0 ||
 							!this.isExpandLimitReached,
 						() => {
-							confetti({
-								particleCount: 300,
-								spread: 600,
-								origin: { y: 0.3, x: 0.52 },
-							});
 							return html``;
 						},
 						() => html`

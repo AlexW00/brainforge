@@ -10,6 +10,7 @@ import { IdentifiableConstructor } from "../../../core/types/general/Constructor
 import { Metadata } from "../../../core/types/general/Metadata";
 import { PageDefinition } from "../../../core/types/views/PageDefinition";
 import { CustomElement } from "../atomic/CustomElement";
+import { ToastService } from "../../../core/services/app/ToastService";
 
 @customElement("template-overview-page")
 export default class TemplateOverviewPage extends CustomElement {
@@ -105,6 +106,8 @@ export class TemplateOverviewPageDefinition extends PageDefinition<TemplatePageP
 	private readonly templateService: PouchTemplateService =
 		container.resolve(PouchTemplateService);
 
+	private readonly toastService = container.resolve(ToastService);
+
 	onLoad = (properties: TemplatePageProperties, container: HTMLElement) => {
 		this.templatePage = new TemplateOverviewPage();
 		this.templatePage.properties = properties;
@@ -123,7 +126,12 @@ export class TemplateOverviewPageDefinition extends PageDefinition<TemplatePageP
 				title: "Create",
 				icon: "file-plus",
 				onClick: () => {
-					this.templateService.createNew();
+					// this.templateService.createNew();
+					this.toastService.notify(
+						"Template creation is not available in the Demo yet",
+						"warning",
+						"exclamation-triangle"
+					);
 				},
 			},
 		];

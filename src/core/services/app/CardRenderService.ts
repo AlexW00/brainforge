@@ -385,7 +385,7 @@ export class CardRenderService {
 	public async renderCard(cardId: string): Promise<string> {
 		if (this.renderPromiseMap[cardId] === undefined) {
 			this.renderPromiseMap[cardId] = this._renderCard(cardId);
-			this.renderPromiseMap[cardId].then(() => {
+			this.renderPromiseMap[cardId].finally(() => {
 				delete this.renderPromiseMap[cardId];
 			});
 		}

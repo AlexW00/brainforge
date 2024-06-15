@@ -136,7 +136,7 @@ export const Editor = () => {
 			toastService.notify("Template saved", "success", "check-circle");
 		} catch (error) {
 			console.error("Error saving template", error);
-			toastService.notify("Error saving template", "error", "alert-circle");
+			toastService.notify("Error saving template", "error", "exclamation-triangle");
 		}
 	}
 

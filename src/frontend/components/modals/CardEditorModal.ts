@@ -106,7 +106,12 @@ export default class CardEditor extends CustomElement {
 		this,
 		async () => {
 			this.card = await this.cardService.get(this.properties.cardId);
+			console.log("loaded card", this.card);
 			this.filledOutCardInputFields = this.card?.inputData ?? [];
+			console.log(
+				"loaded filled out card input fields",
+				this.filledOutCardInputFields
+			);
 			return this.card;
 		},
 		() => []
@@ -124,7 +129,11 @@ export default class CardEditor extends CustomElement {
 		const templateId = this.selectedTemplateId ?? this.card?.templateId;
 		const inputData = this.filledOutCardInputFields;
 		if (templateId === undefined) {
-			this.toastService.notify("No template selected", "error", "alert-circle");
+			this.toastService.notify(
+				"No template selected",
+				"error",
+				"exclamation-triangle"
+			);
 		} else {
 			const card: Card = {
 				...(this.card as Card),
@@ -158,16 +167,7 @@ export default class CardEditor extends CustomElement {
 						@save=${this.handleSave}
 						@cancel=${this.handleCancel}
 					>
-						<template-select
-							slot="center-action"
-							.templates=${this.templates}
-							.selectedTemplateId=${this.selectedTemplateId}
-							@template-select=${(e: CustomEvent<string>) => {
-								const templateId = e.detail;
-								if (templateId === undefined) return;
-								this.selectTemplate(templateId);
-							}}
-						></template-select>
+						<div slot="center-action" class="spacer">Edit card</div>
 					</card-editor-header>
 					<card-input-editor
 						.filledOutCardInputFields=${this.filledOutCardInputFields}
@@ -181,6 +181,17 @@ export default class CardEditor extends CustomElement {
 			</loading-wrapper>
 		`;
 	}
+
+	static styles = css`
+		:host {
+			display: flex;
+			flex-direction: column;
+			gap: var(--sl-spacing-large);
+		}
+		.spacer {
+			flex-grow: 1;
+		}
+	`;
 }
 
 export type CardEditorProps = {

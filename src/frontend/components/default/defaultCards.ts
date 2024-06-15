@@ -14,7 +14,7 @@ export const DEFAULT_CARDS: Card[] = [
 			dueOn: "2024-06-12T17:45:15.151Z",
 		},
 		metadata: {
-			creationTimestamp: "2024-06-12T17:45:15.151Z",
+			creationTimestamp: 1623529515151,
 		},
 		inputData: [
 			{
@@ -22,6 +22,7 @@ export const DEFAULT_CARDS: Card[] = [
 				name: "Japanese",
 				inputTypeId: "text",
 				value: "友達",
+				lastEditTs: 1623529515151,
 			},
 		],
 	},
@@ -34,7 +35,7 @@ export const DEFAULT_CARDS: Card[] = [
 			dueOn: "2024-06-12T17:45:15.151Z",
 		},
 		metadata: {
-			creationTimestamp: "2024-06-12T17:45:15.151Z",
+			creationTimestamp: 1623529515151,
 		},
 		inputData: [
 			{
@@ -42,6 +43,7 @@ export const DEFAULT_CARDS: Card[] = [
 				name: "Japanese",
 				inputTypeId: "text",
 				value: "働く",
+				lastEditTs: 1623529515151,
 			},
 		],
 	},
