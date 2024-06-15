@@ -47,6 +47,13 @@ export default class RootComponent extends CustomElement {
 				for (const card of DEFAULT_CARDS) {
 					await masterService.storage.pouch.cardService.set(card);
 				}
+
+				masterService.toastService.notify(
+					"Hint: Add your OpenAI API key in the settings",
+					"primary",
+					"info-circle",
+					10000
+				);
 			}
 		},
 		() => [this.masterService]

@@ -12,6 +12,7 @@ import { STOCK_MODALS } from "../../frontend/components/modals/StockModals";
 import { UiEventHandler } from "./app/UiEventHandler";
 import { STOCK_NODES } from "../../frontend/components/nodes/StockNodes";
 import { STOCK_CARD_INPUT_FIELDS } from "../static/cardInputs/StockCardInputFields";
+import { ToastService } from "./app/ToastService";
 
 @singleton()
 export class MasterService implements Initializeable {
@@ -25,7 +26,8 @@ export class MasterService implements Initializeable {
 		@inject(LoggerService) public loggerService: LoggerService,
 		@inject(ElementRegistrarService)
 		public elementRegistrarService: ElementRegistrarService,
-		@inject(UiEventHandler) public _uiEventHandler: UiEventHandler
+		@inject(UiEventHandler) public _uiEventHandler: UiEventHandler,
+		@inject(ToastService) public toastService: ToastService
 	) {}
 
 	async init() {

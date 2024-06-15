@@ -290,21 +290,6 @@ export class CardRenderService {
 			const inputFieldLastEditTs = inputField?.lastEditTs ?? 0;
 			const isInputField = node.data.definitionId === "input-node";
 
-			console.log(
-				"node",
-				node.id,
-				"hasCache",
-				hasCache,
-				"doReRunOnRender",
-				doReRunOnRender,
-				"cacheTs",
-				cacheTs,
-				"nodeLastEditTs",
-				nodeLastEditTs,
-				"inputFieldLastEditTs",
-				inputFieldLastEditTs
-			);
-
 			if (
 				hasCache && // has existing cache
 				!doReRunOnRender && // does not require re-run on render
@@ -315,7 +300,6 @@ export class CardRenderService {
 				newRenderCache[node.id] = oldRenderCache[node.id];
 			} else {
 				// otherwise, invalidate the cache
-				console.log("invalidating cache 1", node.id);
 				cacheHasChanged = true;
 			}
 		}

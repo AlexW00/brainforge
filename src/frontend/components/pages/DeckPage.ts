@@ -112,6 +112,7 @@ export class DeckPageDefinition extends PageDefinition<DeckPageProperties> {
 
 	onUnload = () => {
 		this.sessionZustand.state.setSelectedDeckIds([]);
+		this.deckPage.remove();
 	};
 	onUpdate = (properties: DeckPageProperties) => {
 		console.log("Updating deck page", properties);
