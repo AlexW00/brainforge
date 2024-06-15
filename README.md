@@ -1,12 +1,12 @@
-![logo](./docs/brainforge-logo-dark-blue.png)
+<p align="center">
+  <img width="250" height="250" src="./docs/brainforge-logo-dark-blue.png">
+</p>
 
 # Brainforge (POC)
 
-Brainforge is a proof of concept for a node-based flashcard system.
+Brainforge is a proof of concept for a node-based flashcard system. Check out the demo [here](https://brainforge.app/).
 
-TODO: DEMO VIDEO
-
-![video](./docs/brainforge-demo.mp4)
+https://github.com/AlexW00/brainforge/assets/55558407/68f37702-5bdf-4051-93e7-49d7c2679dcb
 
 ## Development
 
